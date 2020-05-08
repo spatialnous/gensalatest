@@ -22,6 +22,7 @@
 #include "depthmapX/GraphDoc.h"
 #include "depthmapX/compatibilitydefines.h"
 #include "depthmapX/settings.h"
+#include "depthmapX/mainwindowpluginfactory.hpp"
 
 #include "depthmapX/dialogs/ColourScaleDlg.h"
 #include "depthmapX/views/glview/glview.h"
@@ -79,6 +80,8 @@ public:
     Options m_options;
     QRgb m_foreground;
     QRgb m_background;
+
+    static MainWindowPluginRegister<MainWindowPlugin> mainWindowPluginRegistry;
 
     bool m_simpleVersion;  // bool that replaces compile defines
 

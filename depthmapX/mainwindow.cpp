@@ -16,6 +16,7 @@
 
 
 #include "mainwindow.h"
+#include "mainwindowplugin.h"
 
 #include "depthmapX/views/depthmapview/depthmapview.h"
 #include "depthmapX/views/3dview/3dview.h"
@@ -3637,6 +3638,10 @@ void MainWindow::createMenus()
     helpMenu->addAction(onlineScriptingManualAct);
     helpMenu->addSeparator();
     helpMenu->addAction(aboutDepthMapAct);
+
+    for(auto it = mainWindowPluginRegistry.getMap()->begin(); it != mainWindowPluginRegistry.getMap()->end(); it++) {
+        it->second()->createMenus(this);
+    }
 
     connect(viewMenu, SIGNAL(aboutToShow()), this, SLOT(updateViewMenu()));
     connect(visibilitySubMenu, SIGNAL(aboutToShow()), this, SLOT(updateVisibilitySubMenu()));
