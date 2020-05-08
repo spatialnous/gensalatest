@@ -70,6 +70,8 @@ private:
     QWaitCondition condition;
 };
 
+class QGraphDoc; // forward declaration required by CMSCommunicator::run(QGraphDoc *)
+
 class CMSCommunicator : public Communicator
 {
 public:
@@ -79,7 +81,8 @@ public:
           MAKEALLLINEMAP, MAKEFEWESTLINEMAP, MAKEDRAWING,
           MAKEUSERMAP, MAKEUSERMAPSHAPE, MAKEUSERSEGMAP, MAKEUSERSEGMAPSHAPE, MAKEGATESMAP, MAKEBOUNDARYMAP, MAKESEGMENTMAP,
           MAKECONVEXMAP, 
-          AXIALANALYSIS, SEGMENTANALYSISTULIP, SEGMENTANALYSISANGULAR, TOPOMETANALYSIS, AGENTANALYSIS };
+          AXIALANALYSIS, SEGMENTANALYSISTULIP, SEGMENTANALYSISANGULAR, TOPOMETANALYSIS, AGENTANALYSIS,
+        FROMCONNECTOR};
 public:
    CMSCommunicator();
    virtual ~CMSCommunicator();
@@ -122,7 +125,10 @@ public:
            m_fileset.push_back(strings[i].toStdString());
        }
    }
-
+   virtual bool run(QGraphDoc &) {
+       throw depthmapX::RuntimeException("Base class function run() can not be used with FROMCONNECTOR. "
+                                         "Instead declare this function in a derived class.");
+   }
 
 protected:
    std::vector<int> m_options;

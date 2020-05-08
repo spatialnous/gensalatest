@@ -83,6 +83,8 @@ public:
 
     static MainWindowPluginRegister<MainWindowPlugin> mainWindowPluginRegistry;
 
+    QGraphDoc *activeMapDoc();
+
     bool m_simpleVersion;  // bool that replaces compile defines
 
     void RedoPlotViewMenu(QGraphDoc* pDoc);
@@ -250,7 +252,6 @@ private:
     QWidget * setupAttributesListWidget();
     MapView *createMapView();
     MapView *activeMapView();
-    QGraphDoc *activeMapDoc();
     QMdiSubWindow *findMapView(const QString &fileName);
 //////////////////////////////////////////////////////
 //	treeContorl

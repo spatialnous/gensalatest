@@ -27,11 +27,10 @@ class SegmentPathsMainWindow : public MainWindowPlugin {
     QAction *angularPathAct;
     QAction *metricPathAct;
     QAction *topoPathAct;
+    enum PathType { ANGULAR, METRIC, TOPOLOGICAL };
 
   private slots:
-    void OnAngularShortestPath();
-    void OnMetricShortestPath();
-    void OnTopoShortestPath();
+    void OnShortestPath(MainWindow *mainWindow, PathType pathType);
 
   public:
     SegmentPathsMainWindow() : MainWindowPlugin() {}

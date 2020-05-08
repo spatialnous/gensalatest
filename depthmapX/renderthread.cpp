@@ -442,6 +442,11 @@ void RenderThread::run()
           }
          }
          break;
+      case CMSCommunicator::FROMCONNECTOR:
+        {
+          comm->run(*pDoc);
+          break;
+        }
       }
 
       emit closeWaitDialog();
