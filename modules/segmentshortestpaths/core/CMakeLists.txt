@@ -15,7 +15,10 @@
 
 set(segmentpathscore segmentpathscore)
 set(segmentpathscore_SRCS
-    segmentpathscore.cpp)
+    segmentpathscore.cpp
+    segmmetricshortestpath.cpp
+    segmtopologicalshortestpath.cpp
+    segmtulipshortestpath.cpp)
 
 add_compile_definitions(SEGMENTPATHS_CORE_LIBRARY)
 
