@@ -18,7 +18,9 @@ set(segmentpathscore_SRCS
     segmmetricshortestpath.cpp
     segmtopologicalshortestpath.cpp
     segmtulipshortestpath.cpp)
+
 set(depthmapx_modules "${depthmapx_modules}" "segmentpathscore" CACHE INTERNAL "depthmapx_modules" FORCE)
+set(moduletest_modules "${moduletest_modules}" "segmentpathscore" CACHE INTERNAL "moduletest_modules" FORCE)
 
 add_compile_definitions(SEGMENTPATHS_CORE_LIBRARY)
 

@@ -96,6 +96,7 @@ find_package(OpenGL REQUIRED)
 set(MODULES_GUI TRUE)
 set(MODULES_CLI FALSE)
 set(MODULES_CORE FALSE)
+set(MODULES_CORE_TEST FALSE)
 add_subdirectory(../modules modules)
 
 target_link_libraries(${depthmapX} salalib genlib mgraph440 Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL

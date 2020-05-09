@@ -13,18 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if(MODULES_CORE)
-add_subdirectory(core)
-endif()
+set(segmentpathscoretest segmentpathscoretest)
+set(segmentpathscoretest_SRCS
+    segmentpathscoretest.cpp)
 
-if(MODULES_GUI)
-  add_subdirectory(gui)
-endif()
+set(moduletest_modules "${moduletest_modules}" "segmentpathscoretest" CACHE INTERNAL "moduletest_modules" FORCE)
 
-if(MODULES_CLI)
-  add_subdirectory(cli)
-endif()
+add_compile_definitions(SEGMENTPATHS_CORE_TEST_LIBRARY)
 
-if(MODULES_CORE_TEST)
-    add_subdirectory(coreTest)
-endif()
+add_library(${segmentpathscoretest} OBJECT ${segmentpathscoretest_SRCS})
