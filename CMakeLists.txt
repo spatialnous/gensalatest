@@ -52,6 +52,7 @@ add_subdirectory(moduleTest)
 
 set(depthmapx_modules "" CACHE INTERNAL "depthmapx_modules" FORCE)
 set(moduletest_modules "" CACHE INTERNAL "moduletest_modules" FORCE)
+set(depthmapxcli_modules "" CACHE INTERNAL "depthmapxcli_modules" FORCE)
 set(MODULES_GUI FALSE)
 set(MODULES_CLI FALSE)
 set(MODULES_CORE TRUE)

@@ -17,6 +17,8 @@ set(segmentpathscli segmentpathscli)
 set(segmentpathscli_SRCS
     segmentpathscli.cpp)
 
+set(depthmapxcli_modules "${depthmapxcli_modules}" "segmentpathscli" CACHE INTERNAL "depthmapxcli_modules" FORCE)
+
 add_compile_definitions(SEGMENTPATHS_CLI_LIBRARY)
 
 add_library(${segmentpathscli} OBJECT ${segmentpathscli_SRCS})
