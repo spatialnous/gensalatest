@@ -16,15 +16,15 @@
 
 #pragma once
 
-#include "imainwindowplugin.h"
+#include "imainwindowmodule.h"
 #include <vector>
 #include <memory>
 
-typedef std::vector<std::unique_ptr<IMainWindowPlugin> > MainWindowPluginVec;
+typedef std::vector<std::unique_ptr<IMainWindowModule> > MainWindowModuleVec;
 
-class IMainWindowPluginFactory
+class IMainWindowModuleFactory
 {
 public:
-    virtual const MainWindowPluginVec &getPlugins() const = 0;
-    virtual ~IMainWindowPluginFactory(){}
+    virtual const MainWindowModuleVec &getModules() const = 0;
+    virtual ~IMainWindowModuleFactory(){}
 };

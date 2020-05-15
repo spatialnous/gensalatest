@@ -21,10 +21,10 @@
 
 class MainWindow;
 
-class IMainWindowPlugin : public QObject {
+class IMainWindowModule : public QObject {
     Q_OBJECT
 
   public:
     virtual bool createMenus(MainWindow *m_mainWindow) = 0;
-    virtual ~IMainWindowPlugin() {}
+    virtual ~IMainWindowModule() {}
 };

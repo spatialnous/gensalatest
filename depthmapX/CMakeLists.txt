@@ -35,7 +35,7 @@ set(depthmapX_SRCS
 	coreapplication.cpp
         coreapplication.h
         mainwindowhelpers.cpp
-        mainwindowpluginregistry.cpp
+        mainwindowmoduleregistry.cpp
         imainwindowmodulefactory.h)
 
 qt5_wrap_ui(UI_HDRS

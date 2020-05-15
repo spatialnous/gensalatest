@@ -15,9 +15,9 @@
 
 #pragma once
 
-#include "depthmapX/imainwindowplugin.h"
+#include "depthmapX/imainwindowmodule.h"
 
-class SegmentPathsMainWindow : public IMainWindowPlugin {
+class SegmentPathsMainWindow : public IMainWindowModule {
 
   private:
     enum PathType { ANGULAR, METRIC, TOPOLOGICAL };
@@ -26,6 +26,6 @@ class SegmentPathsMainWindow : public IMainWindowPlugin {
     void OnShortestPath(MainWindow *mainWindow, PathType pathType);
 
   public:
-    SegmentPathsMainWindow() : IMainWindowPlugin() {}
+    SegmentPathsMainWindow() : IMainWindowModule() {}
     bool createMenus(MainWindow *mainWindow);
 };

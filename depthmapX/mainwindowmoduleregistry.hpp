@@ -14,11 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "mainwindowpluginregistry.hpp"
-#include "modules/segmentshortestpaths/gui/segmentpathsmainwindow.h"
+#pragma once
 
-void MainWindowPluginRegistry::populatePlugins() {
-    // Register any mode parsers here
-    REGISTER_MAIN_WINDOW_MODULE(SegmentPathsMainWindow);
-    // *********
-}
+#include "imainwindowmodulefactory.h"
+#include "imainwindowmodule.h"
+#include <memory>
+#include <vector>
+
+class MainWindowModuleRegistry : public IMainWindowModuleFactory {
+  public:
+    MainWindowModuleRegistry() { populateModules(); }
+
+    const MainWindowModuleVec &getModules() const { return m_availableModules; }
+
+  private:
+    void populateModules();
+    MainWindowModuleVec m_availableModules;
+};
+
+#define REGISTER_MAIN_WINDOW_MODULE(module)                                                                           \
+    m_availableModules.push_back(std::unique_ptr<IMainWindowModule>(new module));

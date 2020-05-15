@@ -38,4 +38,4 @@ add_definitions(${Qt5Gui_DEFINITIONS})
 add_compile_definitions(SEGMENTPATHS_GUI_LIBRARY)
 
 add_library(${segmentpathsgui} OBJECT ${segmentpathsgui_SRCS}
-    ../../../depthmapX/imainwindowplugin.h)
+    ../../../depthmapX/imainwindowmodule.h)

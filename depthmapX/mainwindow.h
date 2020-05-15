@@ -22,7 +22,7 @@
 #include "depthmapX/GraphDoc.h"
 #include "depthmapX/compatibilitydefines.h"
 #include "depthmapX/settings.h"
-#include "depthmapX/mainwindowpluginregistry.hpp"
+#include "depthmapX/mainwindowmoduleregistry.hpp"
 
 #include "depthmapX/dialogs/ColourScaleDlg.h"
 #include "depthmapX/views/glview/glview.h"
@@ -81,7 +81,7 @@ public:
     QRgb m_foreground;
     QRgb m_background;
 
-    MainWindowPluginRegistry mainWindowPluginRegistry;
+    MainWindowModuleRegistry mainWindowPluginRegistry;
 
     QGraphDoc *activeMapDoc();
 

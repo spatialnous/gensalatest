@@ -3638,8 +3638,8 @@ void MainWindow::createMenus()
     helpMenu->addSeparator();
     helpMenu->addAction(aboutDepthMapAct);
 
-    for(auto &&mainWindowPlugin: mainWindowPluginRegistry.getPlugins()) {
-        mainWindowPlugin->createMenus(this);
+    for(auto &&mainWindowModule: mainWindowPluginRegistry.getModules()) {
+        mainWindowModule->createMenus(this);
     }
 
     connect(viewMenu, SIGNAL(aboutToShow()), this, SLOT(updateViewMenu()));
