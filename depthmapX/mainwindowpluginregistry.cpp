@@ -1,4 +1,5 @@
-// Copyright (C) 2020 Petros Koutsolampros
+// Copyright (C) 2017, Christian Sailer
+// Copyright (C) 2020, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,19 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#pragma once
+#include "mainwindowpluginregistry.hpp"
+#include "modules/segmentshortestpaths/gui/segmentpathsmainwindow.h"
 
-#include "depthmapX/imainwindowplugin.h"
-
-class SegmentPathsMainWindow : public IMainWindowPlugin {
-
-  private:
-    enum PathType { ANGULAR, METRIC, TOPOLOGICAL };
-
-  private slots:
-    void OnShortestPath(MainWindow *mainWindow, PathType pathType);
-
-  public:
-    SegmentPathsMainWindow() : IMainWindowPlugin() {}
-    bool createMenus(MainWindow *mainWindow);
-};
+void MainWindowPluginRegistry::populatePlugins() {
+    // Register any mode parsers here
+    REGISTER_MAIN_WINDOW_MODULE(SegmentPathsMainWindow);
+    // *********
+}

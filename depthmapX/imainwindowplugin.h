@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Petros Koutsolampros
+// Copyright (C) 2020, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,17 +15,16 @@
 
 #pragma once
 
-#include "depthmapX/imainwindowplugin.h"
+#include <QAction>
+#include <QMenuBar>
+#include <iostream>
 
-class SegmentPathsMainWindow : public IMainWindowPlugin {
+class MainWindow;
 
-  private:
-    enum PathType { ANGULAR, METRIC, TOPOLOGICAL };
-
-  private slots:
-    void OnShortestPath(MainWindow *mainWindow, PathType pathType);
+class IMainWindowPlugin : public QObject {
+    Q_OBJECT
 
   public:
-    SegmentPathsMainWindow() : IMainWindowPlugin() {}
-    bool createMenus(MainWindow *mainWindow);
+    virtual bool createMenus(MainWindow *m_mainWindow) = 0;
+    virtual ~IMainWindowPlugin() {}
 };

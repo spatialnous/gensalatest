@@ -13,10 +13,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "depthmapX/mainwindowplugin.h"
+#include "depthmapX/mainwindowhelpers.h"
 #include "depthmapX/mainwindow.h"
 
-QMenu *MainWindowPlugin::getOrAddRootMenu(MainWindow *mainWindow, QString menuTitle) {
+QMenu *MainWindowHelpers::getOrAddRootMenu(MainWindow *mainWindow, QString menuTitle) {
     QMenuBar *menuBar = mainWindow->menuBar();
     QMenu *menu = nullptr;
     for (auto it = menuBar->actions().begin(); it != menuBar->actions().end(); it++) {
@@ -31,7 +31,7 @@ QMenu *MainWindowPlugin::getOrAddRootMenu(MainWindow *mainWindow, QString menuTi
     return menu;
 }
 
-QMenu *MainWindowPlugin::getOrAddMenu(QMenu *parent, QString menuTitle) {
+QMenu *MainWindowHelpers::getOrAddMenu(QMenu *parent, QString menuTitle) {
     QMenu *menu = nullptr;
     for (auto it = parent->actions().begin(); it != parent->actions().end(); it++) {
         QMenu *childMenu = (*it)->menu();

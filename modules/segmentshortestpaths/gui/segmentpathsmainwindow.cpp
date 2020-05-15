@@ -19,17 +19,15 @@
 #include "modules/segmentshortestpaths/core/segmtopologicalshortestpath.h"
 #include "modules/segmentshortestpaths/core/segmtulipshortestpath.h"
 
-#include "depthmapX/mainwindow.h"
+#include "depthmapX/mainwindowhelpers.h"
 
 #include <QMenuBar>
 #include <QMessageBox>
 
-MainWindowPluginRegister<SegmentPathsMainWindow> SegmentPathsMainWindow::reg("SegmentPathsMainWindow");
-
 bool SegmentPathsMainWindow::createMenus(MainWindow *mainWindow) {
-    QMenu *toolsMenu = getOrAddRootMenu(mainWindow, tr("&Tools"));
-    QMenu *segmentMenu = getOrAddMenu(toolsMenu, tr("&Segment"));
-    QMenu *shortestPathsMenu = getOrAddMenu(segmentMenu, tr("Shortest Paths"));
+    QMenu *toolsMenu = MainWindowHelpers::getOrAddRootMenu(mainWindow, tr("&Tools"));
+    QMenu *segmentMenu = MainWindowHelpers::getOrAddMenu(toolsMenu, tr("&Segment"));
+    QMenu *shortestPathsMenu = MainWindowHelpers::getOrAddMenu(segmentMenu, tr("Shortest Paths"));
 
     QAction *angularPathAct = new QAction(tr("Angular shortest path"), mainWindow);
     angularPathAct->setStatusTip(tr("Create an angular shortest path"));

@@ -15,20 +15,27 @@
 
 set(segmentpathsgui segmentpathsgui)
 set(segmentpathsgui_SRCS
+    uictrigger.cpp
     segmentpathsmainwindow.cpp)
 set(depthmapx_modules "${depthmapx_modules}" "segmentpathsgui" CACHE INTERNAL "depthmapx_modules" FORCE)
 
 find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${Qt5Core_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDE_DIRS})
 include_directories(${Qt5Gui_INCLUDE_DIRS})
 
-add_definitions(${Qt5WCore_DEFINITIONS})
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTOUIC_SEARCH_PATHS "../../../depthmapX/UI")
+
+add_definitions(${Qt5Core_DEFINITIONS})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 add_definitions(${Qt5Gui_DEFINITIONS})
 
 add_compile_definitions(SEGMENTPATHS_GUI_LIBRARY)
 
-add_library(${segmentpathsgui} OBJECT ${segmentpathsgui_SRCS})
+add_library(${segmentpathsgui} OBJECT ${segmentpathsgui_SRCS}
+    ../../../depthmapX/imainwindowplugin.h)

@@ -37,9 +37,18 @@ configure_file("${CMAKE_SOURCE_DIR}/version_defs.h.in" "${CMAKE_BINARY_DIR}/vers
 
 string(TIMESTAMP APP_DATE %Y-%m-%d)
 
+set(depthmapx_modules "" CACHE INTERNAL "depthmapx_modules" FORCE)
+set(moduletest_modules "" CACHE INTERNAL "moduletest_modules" FORCE)
+set(depthmapxcli_modules "" CACHE INTERNAL "depthmapxcli_modules" FORCE)
+set(MODULES_GUI FALSE)
+set(MODULES_CLI FALSE)
+set(MODULES_CORE TRUE)
+set(MODULES_CORE_TEST FALSE)
+
 add_subdirectory(genlib)
 add_subdirectory(genlibTest)
 add_subdirectory(salalib)
+add_subdirectory(modules) # only the core modules are loaded here
 add_subdirectory(mgraph440)
 add_subdirectory(mgraph440Test)
 add_subdirectory(salaTest)
@@ -50,11 +59,3 @@ add_subdirectory(depthmapX)
 add_subdirectory(GuiUnitTest)
 add_subdirectory(moduleTest)
 
-set(depthmapx_modules "" CACHE INTERNAL "depthmapx_modules" FORCE)
-set(moduletest_modules "" CACHE INTERNAL "moduletest_modules" FORCE)
-set(depthmapxcli_modules "" CACHE INTERNAL "depthmapxcli_modules" FORCE)
-set(MODULES_GUI FALSE)
-set(MODULES_CLI FALSE)
-set(MODULES_CORE TRUE)
-set(MODULES_CORE_TEST FALSE)
-add_subdirectory(modules)

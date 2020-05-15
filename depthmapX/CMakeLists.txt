@@ -34,8 +34,9 @@ set(depthmapX_SRCS
 	main.cpp
 	coreapplication.cpp
         coreapplication.h
-        mainwindowplugin.cpp
-        mainwindowpluginfactory.cpp)
+        mainwindowhelpers.cpp
+        mainwindowpluginregistry.cpp
+        imainwindowmodulefactory.h)
 
 qt5_wrap_ui(UI_HDRS
     UI/TopoMetDlg.ui

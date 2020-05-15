@@ -1,3 +1,4 @@
+// Copyright (C) 2017 Christian Sailer
 // Copyright (C) 2020 Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
@@ -15,17 +16,15 @@
 
 #pragma once
 
-#include "depthmapX/imainwindowplugin.h"
+#include "imainwindowplugin.h"
+#include <vector>
+#include <memory>
 
-class SegmentPathsMainWindow : public IMainWindowPlugin {
+typedef std::vector<std::unique_ptr<IMainWindowPlugin> > MainWindowPluginVec;
 
-  private:
-    enum PathType { ANGULAR, METRIC, TOPOLOGICAL };
-
-  private slots:
-    void OnShortestPath(MainWindow *mainWindow, PathType pathType);
-
-  public:
-    SegmentPathsMainWindow() : IMainWindowPlugin() {}
-    bool createMenus(MainWindow *mainWindow);
+class IMainWindowPluginFactory
+{
+public:
+    virtual const MainWindowPluginVec &getPlugins() const = 0;
+    virtual ~IMainWindowPluginFactory(){}
 };

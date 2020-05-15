@@ -1,4 +1,4 @@
-// Copyright (C) 2020, Petros Koutsolampros
+// Copyright (C) 2020 Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,21 +15,11 @@
 
 #pragma once
 
-#include <QAction>
-#include <QMenuBar>
-#include <iostream>
+#include "mainwindow.h"
 
-class MainWindow;
+#include <QMenu>
 
-class MainWindowPlugin : public QObject {
-    Q_OBJECT
-
-  public:
-    MainWindowPlugin() {}
-    virtual bool createMenus(MainWindow *m_mainWindow) = 0;
-    virtual ~MainWindowPlugin() {}
-
-  protected:
+namespace MainWindowHelpers {
     QMenu *getOrAddRootMenu(MainWindow *mainWindow, QString menuTitle);
     QMenu *getOrAddMenu(QMenu *parent, QString menuTitle);
-};
+} // namespace MainWindowHelpers
