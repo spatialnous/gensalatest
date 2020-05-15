@@ -17,7 +17,7 @@ set(segmentpathsgui segmentpathsgui)
 set(segmentpathsgui_SRCS
     uictrigger.cpp
     segmentpathsmainwindow.cpp)
-set(depthmapx_modules "${depthmapx_modules}" "segmentpathsgui" CACHE INTERNAL "depthmapx_modules" FORCE)
+set(modules_gui "${modules_gui}" "segmentpathsgui" CACHE INTERNAL "modules_gui" FORCE)
 
 find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
 

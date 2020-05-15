@@ -17,7 +17,7 @@ set(segmentpathscoretest segmentpathscoretest)
 set(segmentpathscoretest_SRCS
     segmentpathscoretest.cpp)
 
-set(moduletest_modules "${moduletest_modules}" "segmentpathscoretest" CACHE INTERNAL "moduletest_modules" FORCE)
+set(modules_coreTest "${modules_coreTest}" "segmentpathscoretest" CACHE INTERNAL "modules_coreTest" FORCE)
 
 add_compile_definitions(SEGMENTPATHS_CORE_TEST_LIBRARY)
 

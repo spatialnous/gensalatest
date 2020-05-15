@@ -37,9 +37,7 @@ configure_file("${CMAKE_SOURCE_DIR}/version_defs.h.in" "${CMAKE_BINARY_DIR}/vers
 
 string(TIMESTAMP APP_DATE %Y-%m-%d)
 
-set(depthmapx_modules "" CACHE INTERNAL "depthmapx_modules" FORCE)
-set(moduletest_modules "" CACHE INTERNAL "moduletest_modules" FORCE)
-set(depthmapxcli_modules "" CACHE INTERNAL "depthmapxcli_modules" FORCE)
+set(modules_core "" CACHE INTERNAL "modules_core" FORCE)
 set(MODULES_GUI FALSE)
 set(MODULES_CLI FALSE)
 set(MODULES_CORE TRUE)
