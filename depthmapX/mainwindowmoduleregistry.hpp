@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include "imainwindowmodulefactory.h"
 #include "imainwindowmodule.h"
+#include "imainwindowmodulefactory.h"
 #include <memory>
 #include <vector>
 

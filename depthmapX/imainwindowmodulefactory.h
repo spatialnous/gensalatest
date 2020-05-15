@@ -17,14 +17,13 @@
 #pragma once
 
 #include "imainwindowmodule.h"
-#include <vector>
 #include <memory>
+#include <vector>
 
-typedef std::vector<std::unique_ptr<IMainWindowModule> > MainWindowModuleVec;
+typedef std::vector<std::unique_ptr<IMainWindowModule>> MainWindowModuleVec;
 
-class IMainWindowModuleFactory
-{
-public:
+class IMainWindowModuleFactory {
+  public:
     virtual const MainWindowModuleVec &getModules() const = 0;
-    virtual ~IMainWindowModuleFactory(){}
+    virtual ~IMainWindowModuleFactory() {}
 };

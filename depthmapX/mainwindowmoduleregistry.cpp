@@ -18,7 +18,7 @@
 #include "modules/segmentshortestpaths/gui/segmentpathsmainwindow.h"
 
 void MainWindowModuleRegistry::populateModules() {
-    // Register any mode parsers here
+    // Register any main window modules here
     REGISTER_MAIN_WINDOW_MODULE(SegmentPathsMainWindow);
     // *********
 }
