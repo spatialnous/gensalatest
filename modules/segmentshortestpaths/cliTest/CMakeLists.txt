@@ -15,7 +15,7 @@
 
 set(segmentpathsclitest segmentpathsclitest)
 set(segmentpathsclitest_SRCS
-    segmentpathsclitest.cpp)
+    segmentshortestpathparsertest.cpp)
 
 set(modules_cliTest "${modules_cliTest}" "segmentpathsclitest" CACHE INTERNAL "modules_cliTest" FORCE)
 
