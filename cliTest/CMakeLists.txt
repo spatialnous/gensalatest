@@ -43,5 +43,5 @@ include_directories("../ThirdParty/Catch" "../ThirdParty/FakeIt")
 set(LINK_LIBS salalib genlib mgraph440)
 
 add_executable(${cliTest} ${cliTest_SRCS})
-target_link_libraries(${cliTest} ${LINK_LIBS})
+target_link_libraries(${cliTest} ${LINK_LIBS} ${modules_cli} ${modules_core})
 

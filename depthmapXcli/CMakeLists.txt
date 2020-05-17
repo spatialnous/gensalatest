@@ -22,12 +22,13 @@ set(depthmapXcli_SRCS
 
 set(LINK_LIBS salalib genlib mgraph440)
 
-add_executable(${depthmapXcli} ${depthmapXcli_SRCS})
-target_link_libraries(${depthmapXcli} ${LINK_LIBS})
-
 set(modules_cli "" CACHE INTERNAL "modules_cli" FORCE)
 set(MODULES_GUI FALSE)
 set(MODULES_CLI TRUE)
 set(MODULES_CORE FALSE)
 set(MODULES_CORE_TEST FALSE)
 add_subdirectory(../modules modules)
+
+add_executable(${depthmapXcli} ${depthmapXcli_SRCS})
+target_link_libraries(${depthmapXcli} ${LINK_LIBS} ${modules_cli} ${modules_core})
+

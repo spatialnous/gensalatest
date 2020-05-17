@@ -15,7 +15,7 @@
 
 set(segmentpathscli segmentpathscli)
 set(segmentpathscli_SRCS
-    segmentpathscli.cpp)
+    segmentshortestpathparser.cpp)
 
 set(modules_cli "${modules_cli}" "segmentpathscli" CACHE INTERNAL "modules_cli" FORCE)
 
