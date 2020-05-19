@@ -121,17 +121,17 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp, IPerformanceSi
     switch (m_stepType) {
     case SegmentShortestPathParser::StepType::TULIP: {
         DO_TIMED("Calculating tulip shortest path",
-                 SegmentTulipShortestPath().run(comm.get(), mGraph->getDisplayedShapeGraph(), false))
+                 SegmentTulipShortestPath(mGraph->getDisplayedShapeGraph()).run(comm.get()))
         break;
     }
     case SegmentShortestPathParser::StepType::METRIC: {
         DO_TIMED("Calculating metric shortest path",
-                 SegmentMetricShortestPath().run(comm.get(), mGraph->getDisplayedShapeGraph(), false))
+                 SegmentMetricShortestPath(mGraph->getDisplayedShapeGraph()).run(comm.get()))
         break;
     }
     case SegmentShortestPathParser::StepType::TOPOLOGICAL: {
         DO_TIMED("Calculating topological shortest path",
-                 SegmentTopologicalShortestPath().run(comm.get(), mGraph->getDisplayedShapeGraph(), false))
+                 SegmentTopologicalShortestPath(mGraph->getDisplayedShapeGraph()).run(comm.get()))
         break;
     }
     default: {

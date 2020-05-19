@@ -20,10 +20,14 @@
 
 #include "salalib/segmmodules/segmhelpers.h"
 
-#include "salalib/isegment.h"
+#include "salalib/ianalysis.h"
 
-class SegmentMetricShortestPath : ISegment {
+class SegmentMetricShortestPath : public IAnalysis {
+  private:
+    ShapeGraph &m_map;
+
   public:
+    SegmentMetricShortestPath(ShapeGraph &map) : m_map(map) {}
     std::string getAnalysisName() const override { return "Metric Shortest Path"; }
-    bool run(Communicator *comm, ShapeGraph &map, bool simple_version) override;
+    bool run(Communicator *) override;
 };

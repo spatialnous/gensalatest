@@ -74,23 +74,6 @@ void SegmentPathsMainWindow::OnShortestPath(MainWindow *mainWindow, PathType pat
     class SegmentPathsComm : public CMSCommunicator {
         PathType m_pathType;
         bool run(QGraphDoc &pDoc) {
-            bool ok = false;
-            switch (m_pathType) {
-            case PathType::ANGULAR:
-                ok = SegmentTulipShortestPath().run(this, pDoc.m_meta_graph->getDisplayedShapeGraph(), false);
-                break;
-            case PathType::METRIC:
-                ok = SegmentMetricShortestPath().run(this, pDoc.m_meta_graph->getDisplayedShapeGraph(), false);
-                break;
-            case PathType::TOPOLOGICAL:
-                ok = SegmentTopologicalShortestPath().run(this, pDoc.m_meta_graph->getDisplayedShapeGraph(), false);
-                break;
-            }
-
-            if (ok) {
-                pDoc.SetUpdateFlag(QGraphDoc::NEW_DATA);
-            }
-            pDoc.SetRedrawFlag(QGraphDoc::VIEW_ALL, QGraphDoc::REDRAW_POINTS, QGraphDoc::NEW_DATA);
             return true;
         }
 
@@ -98,9 +81,22 @@ void SegmentPathsMainWindow::OnShortestPath(MainWindow *mainWindow, PathType pat
         SegmentPathsComm(PathType pathType) : m_pathType(pathType) {}
     };
 
-    graphDoc->m_communicator = new SegmentPathsComm(pathType);
-    graphDoc->CreateWaitDialog(tr("Calculating shortest path..."));
+    graphDoc->m_communicator = new CMSCommunicator();
+    switch (pathType) {
+    case PathType::ANGULAR:
+        graphDoc->m_communicator->setAnalysis(std::unique_ptr<IAnalysis>(new SegmentTulipShortestPath(graphDoc->m_meta_graph->getDisplayedShapeGraph())));
+        break;
+    case PathType::METRIC:
+        graphDoc->m_communicator->setAnalysis(std::unique_ptr<IAnalysis>(new SegmentMetricShortestPath(graphDoc->m_meta_graph->getDisplayedShapeGraph())));
+        break;
+    case PathType::TOPOLOGICAL:
+        graphDoc->m_communicator->setAnalysis(std::unique_ptr<IAnalysis>(new SegmentTopologicalShortestPath(graphDoc->m_meta_graph->getDisplayedShapeGraph())));
+        break;
+    }
     graphDoc->m_communicator->SetFunction(CMSCommunicator::FROMCONNECTOR);
+    graphDoc->m_communicator->setSuccessUpdateFlags(QGraphDoc::NEW_DATA);
+    graphDoc->m_communicator->setSuccessRedrawFlags(QGraphDoc::VIEW_ALL, QGraphDoc::REDRAW_POINTS, QGraphDoc::NEW_DATA);
 
+    graphDoc->CreateWaitDialog(tr("Calculating shortest path..."));
     graphDoc->m_thread.render(graphDoc);
 }

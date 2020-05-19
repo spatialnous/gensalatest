@@ -20,9 +20,9 @@
 
 #include "genlib/stringutils.h"
 
-bool SegmentTopologicalShortestPath::run(Communicator *comm, ShapeGraph &map, bool simple_version) {
+bool SegmentTopologicalShortestPath::run(Communicator *comm) {
 
-    AttributeTable &attributes = map.getAttributeTable();
+    AttributeTable &attributes = m_map.getAttributeTable();
 
     bool retvar = true;
 
@@ -34,8 +34,8 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm, ShapeGraph &map, bo
     // quick through to find the longest seg length
     std::vector<float> seglengths;
     float maxseglength = 0.0f;
-    for (size_t cursor = 0; cursor < map.getShapeCount(); cursor++) {
-        AttributeRow &row = map.getAttributeRowFromShapeIndex(cursor);
+    for (size_t cursor = 0; cursor < m_map.getShapeCount(); cursor++) {
+        AttributeRow &row = m_map.getAttributeRowFromShapeIndex(cursor);
         axialrefs.push_back(row.getValue("Axial Line Ref"));
         seglengths.push_back(row.getValue("Segment Length"));
         if (seglengths.back() > maxseglength) {
@@ -45,16 +45,16 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm, ShapeGraph &map, bo
 
     int maxbin = 2;
 
-    std::vector<unsigned int> seen(map.getShapeCount());
-    std::vector<TopoMetSegmentRef> audittrail(map.getShapeCount());
+    std::vector<unsigned int> seen(m_map.getShapeCount());
+    std::vector<TopoMetSegmentRef> audittrail(m_map.getShapeCount());
     std::vector<int> list[512]; // 512 bins!
     int open = 0;
 
-    for (size_t i = 0; i < map.getShapeCount(); i++) {
+    for (size_t i = 0; i < m_map.getShapeCount(); i++) {
         seen[i] = 0xffffffff;
     }
 
-    auto &selected = map.getSelSet();
+    auto &selected = m_map.getSelSet();
     if (selected.size() != 2) {
         return false;
     }
@@ -66,7 +66,7 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm, ShapeGraph &map, bo
     double length = seglengths[refFrom];
     audittrail[refFrom] = TopoMetSegmentRef(refFrom, Connector::SEG_CONN_ALL, length * 0.5, -1);
     list[0].push_back(refFrom);
-    map.getAttributeRowFromShapeIndex(refFrom).setValue(depth_col, 0);
+    m_map.getAttributeRowFromShapeIndex(refFrom).setValue(depth_col, 0);
 
     unsigned int segdepth = 0;
     int bin = 0;
@@ -93,7 +93,7 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm, ShapeGraph &map, bo
             here.done = true;
         }
 
-        Connector &axline = map.getConnections().at(here.ref);
+        Connector &axline = m_map.getConnections().at(here.ref);
         int connected_cursor = -2;
 
         auto iter = axline.m_back_segconns.begin();
@@ -109,7 +109,7 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm, ShapeGraph &map, bo
             }
 
             connected_cursor = iter->first.ref;
-            AttributeRow &row = map.getAttributeRowFromShapeIndex(connected_cursor);
+            AttributeRow &row = m_map.getAttributeRowFromShapeIndex(connected_cursor);
             if (seen[connected_cursor] > segdepth) {
                 float length = seglengths[connected_cursor];
                 int axialref = axialrefs[connected_cursor];
@@ -147,12 +147,12 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm, ShapeGraph &map, bo
     auto refToParent = parents.find(refTo);
     int counter = 0;
     while (refToParent != parents.end()) {
-        AttributeRow &row = map.getAttributeRowFromShapeIndex(refToParent->first);
+        AttributeRow &row = m_map.getAttributeRowFromShapeIndex(refToParent->first);
         row.setValue(path_col, counter);
         counter++;
         refToParent = parents.find(refToParent->second);
     }
-    map.getAttributeRowFromShapeIndex(refFrom).setValue(path_col, counter);
+    m_map.getAttributeRowFromShapeIndex(refFrom).setValue(path_col, counter);
 
     for (auto iter = attributes.begin(); iter != attributes.end(); iter++) {
         AttributeRow &row = iter->getRow();
@@ -163,8 +163,8 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm, ShapeGraph &map, bo
         }
     }
 
-    map.overrideDisplayedAttribute(-2); // <- override if it's already showing
-    map.setDisplayedAttribute(depth_col);
+    m_map.overrideDisplayedAttribute(-2); // <- override if it's already showing
+    m_map.setDisplayedAttribute(depth_col);
 
     return retvar;
 }

@@ -1,7 +1,4 @@
-// sala - a component of the depthmapX - spatial network analysis platform
-// Copyright (C) 2000-2010, University College London, Alasdair Turner
-// Copyright (C) 2011-2012, Tasos Varoudis
-// Copyright (C) 2017-2018, Petros Koutsolampros
+// Copyright (C) 2020 Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,16 +15,14 @@
 
 #pragma once
 
-#include "salalib/segmmodules/segmhelpers.h"
+#include "salalib/mgraph.h"
+#include "salalib/pointdata.h"
 
-#include "salalib/ianalysis.h"
+#include "genlib/comm.h"
 
-class SegmentTopologicalShortestPath : public IAnalysis {
-  private:
-    ShapeGraph &m_map;
-
+class IAnalysis {
   public:
-    SegmentTopologicalShortestPath(ShapeGraph &map) : m_map(map) {}
-    std::string getAnalysisName() const override { return "Topological Shortest Path"; }
-    bool run(Communicator *comm) override;
+    virtual std::string getAnalysisName() const = 0;
+    virtual bool run(Communicator *comm) = 0;
+    virtual ~IAnalysis() {}
 };

@@ -22,9 +22,9 @@
 
 // revised to use tulip bins for faster analysis of large spaces
 
-bool SegmentTulipShortestPath::run(Communicator *comm, ShapeGraph &map, bool simple_version) {
+bool SegmentTulipShortestPath::run(Communicator *) {
 
-    AttributeTable &attributes = map.getAttributeTable();
+    AttributeTable &attributes = m_map.getAttributeTable();
 
     int angle_col = attributes.insertOrResetColumn("Angular Shortest Path Angle");
     int path_col = attributes.insertOrResetColumn("Angular Shortest Path Order");
@@ -33,13 +33,13 @@ bool SegmentTulipShortestPath::run(Communicator *comm, ShapeGraph &map, bool sim
     // in order to duplicate previous code (using a semicircle of tulip bins)
     size_t tulip_bins = 513;
 
-    std::vector<bool> covered(map.getConnections().size());
-    for (size_t i = 0; i < map.getConnections().size(); i++) {
+    std::vector<bool> covered(m_map.getConnections().size());
+    for (size_t i = 0; i < m_map.getConnections().size(); i++) {
         covered[i] = false;
     }
     std::vector<std::vector<SegmentData>> bins(tulip_bins);
 
-    auto &selected = map.getSelSet();
+    auto &selected = m_map.getSelSet();
     if (selected.size() != 2) {
         return false;
     }
@@ -48,7 +48,7 @@ bool SegmentTulipShortestPath::run(Communicator *comm, ShapeGraph &map, bool sim
 
     int opencount = 0;
 
-    int row = std::distance(map.getAllShapes().begin(), map.getAllShapes().find(refFrom));
+    int row = std::distance(m_map.getAllShapes().begin(), m_map.getAllShapes().find(refFrom));
     if (row != -1) {
         bins[0].push_back(SegmentData(0, row, SegmentRef(), 0, 0.0, 0));
         opencount++;
@@ -85,11 +85,11 @@ bool SegmentTulipShortestPath::run(Communicator *comm, ShapeGraph &map, bool sim
         opencount--;
         if (!covered[lineindex.ref]) {
             covered[lineindex.ref] = true;
-            Connector &line = map.getConnections()[lineindex.ref];
+            Connector &line = m_map.getConnections()[lineindex.ref];
             // convert depth from tulip_bins normalised to standard angle
             // (note the -1)
             double depth_to_line = depthlevel / ((tulip_bins - 1) * 0.5);
-            map.getAttributeRowFromShapeIndex(lineindex.ref).setValue(angle_col, depth_to_line);
+            m_map.getAttributeRowFromShapeIndex(lineindex.ref).setValue(angle_col, depth_to_line);
             int extradepth;
             if (lineindex.dir != -1) {
                 for (auto &segconn : line.m_forward_segconns) {
@@ -129,12 +129,12 @@ bool SegmentTulipShortestPath::run(Communicator *comm, ShapeGraph &map, bool sim
     auto refToParent = parents.find(refTo);
     int counter = 0;
     while (refToParent != parents.end()) {
-        AttributeRow &row = map.getAttributeRowFromShapeIndex(refToParent->first);
+        AttributeRow &row = m_map.getAttributeRowFromShapeIndex(refToParent->first);
         row.setValue(path_col, counter);
         counter++;
         refToParent = parents.find(refToParent->second);
     }
-    map.getAttributeRowFromShapeIndex(refFrom).setValue(path_col, counter);
+    m_map.getAttributeRowFromShapeIndex(refFrom).setValue(path_col, counter);
 
     for (auto iter = attributes.begin(); iter != attributes.end(); iter++) {
         AttributeRow &row = iter->getRow();
@@ -145,8 +145,8 @@ bool SegmentTulipShortestPath::run(Communicator *comm, ShapeGraph &map, bool sim
         }
     }
 
-    map.overrideDisplayedAttribute(-2); // <- override if it's already showing
-    map.setDisplayedAttribute(angle_col);
+    m_map.overrideDisplayedAttribute(-2); // <- override if it's already showing
+    m_map.setDisplayedAttribute(angle_col);
 
     return true;
 }

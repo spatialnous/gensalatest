@@ -18,10 +18,14 @@
 
 #pragma once
 
-#include "salalib/isegment.h"
+#include "salalib/ianalysis.h"
 
-class SegmentTulipShortestPath : ISegment {
+class SegmentTulipShortestPath : public IAnalysis {
+  private:
+    ShapeGraph &m_map;
+
   public:
+    SegmentTulipShortestPath(ShapeGraph &map) : m_map(map) {}
     std::string getAnalysisName() const override { return "Tulip Shortest Path"; }
-    bool run(Communicator *comm, ShapeGraph &map, bool simple_version) override;
+    bool run(Communicator *) override;
 };

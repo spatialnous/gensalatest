@@ -61,7 +61,7 @@ TEST_CASE("Shortest paths working examples", "") {
     {
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Angle"));
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Order"));
-        SegmentTulipShortestPath().run(nullptr, *segmentMap.get(), false);
+        SegmentTulipShortestPath(*segmentMap.get()).run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Angle"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Order"));
         int angleColIdx = segmentMap->getAttributeTable().getColumnIndex("Angular Shortest Path Angle");
@@ -81,7 +81,7 @@ TEST_CASE("Shortest paths working examples", "") {
     {
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Distance"));
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Order"));
-        SegmentMetricShortestPath().run(nullptr, *segmentMap.get(), false);
+        SegmentMetricShortestPath(*segmentMap.get()).run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Distance"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Order"));
         int distanceColIdx = segmentMap->getAttributeTable().getColumnIndex("Metric Shortest Path Distance");
@@ -100,7 +100,7 @@ TEST_CASE("Shortest paths working examples", "") {
     {
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Depth"));
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Order"));
-        SegmentTopologicalShortestPath().run(nullptr, *segmentMap.get(), false);
+        SegmentTopologicalShortestPath(*segmentMap.get()).run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Depth"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Order"));
         int depthColIdx = segmentMap->getAttributeTable().getColumnIndex("Topological Shortest Path Depth");
