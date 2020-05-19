@@ -71,31 +71,25 @@ void SegmentPathsMainWindow::OnShortestPath(MainWindow *mainWindow, PathType pat
         return;
     }
 
-    class SegmentPathsComm : public CMSCommunicator {
-        PathType m_pathType;
-        bool run(QGraphDoc &pDoc) {
-            return true;
-        }
-
-      public:
-        SegmentPathsComm(PathType pathType) : m_pathType(pathType) {}
-    };
-
     graphDoc->m_communicator = new CMSCommunicator();
     switch (pathType) {
     case PathType::ANGULAR:
-        graphDoc->m_communicator->setAnalysis(std::unique_ptr<IAnalysis>(new SegmentTulipShortestPath(graphDoc->m_meta_graph->getDisplayedShapeGraph())));
+        graphDoc->m_communicator->setAnalysis(std::unique_ptr<IAnalysis>(
+            new SegmentTulipShortestPath(graphDoc->m_meta_graph->getDisplayedShapeGraph())));
         break;
     case PathType::METRIC:
-        graphDoc->m_communicator->setAnalysis(std::unique_ptr<IAnalysis>(new SegmentMetricShortestPath(graphDoc->m_meta_graph->getDisplayedShapeGraph())));
+        graphDoc->m_communicator->setAnalysis(std::unique_ptr<IAnalysis>(
+            new SegmentMetricShortestPath(graphDoc->m_meta_graph->getDisplayedShapeGraph())));
         break;
     case PathType::TOPOLOGICAL:
-        graphDoc->m_communicator->setAnalysis(std::unique_ptr<IAnalysis>(new SegmentTopologicalShortestPath(graphDoc->m_meta_graph->getDisplayedShapeGraph())));
+        graphDoc->m_communicator->setAnalysis(std::unique_ptr<IAnalysis>(
+            new SegmentTopologicalShortestPath(graphDoc->m_meta_graph->getDisplayedShapeGraph())));
         break;
     }
     graphDoc->m_communicator->SetFunction(CMSCommunicator::FROMCONNECTOR);
     graphDoc->m_communicator->setSuccessUpdateFlags(QGraphDoc::NEW_DATA);
-    graphDoc->m_communicator->setSuccessRedrawFlags(QGraphDoc::VIEW_ALL, QGraphDoc::REDRAW_POINTS, QGraphDoc::NEW_DATA);
+    graphDoc->m_communicator->setSuccessRedrawFlags(QGraphDoc::VIEW_ALL, QGraphDoc::REDRAW_POINTS,
+                                                    QGraphDoc::NEW_DATA);
 
     graphDoc->CreateWaitDialog(tr("Calculating shortest path..."));
     graphDoc->m_thread.render(graphDoc);
