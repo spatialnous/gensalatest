@@ -32,6 +32,13 @@
 #include "salalib/isovistdef.h"
 #include <vector>
 
+#define CONCAT_(x,y) x##y
+#define CONCAT(x,y) CONCAT_(x,y)
+#define DO_TIMED(message, code)\
+    SimpleTimer CONCAT(t_, __LINE__); \
+    code; \
+    perfWriter.addData(message, CONCAT(t_, __LINE__).getTimeInSeconds());
+
 class Line;
 class Point2f;
 

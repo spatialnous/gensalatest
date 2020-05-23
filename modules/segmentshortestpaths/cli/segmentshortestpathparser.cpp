@@ -111,13 +111,6 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp, IPerformanceSi
 
     std::unique_ptr<Communicator> comm(new ICommunicator());
 
-#define CONCAT_(x, y) x##y
-#define CONCAT(x, y) CONCAT_(x, y)
-#define DO_TIMED(message, code)                                                                                       \
-    SimpleTimer CONCAT(t_, __LINE__);                                                                                 \
-    code;                                                                                                             \
-    perfWriter.addData(message, CONCAT(t_, __LINE__).getTimeInSeconds());
-
     switch (m_stepType) {
     case SegmentShortestPathParser::StepType::TULIP: {
         DO_TIMED("Calculating tulip shortest path",
