@@ -19,10 +19,12 @@
 QMenu *MainWindowHelpers::getOrAddRootMenu(MainWindow *mainWindow, QString menuTitle) {
     QMenuBar *menuBar = mainWindow->menuBar();
     QMenu *menu = nullptr;
-    for (auto it = menuBar->actions().begin(); it != menuBar->actions().end(); it++) {
-        QMenu *childMenu = (*it)->menu();
-        if (childMenu != nullptr && childMenu->title() == menuTitle) {
-            menu = childMenu;
+    foreach (QAction *action, menuBar->actions()) {
+        if (action->menu()) {
+            QMenu *childMenu = action->menu();
+            if (childMenu != nullptr && childMenu->title() == menuTitle) {
+                menu = childMenu;
+            }
         }
     }
     if (menu == nullptr) {
@@ -33,10 +35,12 @@ QMenu *MainWindowHelpers::getOrAddRootMenu(MainWindow *mainWindow, QString menuT
 
 QMenu *MainWindowHelpers::getOrAddMenu(QMenu *parent, QString menuTitle) {
     QMenu *menu = nullptr;
-    for (auto it = parent->actions().begin(); it != parent->actions().end(); it++) {
-        QMenu *childMenu = (*it)->menu();
-        if (childMenu != nullptr && childMenu->title() == menuTitle) {
-            menu = childMenu;
+    foreach (QAction *action, parent->actions()) {
+        if (action->menu()) {
+            QMenu *childMenu = action->menu();
+            if (childMenu != nullptr && childMenu->title() == menuTitle) {
+                menu = childMenu;
+            }
         }
     }
     if (menu == nullptr) {
