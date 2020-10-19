@@ -23,6 +23,7 @@
 bool SegmentMetricShortestPath::run(Communicator *) {
 
     AttributeTable &attributes = m_map.getAttributeTable();
+    int shapeCount = m_map.getShapeCount();
 
     bool retvar = true;
 
@@ -34,7 +35,7 @@ bool SegmentMetricShortestPath::run(Communicator *) {
     // quick through to find the longest seg length
     std::vector<float> seglengths;
     float maxseglength = 0.0f;
-    for (size_t cursor = 0; cursor < m_map.getShapeCount(); cursor++) {
+    for (size_t cursor = 0; cursor < shapeCount; cursor++) {
         AttributeRow &row = m_map.getAttributeRowFromShapeIndex(cursor);
         axialrefs.push_back(row.getValue("Axial Line Ref"));
         seglengths.push_back(row.getValue("Segment Length"));
@@ -45,8 +46,8 @@ bool SegmentMetricShortestPath::run(Communicator *) {
 
     int maxbin = 512;
 
-    std::vector<unsigned int> seen(m_map.getShapeCount(), 0xffffffff);
-    std::vector<TopoMetSegmentRef> audittrail(m_map.getShapeCount());
+    std::vector<unsigned int> seen(shapeCount, 0xffffffff);
+    std::vector<TopoMetSegmentRef> audittrail(shapeCount);
     std::vector<int> list[512]; // 512 bins!
     int open = 0;
 
