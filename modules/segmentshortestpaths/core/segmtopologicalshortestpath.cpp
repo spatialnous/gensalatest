@@ -72,7 +72,7 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm) {
     bool refFound = false;
 
     while (open != 0) {
-        while (list[bin].size() == 0) {
+        while (list[bin].empty()) {
             bin++;
             segdepth += 1;
             if (bin == maxbin) {
