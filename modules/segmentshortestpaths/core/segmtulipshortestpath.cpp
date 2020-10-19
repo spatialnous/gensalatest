@@ -60,7 +60,7 @@ bool SegmentTulipShortestPath::run(Communicator *) {
     int depthlevel = 0;
     auto binIter = bins.begin();
     int currentbin = 0;
-    while (opencount) {
+    while (opencount && !refFound) {
         while (binIter->empty()) {
             depthlevel++;
             binIter++;
@@ -122,8 +122,6 @@ bool SegmentTulipShortestPath::run(Communicator *) {
                 break;
             }
         }
-        if (refFound)
-            break;
     }
 
     auto refToParent = parents.find(refTo);

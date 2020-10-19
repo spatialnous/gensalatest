@@ -72,7 +72,7 @@ bool SegmentMetricShortestPath::run(Communicator *) {
     std::map<unsigned int, unsigned int> parents;
     bool refFound = false;
 
-    while (open != 0) {
+    while (open != 0 && !refFound) {
         while (list[bin].empty()) {
             bin++;
             segdepth += 1;
@@ -127,8 +127,6 @@ bool SegmentMetricShortestPath::run(Communicator *) {
             }
             iter++;
         }
-        if (refFound)
-            break;
     }
 
     auto refToParent = parents.find(refTo);
