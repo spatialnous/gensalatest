@@ -45,14 +45,10 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm) {
 
     int maxbin = 2;
 
-    std::vector<unsigned int> seen(m_map.getShapeCount());
+    std::vector<unsigned int> seen(m_map.getShapeCount(), 0xffffffff);
     std::vector<TopoMetSegmentRef> audittrail(m_map.getShapeCount());
     std::vector<int> list[512]; // 512 bins!
     int open = 0;
-
-    for (size_t i = 0; i < m_map.getShapeCount(); i++) {
-        seen[i] = 0xffffffff;
-    }
 
     auto &selected = m_map.getSelSet();
     if (selected.size() != 2) {
