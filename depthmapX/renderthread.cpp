@@ -100,7 +100,7 @@ void RenderThread::run()
          break;
 
       case CMSCommunicator::IMPORTMIF:
-         ok = pDoc->m_meta_graph->loadMifMap( comm, *comm, comm->GetInfile2() );
+         ok = pDoc->m_meta_graph->loadMifMap( comm, comm->getInFileStream(), comm->GetInfile2() );
          switch (ok) {
          case MINFO_MULTIPLE:
              //BUG
