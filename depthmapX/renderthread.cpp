@@ -37,6 +37,14 @@ inline void CMSCommunicator::CommPostMessage(int m, int x) const
    pDoc->ProcPostMessage(m, x);
 }
 
+void CMSCommunicator::runAnalysis(QGraphDoc &graphDoc) {
+    bool success = m_analysis->run(this);
+    if (success) {
+        graphDoc.SetUpdateFlag(m_successUpdateFlagType, m_successUpdateFlagModified);
+        graphDoc.SetRedrawFlag(m_successRedrawFlagViewType, m_successRedrawFlag, m_successRedrawReason);
+    }
+}
+
 //! [0]
 RenderThread::RenderThread(QObject *parent)
     : QThread(parent)
@@ -469,6 +477,11 @@ void RenderThread::run()
           }
          }
          break;
+      case CMSCommunicator::FROMCONNECTOR:
+        {
+          comm->runAnalysis(*pDoc);
+          break;
+        }
       }
 
       emit closeWaitDialog();

@@ -30,16 +30,6 @@
 
 namespace dm_runmethods
 {
-
-
-#define CONCAT_(x,y) x##y
-#define CONCAT(x,y) CONCAT_(x,y)
-#define DO_TIMED(message, code)\
-    SimpleTimer CONCAT(t_, __LINE__); \
-    code; \
-    perfWriter.addData(message, CONCAT(t_, __LINE__).getTimeInSeconds());
-
-
     std::unique_ptr<MetaGraph> loadGraph(const std::string& filename, IPerformanceSink &perfWriter) {
         std::unique_ptr<MetaGraph> mgraph(new MetaGraph);
         std::cout << "Loading graph " << filename << std::flush;
