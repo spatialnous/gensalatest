@@ -762,6 +762,26 @@
                 "-crsl":"40"
             }
         }],
+        "convert_axial_segment_copy_attributes":[{
+            "infile": "../../../testdata/barnsbury_axial.graph",
+            "outfile": "out.graph",
+            "mode": "MAPCONVERT",
+            "extraArgs": {
+                "-co": "segment",
+                "-con": "Segment Map Test",
+                "-coc": ""
+            }
+        }],
+        "convert_axial_segment_copy_attributes_non_cont_keys":[{
+            "infile": "../../../testdata/axmap_noncont_keys.graph",
+            "outfile": "out.graph",
+            "mode": "MAPCONVERT",
+            "extraArgs": {
+                "-co": "segment",
+                "-con": "Segment Map Test",
+                "-coc": ""
+            }
+        }],
         "convert_axial_data_axial":[{
             "infile": "../../../testdata/barnsbury_axial.graph",
             "outfile": "out.graph",
