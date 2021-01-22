@@ -71,9 +71,21 @@ qt5_wrap_ui(UI_HDRS
 
 qt5_add_resources(DM_RSRC resource.qrc dialogs/settings/settingsdialog.qrc)
 
-if (MSVC)
+if (WIN32)
         add_executable(${depthmapX} WIN32 ${depthmapX_SRCS} ${UI_HDRS} ${DM_RSRC} icons.rc)
-endif(MSVC)
+        if(MINGW)
+            # https://stackoverflow.com/a/18138926
+            # MinGW compilation does not bring in the required DLLs to make the executable self-contained
+            # The missing DLLs are:
+            # - libstdc++-6.dll
+            # - libwinpthread-1.dll
+            # - libgcc_s_seh-1.dll
+            # Additionally, windeployqt does not drag them into the build directory, so it might be
+            # necessary to manually find and copy them after compilation
+            set(CMAKE_CXX_STANDARD_LIBRARIES "-static-libgcc -static-libstdc++ -lwsock32 -lws2_32 ${CMAKE_CXX_STANDARD_LIBRARIES}")
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Bstatic,--whole-archive -lwinpthread -Wl,--no-whole-archive")
+        endif(MINGW)
+endif(WIN32)
 if(UNIX AND NOT APPLE)
         add_executable(${depthmapX} ${depthmapX_SRCS} ${UI_HDRS} ${DM_RSRC})
         if (Qt5_POSITION_INDEPENDENT_CODE)
