@@ -18,7 +18,7 @@
 #include <qmath.h>
 
 // clang-format off
-static const char *vertexShaderSourceCore =
+static const char *vertexShaderSourceCore = // auto-format hack
         "#version 150\n"
         "in vec4 vertex;\n"
         "uniform mat4 projMatrix;\n"
@@ -27,7 +27,7 @@ static const char *vertexShaderSourceCore =
         "   gl_Position = projMatrix * mvMatrix * vertex;\n"
         "}\n";
 
-static const char *fragmentShaderSourceCore =
+static const char *fragmentShaderSourceCore = // auto-format hack
         "#version 150\n"
         "in vec4 colour;\n"
         "out highp vec4 fragColor;\n"
@@ -35,7 +35,7 @@ static const char *fragmentShaderSourceCore =
         "   fragColor = colour;\n"
         "}\n";
 
-static const char *vertexShaderSource =
+static const char *vertexShaderSource = // auto-format hack
         "attribute vec4 vertex;\n"
         "attribute vec4 colour;\n"
         "varying vec4 fragColour;\n"
@@ -46,7 +46,7 @@ static const char *vertexShaderSource =
         "   fragColour = colour;\n"
         "}\n";
 
-static const char *fragmentShaderSource =
+static const char *fragmentShaderSource = // auto-format hack
         "varying highp vec4 fragColour;\n"
         "void main() {\n"
         "   gl_FragColor = fragColour;\n"
@@ -73,7 +73,8 @@ void GLTriangles::setupVertexAttribs() {
     f->glEnableVertexAttribArray(0);
     f->glEnableVertexAttribArray(1);
     f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, DATA_DIMENSIONS * sizeof(GLfloat), 0);
-    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, DATA_DIMENSIONS * sizeof(GLfloat), (void*)(3*sizeof(GLfloat)));
+    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, DATA_DIMENSIONS * sizeof(GLfloat),
+                             (void *)(3 * sizeof(GLfloat)));
     m_vbo.release();
 }
 
