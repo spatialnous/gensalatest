@@ -68,6 +68,7 @@ void GLLinesUniform::loadLineData(const std::vector<SimpleLine> &lines, const QR
     m_colour.setX(qRed(lineColour) / 255.0f);
     m_colour.setY(qGreen(lineColour) / 255.0f);
     m_colour.setZ(qBlue(lineColour) / 255.0f);
+    m_colour.setW(qAlpha(lineColour) / 255.0f);
 }
 
 void GLLinesUniform::setupVertexAttribs() {
