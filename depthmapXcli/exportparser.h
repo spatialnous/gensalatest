@@ -36,7 +36,8 @@ public:
                   "    pointmap-links-csv\n"\
                   "    shapegraph-map-csv\n"\
                   "    shapegraph-map-mif\n"\
-                  "    shapegraph-connections-csv\n";
+                  "    shapegraph-connections-csv\n"\
+                  "    shapegraph-links-unlinks-csv\n";
     }
 
 public:
@@ -51,7 +52,8 @@ public:
         POINTMAP_LINKS_CSV,
         SHAPEGRAPH_MAP_CSV,
         SHAPEGRAPH_MAP_MIF,
-        SHAPEGRAPH_CONNECTIONS_CSV
+        SHAPEGRAPH_CONNECTIONS_CSV,
+        SHAPEGRAPH_LINKS_UNLINKS_CSV
     };
     ExportMode getExportMode() const { return m_exportMode; }
 
