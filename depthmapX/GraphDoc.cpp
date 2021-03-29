@@ -1349,20 +1349,21 @@ void QGraphDoc::OnMakeIsovist(const Point2f& seed, double angle)
       return;
    }
 
-   CIsovistPathDlg dlg;
-   if (dlg.exec() == QDialog::Accepted)
-   {
-      double fov = dlg.fov_angle;
-      // This is easy too... too easy... hmm... crossed-fingers, here goes:
-      m_communicator = new CMSCommunicator();
-      m_communicator->SetSeedPoint( seed );
-      m_communicator->SetSeedAngle( angle );
-      m_communicator->SetSeedFoV( fov );
-      CreateWaitDialog(tr("Constructing BSP tree to calculate isovist..."));
-      m_communicator->SetFunction( CMSCommunicator::MAKEISOVIST );
+   m_communicator = new CMSCommunicator();
+   m_communicator->SetSeedPoint(seed);
+   m_communicator->SetSeedAngle(angle);
 
-	  m_thread.render(this);
+   if (angle >= 0) {
+       CIsovistPathDlg dlg;
+       if (dlg.exec() == QDialog::Accepted) {
+           m_communicator->SetSeedFoV(dlg.fov_angle);
+       }
    }
+
+   CreateWaitDialog(tr("Constructing BSP tree to calculate isovist..."));
+   m_communicator->SetFunction(CMSCommunicator::MAKEISOVIST);
+
+   m_thread.render(this);
 }
 
 void QGraphDoc::OnToolsIsovistpath()
