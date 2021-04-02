@@ -189,21 +189,6 @@ inline void ICommunicator::CommPostMessage(int m, int x) const
     }
 }
 
-
-// a helpful little function...
-
-inline bool qtimer( time_t& t1, time_t timeout )
-{
-   /* static */ timeb time2; // static removed for multithreaded usage
-   ftime( &time2 );
-   time_t t2 = (time2.time % 100) * 1000 + time2.millitm;
-   if ((t2 - t1) > timeout || (t2 - t1) < 0) { // also catch a loop
-      t1 = t2;
-      return true;
-   }
-   return false;
-}
-
 }
 
 #endif
