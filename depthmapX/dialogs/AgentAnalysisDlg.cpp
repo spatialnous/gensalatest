@@ -76,8 +76,8 @@ void CAgentAnalysisDlg::showEvent(QShowEvent * event)
 	c_timesteps->setText(QString("%1").arg(m_timesteps));
 	c_release_location->setChecked(m_release_location);
 	c_release_rate->setText(QString("%1").arg(m_release_rate));
-	c_fov->setText(QString("%1").arg(m_fov));
-	c_steps->setText(QString("%1").arg(m_steps));
+    c_fov->setValue(m_fov);
+    c_steps->setValue(m_steps);
 	c_frames->setText(QString("%1").arg(m_frames));
 	if (m_record_trails)
 	{
