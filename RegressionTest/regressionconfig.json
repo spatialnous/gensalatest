@@ -343,6 +343,14 @@
                 "-xf": ""
             }
         }],
+        "axial_makelines_polywall": [{
+            "infile": "../../../testdata/polywall.graph",
+            "outfile": "out.graph",
+            "mode": "AXIAL",
+            "extraArgs":{
+                "-xl": "4300,1500"
+            }
+        }],
         "axial_makelines_rooms": [{
             "infile": "../../../testdata/rooms.dxf",
             "outfile": "out.graph",
