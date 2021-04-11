@@ -17,7 +17,7 @@
 #include "gllinesuniform.h"
 #include <qmath.h>
 
-static const char *vertexShaderSourceCore =
+static const char *vertexShaderSourceCore = // auto-format hack
     "#version 150\n"
     "in vec4 vertex;\n"
     "uniform mat4 projMatrix;\n"
@@ -26,7 +26,7 @@ static const char *vertexShaderSourceCore =
     "   gl_Position = projMatrix * mvMatrix * vertex;\n"
     "}\n";
 
-static const char *fragmentShaderSourceCore =
+static const char *fragmentShaderSourceCore = // auto-format hack
     "#version 150\n"
     "uniform vec4 colourVector;\n"
     "out highp vec4 fragColor;\n"
@@ -34,7 +34,7 @@ static const char *fragmentShaderSourceCore =
     "   fragColor = colourVector;\n"
     "}\n";
 
-static const char *vertexShaderSource =
+static const char *vertexShaderSource = // auto-format hack
     "attribute vec4 vertex;\n"
     "uniform mat4 projMatrix;\n"
     "uniform mat4 mvMatrix;\n"
@@ -42,7 +42,7 @@ static const char *vertexShaderSource =
     "   gl_Position = projMatrix * mvMatrix * vertex;\n"
     "}\n";
 
-static const char *fragmentShaderSource =
+static const char *fragmentShaderSource = // auto-format hack
     "uniform highp vec4 colourVector;\n"
     "void main() {\n"
     "   gl_FragColor = colourVector;\n"
@@ -53,32 +53,25 @@ static const char *fragmentShaderSource =
  * This class is an OpenGL representation of  multiple lines of uniform colour
  */
 
-GLLinesUniform::GLLinesUniform()
-    : m_count(0),
-      m_program(0)
-{
+GLLinesUniform::GLLinesUniform() : m_count(0), m_program(0) {}
 
-}
-
-void GLLinesUniform::loadLineData(const std::vector<SimpleLine>& lines, const QRgb &lineColour)
-{
+void GLLinesUniform::loadLineData(const std::vector<SimpleLine> &lines, const QRgb &lineColour) {
     m_built = false;
 
     m_count = 0;
     m_data.resize(lines.size() * 2 * DATA_DIMENSIONS);
 
-    for (auto& line: lines)
-    {
+    for (auto &line : lines) {
         add(QVector3D(line.start().x, line.start().y, 0.0f));
         add(QVector3D(line.end().x, line.end().y, 0.0f));
     }
-    m_colour.setX(qRed(lineColour)/255.0f);
-    m_colour.setY(qGreen(lineColour)/255.0f);
-    m_colour.setZ(qBlue(lineColour)/255.0f);
+    m_colour.setX(qRed(lineColour) / 255.0f);
+    m_colour.setY(qGreen(lineColour) / 255.0f);
+    m_colour.setZ(qBlue(lineColour) / 255.0f);
+    m_colour.setW(qAlpha(lineColour) / 255.0f);
 }
 
-void GLLinesUniform::setupVertexAttribs()
-{
+void GLLinesUniform::setupVertexAttribs() {
     m_vbo.bind();
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
     f->glEnableVertexAttribArray(0);
@@ -86,12 +79,14 @@ void GLLinesUniform::setupVertexAttribs()
     m_vbo.release();
 }
 
-void GLLinesUniform::initializeGL(bool coreProfile)
-{
-    if(m_data.size() == 0) return;
+void GLLinesUniform::initializeGL(bool coreProfile) {
+    if (m_data.size() == 0)
+        return;
     m_program = new QOpenGLShaderProgram;
-    m_program->addShaderFromSourceCode(QOpenGLShader::Vertex, coreProfile ? vertexShaderSourceCore : vertexShaderSource);
-    m_program->addShaderFromSourceCode(QOpenGLShader::Fragment, coreProfile ? fragmentShaderSourceCore : fragmentShaderSource);
+    m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
+                                       coreProfile ? vertexShaderSourceCore : vertexShaderSource);
+    m_program->addShaderFromSourceCode(QOpenGLShader::Fragment,
+                                       coreProfile ? fragmentShaderSourceCore : fragmentShaderSource);
     m_program->bindAttributeLocation("vertex", 0);
     m_program->link();
 
@@ -120,7 +115,7 @@ void GLLinesUniform::initializeGL(bool coreProfile)
 }
 
 void GLLinesUniform::updateGL(bool coreProfile) {
-    if(m_program == 0) {
+    if (m_program == 0) {
         // has not been initialised yet, do that instead
         initializeGL(coreProfile);
     } else {
@@ -131,27 +126,26 @@ void GLLinesUniform::updateGL(bool coreProfile) {
     }
 }
 
-void GLLinesUniform::updateColour(const QRgb &lineColour)
-{
-    m_colour.setX(qRed(lineColour)/255.0f);
-    m_colour.setY(qGreen(lineColour)/255.0f);
-    m_colour.setZ(qBlue(lineColour)/255.0f);
+void GLLinesUniform::updateColour(const QRgb &lineColour) {
+    m_colour.setX(qRed(lineColour) / 255.0f);
+    m_colour.setY(qGreen(lineColour) / 255.0f);
+    m_colour.setZ(qBlue(lineColour) / 255.0f);
     m_program->bind();
     m_program->setUniformValue(m_colourVectorLoc, m_colour);
     m_program->release();
 }
 
-void GLLinesUniform::cleanup()
-{
-    if(!m_built) return;
+void GLLinesUniform::cleanup() {
+    if (!m_built)
+        return;
     m_vbo.destroy();
     delete m_program;
     m_program = 0;
 }
 
-void GLLinesUniform::paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView, const QMatrix4x4 &m_mModel)
-{
-    if(!m_built) return;
+void GLLinesUniform::paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView, const QMatrix4x4 &m_mModel) {
+    if (!m_built)
+        return;
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
     m_program->bind();
     m_program->setUniformValue(m_projMatrixLoc, m_mProj);
@@ -163,8 +157,7 @@ void GLLinesUniform::paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mVie
     m_program->release();
 }
 
-void GLLinesUniform::add(const QVector3D &v)
-{
+void GLLinesUniform::add(const QVector3D &v) {
     GLfloat *p = m_data.data() + m_count;
     *p++ = v.x();
     *p++ = v.y();

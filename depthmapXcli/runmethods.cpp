@@ -716,6 +716,15 @@ namespace dm_runmethods
                 stream.close();
                 break;
             }
+            case ExportParser::SHAPEGRAPH_LINKS_UNLINKS_CSV:
+            {
+                ShapeGraph& currentMap = mgraph->getDisplayedShapeGraph();
+                std::ofstream stream(cmdP.getOuputFile().c_str());
+                DO_TIMED("Writing shapegraph links and unlinks",
+                         currentMap.writeLinksUnlinksAsPairsCSV(stream))
+                stream.close();
+                break;
+            }
             default:
             {
                 throw depthmapX::SetupCheckException("Error, unsupported export mode");

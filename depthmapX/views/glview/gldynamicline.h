@@ -18,9 +18,9 @@
 
 #include "depthmapX/views/glview/gldynamicrect.h"
 
-class GLDynamicLine : public GLDynamicRect
-{
-public:
+class GLDynamicLine : public GLDynamicRect {
+  public:
     GLDynamicLine();
-    void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView, const QMatrix4x4 &m_mModel, const QMatrix2x2 &m_selectionBounds);
+    void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView, const QMatrix4x4 &m_mModel,
+                 const QMatrix2x2 &m_selectionBounds);
 };

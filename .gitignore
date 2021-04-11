@@ -2,7 +2,7 @@
 .DS_Store
 depthmapX-build
 build
-build-debug
+build-*
 RegressionTest/rundir
 __pycache__
 CMakeLists.txt.user
