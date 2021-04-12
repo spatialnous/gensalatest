@@ -11,8 +11,8 @@
 #ifdef __linux__
 #include "GL/glu.h"
 #elif _WIN32
+#include "windows.h"
 #include "GL/glu.h"
-#include <windows.h>
 #else
 #include "glu.h"
 #endif
