@@ -168,7 +168,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="c_fov"/>
+      <widget class="QSpinBox" name="c_fov">
+       <property name="maximum">
+        <number>32</number>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -190,7 +194,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="c_steps"/>
+      <widget class="QSpinBox" name="c_steps"/>
      </item>
     </layout>
    </widget>
