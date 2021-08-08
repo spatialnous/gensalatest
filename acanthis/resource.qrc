@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/acanthis.png</file>
+        <file>images/acanthis.svg</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,9 @@
+target_sources(acanthis
+    PUBLIC
+        licenseagreement.h
+    PRIVATE
+        licenseagreement.cpp
+        settings/generalpage.cpp
+        settings/interfacepage.cpp
+        settings/settingsdialog.cpp
+)

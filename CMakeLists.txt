@@ -57,5 +57,6 @@ add_subdirectory(cliTest)
 add_subdirectory(depthmapXTest)
 add_subdirectory(depthmapX)
 add_subdirectory(GuiUnitTest)
+add_subdirectory(acanthis)
 add_subdirectory(moduleTest)
 
