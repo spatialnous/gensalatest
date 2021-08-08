@@ -16,7 +16,7 @@
 #pragma once
 
 #include "depthmapX/mainwindowfactory.h"
-#include "version.h"
+#include "interfaceversion.h"
 #include "settingsimpl.h"
 #include <QApplication>
 #include <QFileOpenEvent>

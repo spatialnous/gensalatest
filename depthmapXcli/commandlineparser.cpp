@@ -17,7 +17,7 @@
 #include "exceptions.h"
 #include "imodeparserfactory.h"
 #include "parsingutils.h"
-#include "version.h"
+#include "interfaceversion.h"
 #include <iostream>
 #include <cstring>
 #include <algorithm>

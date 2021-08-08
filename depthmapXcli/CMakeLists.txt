@@ -2,6 +2,7 @@ set(depthmapXcli depthmapXcli)
 
 set(depthmapXcli_SRCS
     main.cpp
+    interfaceversion.h
     printcommunicator.cpp
     commandlineparser.cpp
     runmethods.cpp

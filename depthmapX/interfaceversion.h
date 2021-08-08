@@ -1,4 +1,3 @@
-// depthmapX - spatial network analysis platform
 // Copyright (C) 2017 Christian Sailer
 // Copyright (C) 2021 Petros Koutsolampros
 
@@ -15,21 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef VERSION_H
-#define VERSION_H
+#pragma once
 
 #include "version_defs.h"
 
-// use these to define the depthmap versions
-#define DEPTHMAPX_MAJOR_VERSION 0
-#define DEPTHMAPX_MINOR_VERSION 8
-#define DEPTHMAPX_REVISION_VERSION 0
+#include "../version.h"
 
-#define DEPTHMAP_MODULE_VERSION 10.04
+#define INTERFACE_MAJOR_VERSION DEPTHMAPX_MAJOR_VERSION
+#define INTERFACE_MINOR_VERSION DEPTHMAPX_MINOR_VERSION
+#define INTERFACE_REVISION_VERSION DEPTHMAPX_REVISION_VERSION
 
 // leave these alone - C Preprocessor magic to get stuff to the right format
-#define STRINGIFY(v) #v
-#define TITLE_BASE_FORMAT(interface, version, minor, revision)                                                        \
-    interface " " STRINGIFY(version) "." STRINGIFY(minor) "." STRINGIFY(revision)
-
-#endif // VERSION_H
+#define TITLE_BASE                                                                                                    \
+    TITLE_BASE_FORMAT("depthmapX", INTERFACE_MAJOR_VERSION, INTERFACE_MINOR_VERSION, INTERFACE_REVISION_VERSION)
