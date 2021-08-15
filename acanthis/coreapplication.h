@@ -19,17 +19,17 @@
 #include "mainwindowfactory.h"
 #include "settingsimpl.h"
 
-#include <QApplication>
 #include <QFileOpenEvent>
+#include <QGuiApplication>
 #include <QtDebug>
 
-class CoreApplication : public QApplication {
+class CoreApplication : public QGuiApplication {
   private:
     std::string m_fileToLoad;
     std::unique_ptr<MainWindow> mMainWindow;
 
   public:
-    CoreApplication(int &argc, char **argv) : QApplication(argc, argv) {}
+    CoreApplication(int &argc, char **argv) : QGuiApplication(argc, argv) {}
 
     bool event(QEvent *event) {
         // this event is triggered in macOS, either by calling "Open with..."
@@ -41,7 +41,7 @@ class CoreApplication : public QApplication {
             mMainWindow->loadFile(m_fileToLoad);
         }
 
-        return QApplication::event(event);
+        return QGuiApplication::event(event);
     }
 
     int exec();

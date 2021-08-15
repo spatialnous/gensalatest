@@ -6,7 +6,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 
 # Find the QtWidgets library
-find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS Core Qml Quick Gui Gui OpenGL REQUIRED)
 
 add_compile_definitions(_ACANTHIS)
 
@@ -85,7 +85,7 @@ set(MODULES_CORE FALSE)
 set(MODULES_CORE_TEST FALSE)
 add_subdirectory(../modules modules)
 
-target_link_libraries(${projectName} salalib genlib mgraph440 Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL
+target_link_libraries(${projectName} salalib genlib mgraph440 Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick Qt5::OpenGL
     OpenGL::GL OpenGL::GLU ${modules_gui} ${modules_core})
 
 add_subdirectory(dialogs)

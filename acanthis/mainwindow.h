@@ -19,10 +19,10 @@
 
 #include "graphdocument.h"
 
-#include <QMainWindow>
 #include <QMdiArea>
+#include <QtQuick/QQuickView>
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QQuickView {
     Q_OBJECT
 
     struct GraphWindows {
@@ -32,11 +32,20 @@ class MainWindow : public QMainWindow {
         GraphWindows(std::string fileName) : m_graphDocument(fileName){};
     };
 
+    std::map<std::string, GraphWindows> m_graphsAndWindows;
+
   public:
-    explicit MainWindow(const std::string &fileToLoad, Settings &settings, QWidget *parent = 0);
+    explicit MainWindow(const std::string &fileToLoad, Settings &settings);
     void loadFile(const std::string fileName);
+    void newFile(){};
+    void saveFile(){};
 
   private:
     QMdiArea *m_mdiArea;
-    std::map<std::string, GraphWindows> m_graphsAndWindows;
+    //    std::map<std::string, QMenu *> m_menus;
+
+  private: // functions
+    void createActions();
+    void createDockWindows();
+    void toggleAboutDialog(){};
 };

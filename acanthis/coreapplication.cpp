@@ -15,6 +15,7 @@
 
 #include "coreapplication.h"
 #include <QDesktopWidget>
+#include <QtQuick/QQuickView>
 
 int CoreApplication::exec() {
     SettingsImpl settings(new DefaultSettingsFactory);
@@ -37,9 +38,11 @@ int CoreApplication::exec() {
     }
 
     mMainWindow = MainWindowFactory::getMainWindow(fileToLoad, settings);
+    mMainWindow->setResizeMode(QQuickView::SizeRootObjectToView);
+    mMainWindow->setSource(QUrl("qrc:///scenegraph/openglunderqml/main.qml"));
     mMainWindow->show();
 
-    QApplication::setWindowIcon(QIcon(":/images/acanthis.png"));
+    QGuiApplication::setWindowIcon(QIcon(":/images/acanthis.png"));
 
-    return QApplication::exec();
+    return QGuiApplication::exec();
 }
