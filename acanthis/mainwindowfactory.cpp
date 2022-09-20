@@ -19,9 +19,11 @@
 #include <memory>
 
 namespace MainWindowFactory {
-    std::unique_ptr<MainWindow> getMainWindow(const std::string &fileToLoad, Settings &settings) {
+    std::unique_ptr<MainWindow> getMainWindow(const std::string &fileToLoad,
+                                              Settings &settings) {
         return std::unique_ptr<MainWindow>(new MainWindow(fileToLoad, settings));
     }
 
-    std::unique_ptr<QDialog> getLicenseDialog() { return std::unique_ptr<QDialog>(new LicenseAgreement); }
+    //    std::unique_ptr<QDialog> getLicenseDialog() { return
+    //    std::unique_ptr<QDialog>(new LicenseAgreement); }
 } // namespace MainWindowFactory

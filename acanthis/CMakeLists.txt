@@ -4,6 +4,7 @@ set(projectName acanthis)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
 
 # Find the QtWidgets library
 find_package(Qt5 COMPONENTS Core Qml Quick Gui Gui OpenGL REQUIRED)
@@ -16,8 +17,15 @@ set(acanthis_HDRS
     settingsimpl.h
     settings.h
     mainwindow.h
+    documentmanager.h
     graphdocument.h
     interfaceversion.h
+    maplayer.h
+    shapemaplayer.h
+    pixelmaplayer.h
+    mapmodel.h
+    attributelayer.h
+    attributemodel.h
 )
 
 set(acanthis_SRCS
@@ -26,7 +34,14 @@ set(acanthis_SRCS
     mainwindowfactory.cpp
     settingsimpl.cpp
     mainwindow.cpp
+    documentmanager.cpp
     graphdocument.cpp
+    maplayer.cpp
+    shapemaplayer.cpp
+    pixelmaplayer.cpp
+    mapmodel.cpp
+    attributelayer.cpp
+    attributemodel.cpp
 )
 
 qt5_wrap_ui(acanthis_UI
@@ -74,6 +89,11 @@ if(APPLE)
             MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/resources/Info.plist)
 endif(APPLE)
 
+set_target_properties(${projectName} PROPERTIES
+    QT_QML_MODULE_VERSION 1.0
+    QT_QML_MODULE_URI acanthis
+)
+
 find_package(OpenGL REQUIRED)
 
 set(modules_gui "" CACHE INTERNAL "modules_gui" FORCE)
@@ -89,3 +109,4 @@ target_link_libraries(${projectName} salalib genlib mgraph440 Qt5::Core Qt5::Gui
     OpenGL::GL OpenGL::GLU ${modules_gui} ${modules_core})
 
 add_subdirectory(dialogs)
+add_subdirectory(glmapview)

@@ -17,10 +17,30 @@
 
 #include "salalib/mgraph.h"
 
-class GraphDocument {
+#include "maplayer.h"
+
+#include <QObject>
+
+class GraphDocument : public QObject {
+    Q_OBJECT
+
+    std::string m_filename;
+
   public:
-    GraphDocument(std::string fileName);
+    GraphDocument(std::string filename);
+
+    MetaGraph &getMetaGraph() const { return *m_metaGraph; }
+    bool hasMetaGraph() const { return m_metaGraph.get() != nullptr; }
+    std::vector<std::unique_ptr<MapLayer>> &getMapLayers() { return m_mapLayers; }
+
+    MapLayer *layerAt(std::size_t index) { return m_mapLayers[index].get(); }
+    AttributeLayer *attributeAt(std::size_t mapIndex, std::size_t attributeIndex) {
+        return &(m_mapLayers[mapIndex]->getAttribute(attributeIndex)); }
+    std::size_t layerCount() { return m_mapLayers.size(); }
+    std::string getFilenameStr() { return m_filename; }
+    Q_INVOKABLE QString getFilename() { return QString::fromStdString(m_filename); }
 
   private:
-    std::unique_ptr<MetaGraph> m_metaGraph;
+    std::unique_ptr<MetaGraph> m_metaGraph = nullptr;
+    std::vector<std::unique_ptr<MapLayer>> m_mapLayers;
 };

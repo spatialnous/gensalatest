@@ -23,6 +23,7 @@
 class Settings;
 
 namespace MainWindowFactory {
-    std::unique_ptr<MainWindow> getMainWindow(const std::string &fileToLoad, Settings &settings);
+    std::unique_ptr<MainWindow> getMainWindow(const std::string &fileToLoad,
+                                              Settings &settings);
     std::unique_ptr<QDialog> getLicenseDialog();
 } // namespace MainWindowFactory

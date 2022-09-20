@@ -14,21 +14,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "interfacepage.h"
-#include <QtWidgets>
 #include <QColorDialog>
+#include <QtWidgets>
 
 InterfacePage::InterfacePage(Settings &settings, QWidget *parent)
-    : SettingsPage(settings, parent)
-{
+    : SettingsPage(settings, parent) {
     readSettings(settings);
 
     QGroupBox *generalGroup = new QGroupBox(tr("General"));
     QCheckBox *legacyMapCheckBox = new QCheckBox(tr("Legacy map window as default"));
     legacyMapCheckBox->setChecked(m_defaultMapWindowIsLegacy);
-    connect(legacyMapCheckBox, &QCheckBox::stateChanged, [=] () {m_defaultMapWindowIsLegacy = !m_defaultMapWindowIsLegacy;});
+    connect(legacyMapCheckBox, &QCheckBox::stateChanged,
+            [=]() { m_defaultMapWindowIsLegacy = !m_defaultMapWindowIsLegacy; });
     QCheckBox *hoverCheckBox = new QCheckBox(tr("Allow highlighting shapes on hover"));
     hoverCheckBox->setChecked(m_highlightOnHover);
-    connect(hoverCheckBox, &QCheckBox::stateChanged, [=] () {m_highlightOnHover = !m_highlightOnHover;});
+    connect(hoverCheckBox, &QCheckBox::stateChanged,
+            [=]() { m_highlightOnHover = !m_highlightOnHover; });
 
     QVBoxLayout *generalLayout = new QVBoxLayout;
     generalLayout->addWidget(legacyMapCheckBox);
@@ -37,12 +38,12 @@ InterfacePage::InterfacePage(Settings &settings, QWidget *parent)
 
     QGroupBox *interfaceColoursGroup = new QGroupBox(tr("Interface colours"));
     QListWidget *interfaceColoursList = new QListWidget;
-    connect(interfaceColoursList, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
-                this, SLOT(onInterfaceColourlItemClicked(QListWidgetItem*)));
+    connect(interfaceColoursList, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this,
+            SLOT(onInterfaceColourlItemClicked(QListWidgetItem *)));
 
     QListWidgetItem *bgItem = new QListWidgetItem(interfaceColoursList);
     bgItem->setText(tr("Background"));
-    QPixmap pixmap(20,20);
+    QPixmap pixmap(20, 20);
     pixmap.fill(m_background);
     QIcon bgColourIcon(pixmap);
     bgItem->setIcon(bgColourIcon);
@@ -72,12 +73,14 @@ InterfacePage::InterfacePage(Settings &settings, QWidget *parent)
                                 "To see the change close and reopen the file"));
 
     int index = samplesCombo->findData(m_antialiasingSamples);
-    if ( index != -1 ) {
-       samplesCombo->setCurrentIndex(index);
+    if (index != -1) {
+        samplesCombo->setCurrentIndex(index);
     }
 
-    connect(samplesCombo, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated),
-        [=](int index){ m_antialiasingSamples = samplesCombo->itemData(index).toInt();});
+    connect(samplesCombo, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated),
+            [=](int index) {
+                m_antialiasingSamples = samplesCombo->itemData(index).toInt();
+            });
 
     QHBoxLayout *samplesLayout = new QHBoxLayout;
     samplesLayout->addWidget(samplesLabel);
@@ -97,13 +100,12 @@ InterfacePage::InterfacePage(Settings &settings, QWidget *parent)
     setLayout(mainLayout);
 }
 
-void InterfacePage::onInterfaceColourlItemClicked(QListWidgetItem* item)
-{
+void InterfacePage::onInterfaceColourlItemClicked(QListWidgetItem *item) {
     QColor colour = QColorDialog::getColor();
     colourMap[item]->setRed(colour.red());
     colourMap[item]->setGreen(colour.green());
     colourMap[item]->setBlue(colour.blue());
-    QPixmap pixmap(100,100);
+    QPixmap pixmap(100, 100);
     pixmap.fill(colour);
     QIcon bgColourIcon(pixmap);
     item->setIcon(bgColourIcon);

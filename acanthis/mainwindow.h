@@ -19,29 +19,33 @@
 
 #include "graphdocument.h"
 
-#include <QMdiArea>
+//#include <QMdiArea>
 #include <QtQuick/QQuickView>
 
 class MainWindow : public QQuickView {
     Q_OBJECT
 
-    struct GraphWindows {
-        GraphDocument m_graphDocument;
-        std::vector<QMdiSubWindow *> m_windows;
-        QMdiSubWindow *m_activeWindow;
-        GraphWindows(std::string fileName) : m_graphDocument(fileName){};
-    };
+    //    struct GraphWindows {
+    //        GraphDocument m_graphDocument;
+    //        std::vector<QMdiSubWindow *> m_windows;
+    //        QMdiSubWindow *m_activeWindow;
+    //        GraphWindows(std::string fileName) : m_graphDocument(fileName){};
+    //    };
 
-    std::map<std::string, GraphWindows> m_graphsAndWindows;
+    //    std::map<std::string, GraphWindows> m_graphsAndWindows;
+    GraphDocument m_graphDocument;
 
   public:
     explicit MainWindow(const std::string &fileToLoad, Settings &settings);
     void loadFile(const std::string fileName);
     void newFile(){};
     void saveFile(){};
+    Settings &getSettings() { return m_settings; }
+    GraphDocument &getGraphDocument() { return m_graphDocument; }
 
   private:
-    QMdiArea *m_mdiArea;
+    //    QMdiArea *m_mdiArea;
+    Settings &m_settings;
     //    std::map<std::string, QMenu *> m_menus;
 
   private: // functions

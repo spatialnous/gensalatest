@@ -43,16 +43,18 @@ namespace SettingTag {
  */
 class SettingsTransaction {
   public:
-    virtual const QVariant readSetting(const QString &tag, const QVariant &defaultValue = QVariant()) const = 0;
+    virtual const QVariant
+    readSetting(const QString &tag, const QVariant &defaultValue = QVariant()) const = 0;
     virtual void writeSetting(const QString &tag, const QVariant &value) = 0;
     virtual ~SettingsTransaction() {}
 };
 
 /**
  * @brief The Settings class
- * Encapsulates reading/writing settings so we don't have to faff around with constructing QSettings in
- * 7 different location. The read/write methods on this class create a temporary QSettings object, so
- * if you want to read/write more than one setting in one go, use a transaction.
+ * Encapsulates reading/writing settings so we don't have to faff around with constructing
+ * QSettings in 7 different location. The read/write methods on this class create a
+ * temporary QSettings object, so if you want to read/write more than one setting in one
+ * go, use a transaction.
  */
 class Settings : public SettingsTransaction {
   public:

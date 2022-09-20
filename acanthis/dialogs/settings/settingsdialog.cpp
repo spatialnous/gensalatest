@@ -15,12 +15,11 @@
 
 #include <QtWidgets>
 
-#include "settingsdialog.h"
 #include "generalpage.h"
 #include "interfacepage.h"
+#include "settingsdialog.h"
 
-SettingsDialog::SettingsDialog(Settings &settings) : m_settings(settings)
-{
+SettingsDialog::SettingsDialog(Settings &settings) : m_settings(settings) {
     contentsWidget = new QListWidget;
     contentsWidget->setIconSize(QSize(96, 84));
     contentsWidget->setMovement(QListView::Static);
@@ -33,20 +32,19 @@ SettingsDialog::SettingsDialog(Settings &settings) : m_settings(settings)
 
     std::vector<std::unique_ptr<SettingsPage>>::iterator iter = settingsPages.begin(),
                                                          end = settingsPages.end();
-    for ( ; iter != end; ++iter )
-    {
+    for (; iter != end; ++iter) {
         pagesWidget->addWidget((*iter).get());
     }
 
     QPushButton *saveButton = new QPushButton(tr("Save"));
-    connect(saveButton, &QAbstractButton::clicked, this, &SettingsDialog::saveChangesAndClose);
+    connect(saveButton, &QAbstractButton::clicked, this,
+            &SettingsDialog::saveChangesAndClose);
 
     QPushButton *cancelButton = new QPushButton(tr("Cancel"));
     connect(cancelButton, &QAbstractButton::clicked, this, &QDialog::reject);
 
     createIcons();
     contentsWidget->setCurrentRow(0);
-
 
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
     horizontalLayout->addWidget(contentsWidget);
@@ -69,9 +67,8 @@ SettingsDialog::SettingsDialog(Settings &settings) : m_settings(settings)
 
 void SettingsDialog::saveChanges() {
     std::vector<std::unique_ptr<SettingsPage>>::iterator iter = settingsPages.begin(),
-                                        end = settingsPages.end();
-    for ( ; iter != end; ++iter )
-    {
+                                                         end = settingsPages.end();
+    for (; iter != end; ++iter) {
         (*iter)->writeSettings(m_settings);
     }
 }
@@ -81,8 +78,7 @@ void SettingsDialog::saveChangesAndClose() {
     QDialog::accept();
 }
 
-void SettingsDialog::createIcons()
-{
+void SettingsDialog::createIcons() {
     QListWidgetItem *generalButton = new QListWidgetItem(contentsWidget);
     generalButton->setIcon(QIcon(":/images/general.png"));
     generalButton->setText(tr("General"));
@@ -93,11 +89,11 @@ void SettingsDialog::createIcons()
     interfaceButton->setText(tr("Interface"));
     interfaceButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    connect(contentsWidget, &QListWidget::currentItemChanged, this, &SettingsDialog::changePage);
+    connect(contentsWidget, &QListWidget::currentItemChanged, this,
+            &SettingsDialog::changePage);
 }
 
-void SettingsDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous)
-{
+void SettingsDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous) {
     if (!current)
         current = previous;
 

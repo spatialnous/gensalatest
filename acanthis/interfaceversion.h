@@ -25,5 +25,6 @@
 #define INTERFACE_REVISION_VERSION DEPTHMAPX_REVISION_VERSION
 
 // leave these alone - C Preprocessor magic to get stuff to the right format
-#define TITLE_BASE                                                                                                    \
-    TITLE_BASE_FORMAT("acanth.is", INTERFACE_MAJOR_VERSION, INTERFACE_MINOR_VERSION, INTERFACE_REVISION_VERSION)
+#define TITLE_BASE                                                                       \
+    TITLE_BASE_FORMAT("acanth.is", INTERFACE_MAJOR_VERSION, INTERFACE_MINOR_VERSION,     \
+                      INTERFACE_REVISION_VERSION)

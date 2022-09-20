@@ -17,14 +17,16 @@
 #include "../../settings.h"
 #include <QtWidgets>
 
-GeneralPage::GeneralPage(Settings &settings, QWidget *parent) : SettingsPage(settings, parent) {
+GeneralPage::GeneralPage(Settings &settings, QWidget *parent)
+    : SettingsPage(settings, parent) {
     readSettings(settings);
     QGroupBox *configGroup = new QGroupBox(tr("General configuration"));
     QCheckBox *simpleModeCheckBox = new QCheckBox(tr("Simple mode"));
-    simpleModeCheckBox->setToolTip(
-        tr("If enabled, only Integration [HH] will be calulcated (or Visual Integration [HH] for VGA)"));
+    simpleModeCheckBox->setToolTip(tr("If enabled, only Integration [HH] will be "
+                                      "calulcated (or Visual Integration [HH] for VGA)"));
     simpleModeCheckBox->setChecked(m_simpleVersion);
-    connect(simpleModeCheckBox, &QCheckBox::stateChanged, [=]() { m_simpleVersion = !m_simpleVersion; });
+    connect(simpleModeCheckBox, &QCheckBox::stateChanged,
+            [=]() { m_simpleVersion = !m_simpleVersion; });
 
     QVBoxLayout *configLayout = new QVBoxLayout;
     configLayout->addWidget(simpleModeCheckBox);

@@ -15,7 +15,8 @@
 
 #include "licenseagreement.h"
 
-LicenseAgreement::LicenseAgreement(QWidget *parent) : QDialog(parent), m_ui(new Ui::LicenseAgreement) {
+LicenseAgreement::LicenseAgreement(QWidget *parent)
+    : QDialog(parent), m_ui(new Ui::LicenseAgreement) {
     m_ui->setupUi(this);
 }
 

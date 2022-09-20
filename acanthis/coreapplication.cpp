@@ -14,20 +14,30 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "coreapplication.h"
+
+#include "mainwindow.h"
+
+#include "glmapview/glmapview.h"
+
+#include "maplayer.h"
+#include "mapmodel.h"
+
 #include <QDesktopWidget>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
 #include <QtQuick/QQuickView>
 
 int CoreApplication::exec() {
     SettingsImpl settings(new DefaultSettingsFactory);
 
     if (!settings.readSetting(SettingTag::licenseAccepted, false).toBool()) {
-        auto dummy = MainWindowFactory::getLicenseDialog();
-        dummy->setModal(true);
-        dummy->setWindowTitle(TITLE_BASE);
-        dummy->exec();
-        if (dummy->result() == QDialog::Rejected) {
-            return 0;
-        }
+        //        auto dummy = MainWindowFactory::getLicenseDialog();
+        //        dummy->setModal(true);
+        //        dummy->setWindowTitle(TITLE_BASE);
+        //        dummy->exec();
+        //        if (dummy->result() == QDialog::Rejected) {
+        //            return 0;
+        //        }
         settings.writeSetting(SettingTag::licenseAccepted, true);
     }
 
@@ -37,10 +47,30 @@ int CoreApplication::exec() {
         fileToLoad = args[1].toStdString();
     }
 
-    mMainWindow = MainWindowFactory::getMainWindow(fileToLoad, settings);
-    mMainWindow->setResizeMode(QQuickView::SizeRootObjectToView);
-    mMainWindow->setSource(QUrl("qrc:///scenegraph/openglunderqml/main.qml"));
-    mMainWindow->show();
+    setOrganizationName("acanthis");
+    setOrganizationDomain("acanth.is");
+    setApplicationName("acanthis");
+
+    qmlRegisterType<GLMapView>("acanthis", 1, 0, "GLMapView");
+    qmlRegisterType<MapModel>("acanthis", 1, 0, "MapModel");
+    qmlRegisterType<DocumentManager>("acanthis", 1, 0, "DocumentManager");
+    qmlRegisterUncreatableType<GraphDocument>(
+        "acanthis", 1, 0, "GraphDocument",
+        QLatin1String("Cannot create objects of type GraphDocument"));
+
+    qmlRegisterSingletonType(QUrl("qrc:///scenegraph/Theme.qml"), "acanthis", 1, 0,
+                             "Theme");
+
+    QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("documentManager", &m_documentManager);
+    engine.load(QUrl(QStringLiteral("qrc:/scenegraph/main.qml")));
+    //    mMainWindow->setResizeMode(QQuickView::SizeRootObjectToView);
+    //    engine->show();
+
+    //    mMainWindow = MainWindowFactory::getMainWindow(fileToLoad, settings);
+    //    mMainWindow->setResizeMode(QQuickView::SizeRootObjectToView);
+    //    mMainWindow->setSource(QUrl("qrc:///scenegraph/main.qml"));
+    //    mMainWindow->show();
 
     QGuiApplication::setWindowIcon(QIcon(":/images/acanthis.png"));
 
