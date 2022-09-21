@@ -21,7 +21,7 @@
 #include "depthmapX/views/glview/gltrianglesuniform.h"
 #include "salalib/mgraph.h"
 
-class GLPointMap {
+class GLPixelMap {
   public:
     void initializeGL(bool m_core) {
         m_grid.initializeGL(m_core);

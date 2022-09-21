@@ -17,11 +17,14 @@ ItemDelegate {
         id: visibilityCheckBox
         objectName: "layerVisibilityCheckBox"
         x: 14
-        text: model.layer.visible ? "\uf06e" : "\uf070"
         font.family: "FontAwesome"
         focusPolicy: Qt.NoFocus
         indicator: null
         anchors.verticalCenter: parent.verticalCenter
+        contentItem: Text {
+            text: model.layer.visible ? "\uf06e" : "\uf070"
+            color: Theme.toolbarButtonTextColour
+        }
 
         //        onClicked: project.setLayerVisible(index, !model.layer.visible)
     }
@@ -39,6 +42,7 @@ ItemDelegate {
         background.visible: false
         font.pixelSize: 12
         visible: false
+        color: Theme.toolbarButtonTextColour
 
         onAccepted: {
             project.setLayerName(index, text)

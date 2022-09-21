@@ -18,7 +18,7 @@
 #include "salalib/geometrygenerators.h"
 #include "salalib/linkutils.h"
 
-void GLPointMap::loadGLObjects(PointMap &pointMap) {
+void GLPixelMap::loadGLObjects(PointMap &pointMap) {
     QtRegion region = pointMap.getRegion();
     m_pointMap.loadRegionData(region.bottom_left.x, region.bottom_left.y, region.top_right.x, region.top_right.y);
 
@@ -55,7 +55,7 @@ void GLPointMap::loadGLObjects(PointMap &pointMap) {
         m_linkLines.loadLineData(linkFillPerimeters, qRgb(0, 255, 0));
     }
 }
-void GLPointMap::loadGLObjectsRequiringGLContext(const PointMap &currentPointMap) {
+void GLPixelMap::loadGLObjectsRequiringGLContext(const PointMap &currentPointMap) {
     QImage data(currentPointMap.getCols(), currentPointMap.getRows(), QImage::Format_RGBA8888);
     data.fill(Qt::transparent);
 

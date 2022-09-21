@@ -8,8 +8,6 @@ import "." as Ui
 Page {
     id: root
     objectName: "panel"
-    background: Rectangle {//color: Ui.Theme.panelColour
-    }
     topPadding: 0
     bottomPadding: 0
 
@@ -25,6 +23,7 @@ Page {
             objectName: parent.objectName + "TitleLabel"
             text: root.title
             font.bold: true
+            color: Theme.panelTextColour
 
             Layout.leftMargin: 16
         }
@@ -36,26 +35,45 @@ Page {
         ToolButton {
             id: settingsPopupToolButton
             objectName: root.objectName + "SettingsToolButton"
-            text: "\uf013"
-            font.family: "FontAwesome"
+
+            contentItem: Text {
+                text: "⚙"
+                horizontalAlignment: Text.AlignHCenter
+                color: Theme.toolbarButtonTextColour
+            }
             focusPolicy: Qt.NoFocus
             visible: settingsPopup
 
             Layout.preferredWidth: implicitHeight
 
             onClicked: settingsPopup.open()
+            background: Rectangle {
+                Layout.fillHeight: true
+                implicitWidth: parent.height
+                radius: Theme.tabButtonHoverRadius
+                color: parent.hovered ? Theme.toolbarButtonHoverColour : Theme.toolbarButtonColour
+            }
         }
 
         ToolButton {
             objectName: root.objectName + "HideShowToolButton"
-            text: expanded ? "\uf146" : "\uf0fe"
-            font.family: "FontAwesome"
+            contentItem: Text {
+                text: expanded ? "⯇" : "⯆"
+                horizontalAlignment: Text.AlignHCenter
+                color: Theme.toolbarButtonTextColour
+            }
             focusPolicy: Qt.NoFocus
 
             Layout.leftMargin: -8
             Layout.preferredWidth: implicitHeight
 
             onClicked: expanded = !expanded
+            background: Rectangle {
+                Layout.fillHeight: true
+                implicitWidth: parent.height
+                radius: Theme.tabButtonHoverRadius
+                color: parent.hovered ? Theme.toolbarButtonHoverColour : Theme.toolbarButtonColour
+            }
         }
     }
 }

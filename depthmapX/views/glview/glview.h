@@ -98,7 +98,7 @@ class GLView : public MapView, protected QOpenGLFunctions {
     GLLines m_axes;
     GLShapeGraph m_visibleShapeGraph;
     GLLinesUniform m_visibleDrawingLines;
-    GLPointMap m_visiblePointMap;
+    GLPixelMap m_visiblePointMap;
     GLShapeMap m_visibleDataMap;
 
     bool m_highlightOnHover = true;

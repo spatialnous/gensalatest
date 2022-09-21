@@ -58,8 +58,7 @@ int CoreApplication::exec() {
         "acanthis", 1, 0, "GraphDocument",
         QLatin1String("Cannot create objects of type GraphDocument"));
 
-    qmlRegisterSingletonType(QUrl("qrc:///scenegraph/Theme.qml"), "acanthis", 1, 0,
-                             "Theme");
+    qmlRegisterSingletonType(QUrl("qrc:///scenegraph/Theme.qml"), "acanthis", 1, 0, "Theme");
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("documentManager", &m_documentManager);
@@ -72,7 +71,7 @@ int CoreApplication::exec() {
     //    mMainWindow->setSource(QUrl("qrc:///scenegraph/main.qml"));
     //    mMainWindow->show();
 
-    QGuiApplication::setWindowIcon(QIcon(":/images/acanthis.png"));
+    QGuiApplication::setWindowIcon(QIcon(":/images/acanthis.svg"));
 
     return QGuiApplication::exec();
 }

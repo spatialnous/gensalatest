@@ -88,7 +88,7 @@ Panel {
         visible: root.expanded
 
         RowActionButton {
-            objectName: "newLayerButton"
+            objectName: "newMapButton"
 
             Layout.leftMargin: 6
 
