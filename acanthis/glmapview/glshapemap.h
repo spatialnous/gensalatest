@@ -26,12 +26,7 @@
 class GLShapeMap : public GLMap {
   public:
     GLShapeMap(ShapeMap &shapeMap, int pointSides, float pointRadius)
-        : GLMap(GLMap::GLMapType::SHAPEMAP), m_shapeMap(shapeMap),
-          m_pointSides(pointSides), m_pointRadius(pointRadius){};
-    GLShapeMap(GLMap::GLMapType mapType, ShapeMap &shapeMap, int pointSides,
-               float pointRadius)
-        : GLMap(mapType), m_shapeMap(shapeMap), m_pointSides(pointSides),
-          m_pointRadius(pointRadius){};
+        : GLMap(), m_shapeMap(shapeMap), m_pointSides(pointSides), m_pointRadius(pointRadius){};
 
     void initializeGL(bool m_core) override {
         m_lines.initializeGL(m_core);
@@ -76,9 +71,7 @@ class GLShapeMap : public GLMap {
     }
 
     void loadGLObjects() override;
-    void highlightHoveredItems(const QtRegion &region) override {
-        highlightHoveredShapes(region);
-    };
+    void highlightHoveredItems(const QtRegion &region) override { highlightHoveredShapes(region); };
 
     void highlightHoveredShapes(const QtRegion &region);
 

@@ -20,13 +20,6 @@
 #include <QMatrix4x4>
 
 class GLMap {
-    bool m_displayed = false;
-
-  public: // publicly available types
-    enum class GLMapType { SHAPEMAP, SHAPEGRAPH, PIXELMAP };
-
-  private:
-    GLMapType m_mapType;
 
   protected: // variables available to implementing classes
     bool m_datasetChanged = false;
@@ -34,7 +27,6 @@ class GLMap {
     bool m_hoverHasShapes = false;
 
   public: // functions
-    GLMap(GLMapType mapType) : m_mapType(mapType) {}
     virtual void loadGLObjects() = 0;
     virtual void initializeGL(bool m_core) = 0;
     virtual void updateGL(bool m_core) { updateGL(m_core, true); }
@@ -46,5 +38,4 @@ class GLMap {
     virtual void highlightHoveredItems(const QtRegion &region) = 0;
 
     virtual void loadGLObjectsRequiringGLContext() {}
-    void setDisplayed(bool displayed) { m_displayed = displayed; }
 };

@@ -22,21 +22,17 @@ GraphDocument::GraphDocument(std::string filename) : m_filename(filename) {
     m_metaGraph = std::unique_ptr<MetaGraph>(new MetaGraph(filename));
     m_metaGraph->readFromFile(filename);
     for (ShapeMap &shapeMap : m_metaGraph->getDataMaps()) {
-        m_mapLayers.push_back(
-            std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(shapeMap)));
+        m_mapLayers.push_back(std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(shapeMap)));
     }
     for (auto &drawingFile : m_metaGraph->m_drawingFiles) {
         for (ShapeMap &shapeMap : drawingFile.m_spacePixels) {
-            m_mapLayers.push_back(
-                std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(shapeMap)));
+            m_mapLayers.push_back(std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(shapeMap)));
         }
     }
     for (auto &shapeMap : m_metaGraph->getShapeGraphs()) {
-        m_mapLayers.push_back(
-            std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(*shapeMap)));
+        m_mapLayers.push_back(std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(*shapeMap)));
     }
     for (PointMap &pointMap : m_metaGraph->getPointMaps()) {
-        m_mapLayers.push_back(
-            std::unique_ptr<PixelMapLayer>(new PixelMapLayer(pointMap)));
+        m_mapLayers.push_back(std::unique_ptr<PixelMapLayer>(new PixelMapLayer(pointMap)));
     }
 }

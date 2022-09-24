@@ -1,15 +1,14 @@
 ﻿#pragma once
 
+#include "attributelayer.h"
 #include "graphdocument.h"
 #include "maplayer.h"
-#include "attributelayer.h"
 
 #include <QAbstractListModel>
 
 class AttributeModel : public QAbstractListModel {
     Q_OBJECT
-    Q_PROPERTY(
-        GraphDocument *graphDocument MEMBER m_graphDocument NOTIFY graphDocumentChanged)
+    Q_PROPERTY(GraphDocument *graphDocument MEMBER m_graphDocument NOTIFY graphDocumentChanged)
 
     GraphDocument *m_graphDocument;
 

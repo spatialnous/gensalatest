@@ -23,8 +23,7 @@
 class GLShapeGraph : public GLShapeMap {
   public:
     GLShapeGraph(ShapeGraph &shapeGraph, int pointSides, float pointRadius)
-        : GLShapeMap(GLMap::GLMapType::SHAPEGRAPH, shapeGraph, pointSides, pointRadius),
-          m_shapeGraph(shapeGraph){};
+        : GLShapeMap(shapeGraph, pointSides, pointRadius), m_shapeGraph(shapeGraph){};
 
     void initializeGL(bool m_core) override {
         GLShapeMap::initializeGL(m_core);

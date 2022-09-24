@@ -2,8 +2,7 @@
 
 #include <QString>
 
-MapModel::MapModel(QObject *parent)
-    : QAbstractListModel(parent), m_graphDocument(nullptr) {}
+MapModel::MapModel(QObject *parent) : QAbstractListModel(parent), m_graphDocument(nullptr) {}
 
 // void MapModel::setGraphDocument(GraphDocument *layeredImageProject) {
 //    if (layeredImageProject == mLayeredImageProject)

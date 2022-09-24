@@ -64,8 +64,7 @@ class GLMapViewRenderer : public QQuickFramebufferObject::Renderer {
     void recalcView();
 
     static QColor colorMerge(QColor color, QColor mergecolor) {
-        return QColor::fromRgb((color.rgba() & 0x006f6f6f) |
-                               (mergecolor.rgba() & 0x00a0a0a0));
+        return QColor::fromRgb((color.rgba() & 0x006f6f6f) | (mergecolor.rgba() & 0x00a0a0a0));
     }
 
     void notifyDatasetChanged() {
@@ -90,7 +89,7 @@ class GLMapViewRenderer : public QQuickFramebufferObject::Renderer {
     GLDynamicRect m_selectionRect;
     GLDynamicLine m_dragLine;
     GLLines m_axes;
-    std::vector<std::unique_ptr<GLMap>> m_maps;
+    //    std::vector<std::unique_ptr<GLMap>> m_maps;
 
     bool m_highlightOnHover = true;
 
@@ -113,9 +112,10 @@ class GLMapViewRenderer : public QQuickFramebufferObject::Renderer {
     int m_polyPoints = 0;
 
     inline int PixelDist(QPoint a, QPoint b) {
-        return (int)sqrt(double((b.x() - a.x()) * (b.x() - a.x()) +
-                                (b.y() - a.y()) * (b.y() - a.y())));
+        return (int)sqrt(
+            double((b.x() - a.x()) * (b.x() - a.x()) + (b.y() - a.y()) * (b.y() - a.y())));
     }
 
-    MetaGraph &getMetaGraph();
+    // MetaGraph &getMetaGraph();
+    std::vector<std::unique_ptr<MapLayer>> &getMaps();
 };

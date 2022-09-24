@@ -20,12 +20,12 @@
 #include "gllinesuniform.h"
 #include "glrastertexture.h"
 #include "gltrianglesuniform.h"
-#include "salalib/mgraph.h"
+
+#include "salalib/pointdata.h"
 
 class GLPixelMap : public GLMap {
   public:
-    GLPixelMap(PointMap &pointMap)
-        : GLMap(GLMap::GLMapType::PIXELMAP), m_pixelMap(pointMap) {}
+    GLPixelMap(PointMap &pointMap) : GLMap(), m_pixelMap(pointMap) {}
     void initializeGL(bool m_core) override {
         m_grid.initializeGL(m_core);
         m_rasterTexture.initializeGL(m_core);
@@ -67,9 +67,7 @@ class GLPixelMap : public GLMap {
     void loadGLObjects() override;
     void loadGLObjectsRequiringGLContext() override;
 
-    void highlightHoveredItems(const QtRegion &region) override {
-        highlightHoveredPixels(region);
-    }
+    void highlightHoveredItems(const QtRegion &region) override { highlightHoveredPixels(region); }
 
     void setGridColour(QColor gridColour) { m_gridColour = gridColour; }
     void showLinks(bool showLinks) { m_showLinks = showLinks; }
@@ -84,8 +82,8 @@ class GLPixelMap : public GLMap {
     GLLinesUniform m_linkLines;
     GLTrianglesUniform m_linkFills;
 
-    QColor m_gridColour = QColor::fromRgb((qRgb(255, 255, 255) & 0x006f6f6f) |
-                                          (qRgb(0, 0, 0) & 0x00a0a0a0));
+    QColor m_gridColour =
+        QColor::fromRgb((qRgb(255, 255, 255) & 0x006f6f6f) | (qRgb(0, 0, 0) & 0x00a0a0a0));
 
     bool m_showGrid = true;
     bool m_showLinks = false;

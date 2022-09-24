@@ -17,7 +17,7 @@
 
 #include "documentmanager.h"
 #include "interfaceversion.h"
-#include "mainwindowfactory.h"
+#include "mainwindow.h"
 #include "settingsimpl.h"
 
 #include <QFileOpenEvent>

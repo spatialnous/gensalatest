@@ -35,7 +35,8 @@ class GraphDocument : public QObject {
 
     MapLayer *layerAt(std::size_t index) { return m_mapLayers[index].get(); }
     AttributeLayer *attributeAt(std::size_t mapIndex, std::size_t attributeIndex) {
-        return &(m_mapLayers[mapIndex]->getAttribute(attributeIndex)); }
+        return &(m_mapLayers[mapIndex]->getAttribute(attributeIndex));
+    }
     std::size_t layerCount() { return m_mapLayers.size(); }
     std::string getFilenameStr() { return m_filename; }
     Q_INVOKABLE QString getFilename() { return QString::fromStdString(m_filename); }

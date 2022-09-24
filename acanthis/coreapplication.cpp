@@ -15,14 +15,10 @@
 
 #include "coreapplication.h"
 
-#include "mainwindow.h"
-
 #include "glmapview/glmapview.h"
 
-#include "maplayer.h"
 #include "mapmodel.h"
 
-#include <QDesktopWidget>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QtQuick/QQuickView>
@@ -54,6 +50,7 @@ int CoreApplication::exec() {
     qmlRegisterType<GLMapView>("acanthis", 1, 0, "GLMapView");
     qmlRegisterType<MapModel>("acanthis", 1, 0, "MapModel");
     qmlRegisterType<DocumentManager>("acanthis", 1, 0, "DocumentManager");
+
     qmlRegisterUncreatableType<GraphDocument>(
         "acanthis", 1, 0, "GraphDocument",
         QLatin1String("Cannot create objects of type GraphDocument"));

@@ -1,3 +1,18 @@
+// Copyright (C) 2021 - 2022 Petros Koutsolampros
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import QtQuick 2.12
 import QtQuick.Layouts 1.1
 import QtQuick.Controls 2.12
@@ -17,7 +32,7 @@ Panel {
         color: Theme.panelColour
     }
 
-    property GraphDocument project
+    property GraphDocument graphDocument
 
     readonly property int minimumUsefulHeight: header.implicitHeight
     // Estimate delegate height since we can't easily know what it is for all styles.
@@ -58,7 +73,7 @@ Panel {
             ScrollBar.vertical: ScrollBar {}
 
             model: MapModel {
-                graphDocument: root.project
+                graphDocument: root.graphDocument
             }
 
             delegate: MapDelegate {
@@ -95,7 +110,7 @@ Panel {
             ToolTip.text: qsTr("Add a new layer")
 
             onClicked: {
-                root.project.addNewLayer()
+                root.graphDocument.addNewLayer()
                 layerListView.positionViewAtIndex(layerListView.currentIndex,
                                                   ListView.Contain)
             }
@@ -105,35 +120,35 @@ Panel {
             objectName: "moveLayerDownButton"
             text: "\uf107"
             font.family: "FontAwesome"
-            enabled: project
-                     && project.currentLayerIndex < project.layerCount - 1
+            enabled: graphDocument
+                     && graphDocument.currentLayerIndex < graphDocument.layerCount - 1
 
             ToolTip.text: qsTr("Move the current layer down")
 
-            onClicked: project.moveCurrentLayerDown()
+            onClicked: graphDocument.moveCurrentLayerDown()
         }
 
         RowActionButton {
             objectName: "moveLayerUpButton"
             text: "\uf106"
             font.family: "FontAwesome"
-            enabled: project && project.currentLayerIndex > 0
+            enabled: graphDocument && graphDocument.currentLayerIndex > 0
 
             ToolTip.text: qsTr("Move the current layer up")
 
-            onClicked: project.moveCurrentLayerUp()
+            onClicked: graphDocument.moveCurrentLayerUp()
         }
 
         RowActionButton {
             objectName: "duplicateLayerButton"
             text: "\uf24d"
             font.family: "FontAwesome"
-            enabled: project && project.currentLayerIndex >= 0
-                     && project.currentLayerIndex < project.layerCount
+            enabled: graphDocument && graphDocument.currentLayerIndex >= 0
+                     && graphDocument.currentLayerIndex < graphDocument.layerCount
 
             ToolTip.text: qsTr("Duplicate the current layer")
 
-            onClicked: project.duplicateCurrentLayer()
+            onClicked: graphDocument.duplicateCurrentLayer()
         }
 
         Item {
@@ -150,7 +165,7 @@ Panel {
             //enabled: project && project.currentLayer && project.layerCount > 1
             ToolTip.text: qsTr("Delete the current layer")
 
-            onClicked: project.deleteCurrentLayer()
+            onClicked: graphDocument.deleteCurrentLayer()
         }
     }
 }

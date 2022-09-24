@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Petros Koutsolampros
+// Copyright (C) 2021 - 2022 Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,6 +12,7 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -265,7 +266,7 @@ ApplicationWindow {
                 visible: active
                 sourceComponent: Ui.MapPanel {
                     //                        layeredImageCanvas: window.canvas
-                    project: window.graphDocument
+                    graphDocumentInMapPanel: window.graphDocument
                     //z: canvasContainer.z - 1
                 }
 

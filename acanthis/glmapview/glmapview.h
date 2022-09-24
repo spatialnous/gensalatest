@@ -26,9 +26,8 @@
 class GLMapView : public QQuickFramebufferObject {
     Q_OBJECT
     QML_ELEMENT
-    Q_PROPERTY(
-        GraphDocument *graphDocument //
-            MEMBER m_graphDocument WRITE setGraphDocument NOTIFY graphDocumentChanged)
+    Q_PROPERTY(GraphDocument *graphDocument //
+                   MEMBER m_graphDocument WRITE setGraphDocument NOTIFY graphDocumentChanged)
     Q_PROPERTY(QColor foregroundColour //
                    MEMBER m_foregroundColour NOTIFY foregroundColourChanged)
     Q_PROPERTY(QColor backgroundColour //
@@ -40,16 +39,15 @@ class GLMapView : public QQuickFramebufferObject {
 
     GraphDocument *m_graphDocument;
     QQuickFramebufferObject::Renderer *createRenderer() const override {
-        connect(window(), &QQuickWindow::afterRendering, this,
-                &GLMapView::handleWindowSync, Qt::DirectConnection);
+        connect(window(), &QQuickWindow::afterRendering, this, &GLMapView::handleWindowSync,
+                Qt::QueuedConnection);
         connect(this, &QQuickItem::widthChanged, this, &GLMapView::forceUpdate,
                 Qt::DirectConnection);
         connect(this, &QQuickItem::heightChanged, this, &GLMapView::forceUpdate,
                 Qt::DirectConnection);
 
-        return new GLMapViewRenderer(this, m_graphDocument, m_foregroundColour,
-                                     m_backgroundColour, m_antialiasingSamples,
-                                     m_highlightOnHover);
+        return new GLMapViewRenderer(this, m_graphDocument, m_foregroundColour, m_backgroundColour,
+                                     m_antialiasingSamples, m_highlightOnHover);
     }
 
   public:
@@ -64,7 +62,7 @@ class GLMapView : public QQuickFramebufferObject {
         setDirtyRenderer();
         //        update();
     }
-    GraphDocument *getGraphDocument() const { return m_graphDocument; }
+    GraphDocument &getGraphDocument() const { return *m_graphDocument; }
 
     void panBy(int dx, int dy);
     void zoomBy(float dzf, int mouseX, int mouseY);

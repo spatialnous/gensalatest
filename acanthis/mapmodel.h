@@ -5,8 +5,7 @@
 
 class MapModel : public QAbstractListModel {
     Q_OBJECT
-    Q_PROPERTY(
-        GraphDocument *graphDocument MEMBER m_graphDocument NOTIFY graphDocumentChanged)
+    Q_PROPERTY(GraphDocument *graphDocument MEMBER m_graphDocument NOTIFY graphDocumentChanged)
 
     GraphDocument *m_graphDocument;
 

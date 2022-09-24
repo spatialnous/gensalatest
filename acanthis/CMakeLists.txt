@@ -2,18 +2,17 @@ set(projectName acanthis)
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-# Instruct CMake to run moc automatically when needed
+
+set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-# Find the QtWidgets library
-find_package(Qt5 COMPONENTS Core Qml Quick Gui Gui OpenGL REQUIRED)
+find_package(Qt6 COMPONENTS Core Qml Quick Gui OpenGL Widgets REQUIRED)
 
 add_compile_definitions(_ACANTHIS)
 
 set(acanthis_HDRS
     coreapplication.h
-    mainwindowfactory.h
     settingsimpl.h
     settings.h
     mainwindow.h
@@ -22,6 +21,7 @@ set(acanthis_HDRS
     interfaceversion.h
     maplayer.h
     shapemaplayer.h
+    shapegraphlayer.h
     pixelmaplayer.h
     mapmodel.h
     attributelayer.h
@@ -31,25 +31,20 @@ set(acanthis_HDRS
 set(acanthis_SRCS
     main.cpp
     coreapplication.cpp
-    mainwindowfactory.cpp
     settingsimpl.cpp
     mainwindow.cpp
     documentmanager.cpp
     graphdocument.cpp
     maplayer.cpp
     shapemaplayer.cpp
+    shapegraphlayer.cpp
     pixelmaplayer.cpp
     mapmodel.cpp
     attributelayer.cpp
     attributemodel.cpp
 )
 
-qt5_wrap_ui(acanthis_UI
-   # UI/aboutdlg.ui
-   UI/licenseagreement.ui
-)
-
-qt5_add_resources(acanthis_RSRC resource.qrc dialogs/settings/settingsdialog.qrc)
+qt6_add_resources(acanthis_RSRC resource.qrc dialogs/settings/settingsdialog.qrc)
 
 set(projectFiles ${acanthis_HDRS} ${acanthis_SRCS} ${acanthis_UI} ${acanthis_RSRC})
 
@@ -70,7 +65,7 @@ if (WIN32)
 endif(WIN32)
 if(UNIX AND NOT APPLE)
         add_executable(${projectName} ${projectFiles})
-        if (Qt5_POSITION_INDEPENDENT_CODE)
+        if (Qt6_POSITION_INDEPENDENT_CODE)
             SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
         endif()
 endif()
@@ -105,8 +100,9 @@ set(MODULES_CORE FALSE)
 set(MODULES_CORE_TEST FALSE)
 add_subdirectory(../modules modules)
 
-target_link_libraries(${projectName} salalib genlib mgraph440 Qt5::Core Qt5::Gui Qt5::Qml Qt5::Quick Qt5::OpenGL
+target_link_libraries(${projectName} salalib genlib mgraph440 Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick Qt6::OpenGL Qt6::Widgets
     OpenGL::GL OpenGL::GLU ${modules_gui} ${modules_core})
 
 add_subdirectory(dialogs)
+set(CMAKE_AUTOUIC_SEARCH_PATHS dialogs)
 add_subdirectory(glmapview)

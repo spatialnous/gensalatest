@@ -1,4 +1,4 @@
-// Copyright (C) 2021 Petros Koutsolampros
+// Copyright (C) 2021 - 2022 Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,12 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 import Qt.labs.settings 1.0
-import QtQuick.Dialogs 1.2
-import QtQuick.Window 2.3
+import QtQuick.Dialogs
 import acanthis 1.0
 
 import "." as Ui
@@ -99,10 +98,9 @@ ApplicationWindow {
     FileDialog {
         id: openDialog
         onAccepted: {
-            documentManager.openDocument(openDialog.fileUrl)
+            documentManager.openDocument(openDialog.selectedFile)
             let lastDocumentIndex = documentManager.lastDocumentIndex();
-            console.log(lastDocumentIndex + " " + documentManager.numOpenedDocuments() - 1)
-            if(lastDocumentIndex === documentManager.numOpenedDocuments() - 1) {
+            if(lastDocumentIndex === (documentManager.numOpenedDocuments() - 1)) {
                 graphDisplayModel.append({graphDocumentFile: documentManager.lastDocument, current: true})
             }
             graphListNameView.currentIndex = lastDocumentIndex;
@@ -192,7 +190,6 @@ ApplicationWindow {
                                     leftPadding: 5
                                 }
                                 Button {
-                                    id: tabCloseButton
                                     contentItem: Text {
                                         text: "✕"
                                         horizontalAlignment: Text.AlignHCenter
@@ -204,8 +201,8 @@ ApplicationWindow {
                                         height: 21
                                         anchors.verticalCenter: parent.verticalCenter
                                         anchors.horizontalCenter: parent.horizontalCenter
-                                        radius: tabCloseButton.width * 0.5
-                                        color: tabCloseButton.hovered ? Theme.tabCloseButtonHoverColour : Theme.tabCloseButtonColour
+                                        radius: parent.width * 0.5
+                                        color: parent.hovered ? Theme.tabCloseButtonHoverColour : Theme.tabCloseButtonColour
                                     }
                                     onClicked: {
                                         documentManager.removeDocument(index);
@@ -261,7 +258,7 @@ ApplicationWindow {
                             color: parent.hovered ? Theme.toolbarButtonHoverColour : Theme.toolbarButtonColour
                         }
                         onClicked: {
-                            window.close()
+                            Qt.quit()
                         }
                     }
                 }
@@ -425,7 +422,7 @@ ApplicationWindow {
                         visible: active
                         sourceComponent: Ui.MapPanel {
                             //                        layeredImageCanvas: window.canvas
-                            project: graphDocumentFile
+                            graphDocumentInMapPanel: graphDocumentFile
                             //z: canvasContainer.z - 1
                         }
 
@@ -442,7 +439,7 @@ ApplicationWindow {
                         visible: active
                         sourceComponent: Ui.AttributePanel {
                             //                        layeredImageCanvas: window.canvas
-                            project: graphDocumentFile
+                            graphDocument: graphDocumentFile
                             //z: canvasContainer.z - 1
                         }
 
