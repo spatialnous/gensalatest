@@ -7,9 +7,8 @@
         <file>scenegraph/Panel.qml</file>
         <file>scenegraph/RowActionButton.qml</file>
         <file>scenegraph/UiConstants.qml</file>
-        <file>scenegraph/MapDelegate.qml</file>
+        <file>scenegraph/MapTreeView.qml</file>
         <file>scenegraph/Theme.qml</file>
         <file>scenegraph/mainMobile.qml</file>
-        <file>scenegraph/AttributePanel.qml</file>
     </qresource>
 </RCC>

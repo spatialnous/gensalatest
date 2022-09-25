@@ -19,6 +19,7 @@ set(acanthis_HDRS
     documentmanager.h
     graphdocument.h
     interfaceversion.h
+    treeitem.h
     maplayer.h
     shapemaplayer.h
     shapegraphlayer.h
@@ -35,6 +36,7 @@ set(acanthis_SRCS
     mainwindow.cpp
     documentmanager.cpp
     graphdocument.cpp
+    treeitem.cpp
     maplayer.cpp
     shapemaplayer.cpp
     shapegraphlayer.cpp

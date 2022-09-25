@@ -17,19 +17,18 @@
 
 #include "attributelayer.h"
 #include "glmapview/glmap.h"
+#include "treeitem.h"
 
 #include <QObject>
 #include <QString>
 #include <memory>
 
-class MapLayer : public QObject {
+class MapLayer : public TreeItem {
     Q_OBJECT
     Q_PROPERTY(QString name MEMBER m_name NOTIFY nameChanged)
     Q_PROPERTY(bool visible MEMBER m_visible NOTIFY visibilityChanged)
 
   protected:
-    QString m_name;
-    bool m_visible = true;
     std::vector<std::unique_ptr<AttributeLayer>> m_attributes;
     const std::unique_ptr<GLMap> m_glMap;
 
@@ -39,6 +38,7 @@ class MapLayer : public QObject {
     AttributeLayer &getAttribute(std::size_t index) { return *m_attributes[index]; }
     GLMap &getGLMap() { return *m_glMap.get(); }
     bool isVisible() { return m_visible; }
+    QString getName() { return m_name; }
 
   signals:
     void nameChanged();

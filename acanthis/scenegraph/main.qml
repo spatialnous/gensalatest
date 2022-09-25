@@ -12,12 +12,12 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.settings 1.0
 import QtQuick.Dialogs
+
 import acanthis 1.0
 
 import "." as Ui
@@ -29,8 +29,8 @@ ApplicationWindow {
 
     width: 800
     height: 600
-    minimumHeight : 100
-    minimumWidth : 200
+    minimumHeight: 100
+    minimumWidth: 200
 
     property int bw: 5
 
@@ -38,9 +38,9 @@ ApplicationWindow {
 
     function toggleMaximized() {
         if (window.visibility === Window.Maximized) {
-            window.showNormal();
+            window.showNormal()
         } else {
-            window.showMaximized();
+            window.showMaximized()
         }
     }
 
@@ -50,14 +50,21 @@ ApplicationWindow {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: {
-            const p = Qt.point(mouseX, mouseY);
-            const b = bw + 10; // Increase the corner size slightly
-            if (p.x < b && p.y < b) return Qt.SizeFDiagCursor;
-            if (p.x >= width - b && p.y >= height - b) return Qt.SizeFDiagCursor;
-            if (p.x >= width - b && p.y < b) return Qt.SizeBDiagCursor;
-            if (p.x < b && p.y >= height - b) return Qt.SizeBDiagCursor;
-            if (p.x < b || p.x >= width - b) return Qt.SizeHorCursor;
-            if (p.y < b || p.y >= height - b) return Qt.SizeVerCursor;
+            const p = Qt.point(mouseX, mouseY)
+            const b = bw + 10
+            // Increase the corner size slightly
+            if (p.x < b && p.y < b)
+                return Qt.SizeFDiagCursor
+            if (p.x >= width - b && p.y >= height - b)
+                return Qt.SizeFDiagCursor
+            if (p.x >= width - b && p.y < b)
+                return Qt.SizeBDiagCursor
+            if (p.x < b && p.y >= height - b)
+                return Qt.SizeBDiagCursor
+            if (p.x < b || p.x >= width - b)
+                return Qt.SizeHorCursor
+            if (p.y < b || p.y >= height - b)
+                return Qt.SizeVerCursor
         }
         acceptedButtons: Qt.NoButton // don't handle actual events
     }
@@ -67,15 +74,26 @@ ApplicationWindow {
         grabPermissions: TapHandler.TakeOverForbidden
         target: null
         onActiveChanged: if (active) {
-            const p = resizeHandler.centroid.position;
-            const b = bw + 10; // Increase the corner size slightly
-            let e = 0;
-            if (p.x < b) { e |= Qt.LeftEdge }
-            if (p.x >= width - b) { e |= Qt.RightEdge }
-            if (p.y < b) { e |= Qt.TopEdge }
-            if (p.y >= resizableMouseArea.height - b) { e |= Qt.BottomEdge }
-            if (e != 0) { window.startSystemResize(e); }
-        }
+                             const p = resizeHandler.centroid.position
+                             const b = bw + 10
+                             // Increase the corner size slightly
+                             let e = 0
+                             if (p.x < b) {
+                                 e |= Qt.LeftEdge
+                             }
+                             if (p.x >= width - b) {
+                                 e |= Qt.RightEdge
+                             }
+                             if (p.y < b) {
+                                 e |= Qt.TopEdge
+                             }
+                             if (p.y >= resizableMouseArea.height - b) {
+                                 e |= Qt.BottomEdge
+                             }
+                             if (e != 0) {
+                                 window.startSystemResize(e)
+                             }
+                         }
     }
 
     Settings {
@@ -99,12 +117,15 @@ ApplicationWindow {
         id: openDialog
         onAccepted: {
             documentManager.openDocument(openDialog.selectedFile)
-            let lastDocumentIndex = documentManager.lastDocumentIndex();
-            if(lastDocumentIndex === (documentManager.numOpenedDocuments() - 1)) {
-                graphDisplayModel.append({graphDocumentFile: documentManager.lastDocument, current: true})
+            let lastDocumentIndex = documentManager.lastDocumentIndex()
+            if (lastDocumentIndex === (documentManager.numOpenedDocuments(
+                                           ) - 1)) {
+                graphDisplayModel.append({
+                                             "graphDocumentFile": documentManager.lastDocument,
+                                             "current": true
+                                         })
             }
-            graphListNameView.currentIndex = lastDocumentIndex;
-
+            graphListNameView.currentIndex = lastDocumentIndex
         }
     }
 
@@ -120,7 +141,6 @@ ApplicationWindow {
                 color: Theme.panelColour
             }
             spacing: 3
-
 
             ColumnLayout {
                 anchors.fill: parent
@@ -152,11 +172,13 @@ ApplicationWindow {
                             id: tabButton
                             anchors.verticalCenter: parent == null ? window.verticalCenter : parent.verticalCenter
                             ButtonGroup.group: btnGrp
-                            width: (graphListNameView.width - (graphListNameView.spacing * (graphDisplayModel.count +1))) / graphDisplayModel.count
+                            width: (graphListNameView.width
+                                    - (graphListNameView.spacing * (graphDisplayModel.count + 1)))
+                                   / graphDisplayModel.count
                             height: parent == null ? 0 : parent.height
                             padding: 0
                             onClicked: {
-                                graphListNameView.currentIndex = index;
+                                graphListNameView.currentIndex = index
                             }
                             ToolTip.visible: hovered
                             ToolTip.delay: Theme.tooltipDelay
@@ -171,7 +193,8 @@ ApplicationWindow {
                                     }
                                 }
                                 radius: {
-                                    hovered || graphListNameView.currentIndex === index ? Theme.tabButtonHoverRadius : 0
+                                    hovered || graphListNameView.currentIndex
+                                            === index ? Theme.tabButtonHoverRadius : 0
                                 }
                             }
                             contentItem: RowLayout {
@@ -205,7 +228,7 @@ ApplicationWindow {
                                         color: parent.hovered ? Theme.tabCloseButtonHoverColour : Theme.tabCloseButtonColour
                                     }
                                     onClicked: {
-                                        documentManager.removeDocument(index);
+                                        documentManager.removeDocument(index)
                                         graphDisplayModel.remove(index)
                                     }
                                 }
@@ -229,20 +252,21 @@ ApplicationWindow {
                             font.bold: true
                         }
 
-
                         TapHandler {
-                            onTapped: if (tapCount === 2) toggleMaximized()
+                            onTapped: if (tapCount === 2)
+                                          toggleMaximized()
                             gesturePolicy: TapHandler.DragThreshold
                         }
                         DragHandler {
                             grabPermissions: TapHandler.CanTakeOverFromAnything
                             target: null
-                            onActiveChanged: if (active) { window.startSystemMove(); }
+                            onActiveChanged: if (active) {
+                                                 window.startSystemMove()
+                                             }
                         }
                     }
 
                     Button {
-                        id: appCloseButton
                         contentItem: Text {
                             text: "✕"
                             horizontalAlignment: Text.AlignHCenter
@@ -254,7 +278,7 @@ ApplicationWindow {
                             height: 21
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.horizontalCenter: parent.horizontalCenter
-                            radius: appCloseButton.width * 0.5
+                            radius: parent.width * 0.5
                             color: parent.hovered ? Theme.toolbarButtonHoverColour : Theme.toolbarButtonColour
                         }
                         onClicked: {
@@ -262,7 +286,6 @@ ApplicationWindow {
                         }
                     }
                 }
-
 
                 RowLayout {
                     spacing: toolbar.spacing
@@ -277,8 +300,11 @@ ApplicationWindow {
                         id: newButton
                         onClicked: {
                             documentManager.createEmptyDocument()
-                            graphDisplayModel.append({graphDocumentFile: documentManager.lastDocument, current: true})
-                            graphListNameView.currentIndex = documentManager.lastDocumentIndex();
+                            graphDisplayModel.append({
+                                                         "graphDocumentFile": documentManager.lastDocument,
+                                                         "current": true
+                                                     })
+                            graphListNameView.currentIndex = documentManager.lastDocumentIndex()
                         }
                         Layout.fillHeight: true
                         contentItem: Text {
@@ -315,7 +341,8 @@ ApplicationWindow {
                         id: saveButton
                         onClicked: {
                             console.log("UNIMPLEMENTED: Save file " + graphDisplayModel.get(
-                                            graphListNameView.currentIndex).graphDocumentFile.getFilename())
+                                            graphListNameView.currentIndex).graphDocumentFile.getFilename(
+                                            ))
                         }
                         Layout.fillHeight: true
                         contentItem: Text {
@@ -417,33 +444,14 @@ ApplicationWindow {
 
                     Loader {
                         objectName: "mapsLoader"
-                        //active: window.isLayeredImageProjectType && window.canvas
                         active: true
                         visible: active
                         sourceComponent: Ui.MapPanel {
-                            //                        layeredImageCanvas: window.canvas
-                            graphDocumentInMapPanel: graphDocumentFile
-                            //z: canvasContainer.z - 1
+                            graphDocument: graphDocumentFile
                         }
 
                         SplitView.minimumHeight: active
                                                  && item.expanded ? item.minimumUsefulHeight : undefined
-                        SplitView.maximumHeight: active ? (item.expanded ? Infinity : item.header.implicitHeight) : 0
-                        SplitView.fillHeight: active && item.expanded
-                    }
-
-                    Loader {
-                        objectName: "tilesetSwatchLoader"
-                        //active: window.projectType === Project.TilesetType && window.canvas
-                        active: true
-                        visible: active
-                        sourceComponent: Ui.AttributePanel {
-                            //                        layeredImageCanvas: window.canvas
-                            graphDocument: graphDocumentFile
-                            //z: canvasContainer.z - 1
-                        }
-
-                        SplitView.minimumHeight: active && item.expanded ? item.header.implicitHeight : undefined
                         SplitView.maximumHeight: active ? (item.expanded ? Infinity : item.header.implicitHeight) : 0
                         SplitView.fillHeight: active && item.expanded
                     }

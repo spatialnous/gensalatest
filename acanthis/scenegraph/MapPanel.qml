@@ -12,7 +12,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -31,7 +30,7 @@ Panel {
         color: Theme.panelColour
     }
 
-    property GraphDocument graphDocumentInMapPanel
+    property GraphDocument graphDocument
 
     readonly property int minimumUsefulHeight: header.implicitHeight
     // Estimate delegate height since we can't easily know what it is for all styles.
@@ -48,55 +47,18 @@ Panel {
     //            root.project.uiState.setValue("layerListViewContentY", layerListView.contentY)
     //        }
     //    }
-    ButtonGroup {
-        objectName: "layerPanelButtonGroup"
-        buttons: layerListView.contentItem.children
-    }
 
+    //    ButtonGroup {
+    //        objectName: "layerPanelButtonGroup"
+    //        buttons: layerListView.contentItem.children
+    //    }
     contentItem: ColumnLayout {
-        visible: root.expanded
+        visible: true
         spacing: 0
+        width: 600
+        height: 400
 
-        ListView {
-            id: layerListView
-            objectName: "layerListView"
-            boundsBehavior: ListView.StopAtBounds
-            // TODO: shouldn't need to null-check at all in this file
-            //            visible: project && project.loaded
-            visible: true
-            clip: true
-
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            ScrollBar.vertical: ScrollBar {}
-
-            model: MapModel {
-                graphDocument: root.graphDocumentInMapPanel
-            }
-
-            delegate: MapDelegate {
-                width: layerListView.width
-                graphDocument: graphDocumentInMapPanel
-            }
-            //            delegate: Text {
-            //                    text: model.layer.name
-            //                }
-        }
-
-        // Necessary for when there is no loaded project so that the separator
-        // doesn't go halfway up the panel.
-        Item {
-            Layout.fillHeight: layerListView.count == 0
-        }
-
-        //        Ui.VerticalSeparator {
-        //            padding: 6
-        //            topPadding: 0
-        //            bottomPadding: 0
-
-        //            Layout.fillWidth: true
-        //        }
+        MapTreeView {}
     }
 
     footer: RowLayout {
@@ -110,7 +72,7 @@ Panel {
             ToolTip.text: qsTr("Add a new layer")
 
             onClicked: {
-                root.graphDocumentInMapPanel.addNewLayer()
+                root.graphDocument.addNewLayer()
                 layerListView.positionViewAtIndex(layerListView.currentIndex,
                                                   ListView.Contain)
             }
@@ -120,35 +82,35 @@ Panel {
             objectName: "moveLayerDownButton"
             text: "\uf107"
             font.family: "FontAwesome"
-            enabled: graphDocumentInMapPanel
-                     && graphDocumentInMapPanel.currentLayerIndex < graphDocumentInMapPanel.layerCount - 1
+            enabled: graphDocument
+                     && graphDocument.currentLayerIndex < graphDocument.layerCount - 1
 
             ToolTip.text: qsTr("Move the current layer down")
 
-            onClicked: graphDocumentInMapPanel.moveCurrentLayerDown()
+            onClicked: graphDocument.moveCurrentLayerDown()
         }
 
         RowActionButton {
             objectName: "moveLayerUpButton"
             text: "\uf106"
             font.family: "FontAwesome"
-            enabled: graphDocumentInMapPanel && graphDocumentInMapPanel.currentLayerIndex > 0
+            enabled: graphDocument && graphDocument.currentLayerIndex > 0
 
             ToolTip.text: qsTr("Move the current layer up")
 
-            onClicked: graphDocumentInMapPanel.moveCurrentLayerUp()
+            onClicked: graphDocument.moveCurrentLayerUp()
         }
 
         RowActionButton {
             objectName: "duplicateLayerButton"
             text: "\uf24d"
             font.family: "FontAwesome"
-            enabled: graphDocumentInMapPanel && graphDocumentInMapPanel.currentLayerIndex >= 0
-                     && graphDocumentInMapPanel.currentLayerIndex < graphDocumentInMapPanel.layerCount
+            enabled: graphDocument && graphDocument.currentLayerIndex >= 0
+                     && graphDocument.currentLayerIndex < graphDocument.layerCount
 
             ToolTip.text: qsTr("Duplicate the current layer")
 
-            onClicked: graphDocumentInMapPanel.duplicateCurrentLayer()
+            onClicked: graphDocument.duplicateCurrentLayer()
         }
 
         Item {
@@ -165,7 +127,7 @@ Panel {
             //enabled: project && project.currentLayer && project.layerCount > 1
             ToolTip.text: qsTr("Delete the current layer")
 
-            onClicked: graphDocumentInMapPanel.deleteCurrentLayer()
+            onClicked: graphDocument.deleteCurrentLayer()
         }
     }
 }

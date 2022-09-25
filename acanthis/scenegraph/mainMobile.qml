@@ -1,3 +1,4 @@
+
 // Copyright (C) 2021 - 2022 Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
@@ -12,12 +13,12 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Qt.labs.settings
+import QtQuick.Dialogs
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import Qt.labs.settings 1.0
-import QtQuick.Dialogs 1.2
 import acanthis 1.0
 
 import "." as Ui
@@ -161,7 +162,6 @@ ApplicationWindow {
                             verticalAlignment: Qt.AlignVCenter
                         }
                         Button {
-                            id: tabCloseButton
                             text: "✕"
                             Layout.alignment: Qt.AlignCenter
                             background: Rectangle {
@@ -169,8 +169,8 @@ ApplicationWindow {
                                 height: 21
                                 anchors.verticalCenter: parent.verticalCenter
                                 anchors.horizontalCenter: parent.horizontalCenter
-                                radius: tabCloseButton.width * 0.5
-                                color: tabCloseButton.hovered ? Theme.tabCloseButtonHoverColour : tabButton.background.color
+                                radius: parent.width * 0.5
+                                color: parent.hovered ? Theme.tabCloseButtonHoverColour : parent.parent.parent.background.color
                             }
                             onClicked: {
                                 console.log("Close file " + graphDocumentFile)
@@ -266,7 +266,7 @@ ApplicationWindow {
                 visible: active
                 sourceComponent: Ui.MapPanel {
                     //                        layeredImageCanvas: window.canvas
-                    graphDocumentInMapPanel: window.graphDocument
+                    graphDocument: window.graphDocument
                     //z: canvasContainer.z - 1
                 }
 
