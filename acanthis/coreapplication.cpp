@@ -15,9 +15,9 @@
 
 #include "coreapplication.h"
 
-#include "glmapview/glmapview.h"
-
+#include "aglmapview/aglmapview.h"
 #include "mapmodel.h"
+#include "settingsimpl.h"
 
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -47,8 +47,9 @@ int CoreApplication::exec() {
     setOrganizationDomain("acanth.is");
     setApplicationName("acanthis");
 
-    qmlRegisterType<GLMapView>("acanthis", 1, 0, "GLMapView");
+    qmlRegisterType<AGLMapView>("acanthis", 1, 0, "GLMapView");
     qmlRegisterType<MapModel>("acanthis", 1, 0, "MapModel");
+    //    qmlRegisterType<MyTreeModel>("acanthis", 1, 0, "MyTreeModel");
     qmlRegisterType<DocumentManager>("acanthis", 1, 0, "DocumentManager");
 
     qmlRegisterUncreatableType<GraphDocument>(

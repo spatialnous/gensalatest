@@ -16,6 +16,7 @@
 #pragma once
 #include <QSettings>
 #include <QString>
+
 #include <memory>
 
 /**
@@ -43,8 +44,8 @@ namespace SettingTag {
  */
 class SettingsTransaction {
   public:
-    virtual const QVariant
-    readSetting(const QString &tag, const QVariant &defaultValue = QVariant()) const = 0;
+    virtual const QVariant readSetting(const QString &tag,
+                                       const QVariant &defaultValue = QVariant()) const = 0;
     virtual void writeSetting(const QString &tag, const QVariant &value) = 0;
     virtual ~SettingsTransaction() {}
 };

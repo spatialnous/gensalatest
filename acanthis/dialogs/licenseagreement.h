@@ -16,6 +16,7 @@
 #pragma once
 
 #include "ui_licenseagreement.h"
+
 #include <QDialog>
 
 namespace Ui {

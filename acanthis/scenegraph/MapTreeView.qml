@@ -20,17 +20,13 @@ import QtQuick.Window
 import acanthis 1.0
 
 TreeView {
-    visible: true
-    clip: true
-
-    Layout.fillWidth: true
-    Layout.fillHeight: true
+    id: control
 
     ScrollBar.vertical: ScrollBar {}
 
     model: MapModel {
         id: memodl
-        graphDocument: root.graphDocument
+        graphDocument: mappnl.graphDocument
         Component.onCompleted: {
             memodl.resetItems()
         }
@@ -39,10 +35,10 @@ TreeView {
     delegate: Item {
         id: root
 
-        implicitWidth: padding + label.x + label.implicitWidth + padding
-        implicitHeight: label.implicitHeight * 1.5
+        implicitWidth: model.column === 0 ? padding + visibilityCheckBox.implicitWidth : label.implicitWidth + padding
+        implicitHeight: visibilityCheckBox.implicitHeight * 1.5
 
-        readonly property real indent: 20
+        readonly property real indent: 10
         readonly property real padding: 5
 
         required property TreeView treeView
@@ -51,34 +47,42 @@ TreeView {
         required property int hasChildren
         required property int depth
 
-        TapHandler {
-            onTapped: treeView.toggleExpanded(row)
-        }
         Text {
-            id: label
-            anchors.left: visibilityCheckBox.right
-            anchors.verticalCenter: parent.verticalCenter
-            x: padding + (root.isTreeNode ? (root.depth + 1) * root.indent : 0)
-            width: root.width - root.padding - x
-            clip: true
-            text: model.treeitem.name
-            color: Theme.toolbarButtonTextColour
-        }
-        CheckBox {
             id: visibilityCheckBox
-            x: 14
-            font.family: "FontAwesome"
-            focusPolicy: Qt.NoFocus
-            indicator: null
-            anchors.verticalCenter: parent.verticalCenter
-            contentItem: Text {
-                text: model.treeitem.visible ? "\uf06e" : "\uf070"
-                color: Theme.toolbarButtonTextColour
+            visible: model.column === 0
+            text: model.visibility ? "\uf06e" : "\uf070"
+            color: Theme.toolbarButtonTextColour
+            TapHandler {
+                onTapped: {
+                    memodl.setItemVisibility(memodl.index(model.row,
+                                                          model.column),
+                                             !model.visibility)
+                    gl_map_view.update()
+                }
             }
-
-            onClicked: {
-                model.treeitem.visible = !model.treeitem.visible
-                gl_map_view.update()
+        }
+        Rectangle {
+            id: label
+            x: visibilityCheckBox.width + padding + (root.depth * root.indent)
+            Layout.alignment: Qt.AlignLeft
+            Text {
+                visible: root.isTreeNode && root.hasChildren
+                         && model.column === 0
+                text: root.expanded ? "▼" : "▶"
+                color: Theme.toolbarButtonTextColour
+                TapHandler {
+                    onTapped: {
+                        treeView.toggleExpanded(row)
+                    }
+                }
+            }
+            Text {
+                Layout.fillWidth: true
+                visible: model.column === 1
+                clip: true
+                text: model.name
+                color: Theme.toolbarButtonTextColour
+                horizontalAlignment: Text.AlignLeft
             }
         }
     }

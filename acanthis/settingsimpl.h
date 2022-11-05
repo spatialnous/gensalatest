@@ -16,9 +16,11 @@
 #pragma once
 
 #include "settings.h"
-#include <memory>
+
 #include <qsettings.h>
 #include <qstandardpaths.h>
+
+#include <memory>
 
 class QSettingsFactory {
   public:
@@ -37,8 +39,7 @@ class DefaultSettingsFactory : public QSettingsFactory {
     // QSettingsFactory interface
   public:
     virtual std::unique_ptr<QSettings> getSettings() const {
-        return std::unique_ptr<QSettings>(
-            new QSettings(m_settingsFile, QSettings::IniFormat));
+        return std::unique_ptr<QSettings>(new QSettings(m_settingsFile, QSettings::IniFormat));
     }
 
   private:
@@ -51,8 +52,7 @@ class SettingsImpl : public Settings {
 
     // SettingsTransaction interface
   public:
-    virtual const QVariant readSetting(const QString &tag,
-                                       const QVariant &defaultValue) const;
+    virtual const QVariant readSetting(const QString &tag, const QVariant &defaultValue) const;
     virtual void writeSetting(const QString &tag, const QVariant &value);
 
     // Settings interface

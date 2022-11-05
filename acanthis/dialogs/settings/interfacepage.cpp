@@ -14,11 +14,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "interfacepage.h"
+
 #include <QColorDialog>
 #include <QtWidgets>
 
-InterfacePage::InterfacePage(Settings &settings, QWidget *parent)
-    : SettingsPage(settings, parent) {
+InterfacePage::InterfacePage(Settings &settings, QWidget *parent) : SettingsPage(settings, parent) {
     readSettings(settings);
 
     QGroupBox *generalGroup = new QGroupBox(tr("General"));
@@ -78,9 +78,7 @@ InterfacePage::InterfacePage(Settings &settings, QWidget *parent)
     }
 
     connect(samplesCombo, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated),
-            [=](int index) {
-                m_antialiasingSamples = samplesCombo->itemData(index).toInt();
-            });
+            [=](int index) { m_antialiasingSamples = samplesCombo->itemData(index).toInt(); });
 
     QHBoxLayout *samplesLayout = new QHBoxLayout;
     samplesLayout->addWidget(samplesLabel);

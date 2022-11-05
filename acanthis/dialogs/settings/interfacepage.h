@@ -15,9 +15,11 @@
 
 #pragma once
 
+#include "settingspage.h"
+
 #include <QWidget>
 #include <QtWidgets>
-#include "settingspage.h"
+
 #include <map>
 #include <memory>
 

@@ -20,7 +20,7 @@ import QtQuick.Templates as T
 import "." as Ui
 
 Page {
-    id: root
+    id: panelRoot
     objectName: "panel"
     topPadding: 0
     bottomPadding: 0
@@ -30,12 +30,12 @@ Page {
     property alias settingsPopupToolButton: settingsPopupToolButton
 
     header: RowLayout {
-        objectName: root.objectName + "Header"
+        objectName: panelRoot.objectName + "Header"
         spacing: 0
 
         Label {
             objectName: parent.objectName + "TitleLabel"
-            text: root.title
+            text: panelRoot.title
             font.bold: true
             color: Theme.panelTextColour
 
@@ -48,7 +48,7 @@ Page {
 
         ToolButton {
             id: settingsPopupToolButton
-            objectName: root.objectName + "SettingsToolButton"
+            objectName: panelRoot.objectName + "SettingsToolButton"
 
             contentItem: Text {
                 text: "⚙"
@@ -70,7 +70,7 @@ Page {
         }
 
         ToolButton {
-            objectName: root.objectName + "HideShowToolButton"
+            objectName: panelRoot.objectName + "HideShowToolButton"
             contentItem: Text {
                 text: expanded ? "⯇" : "⯆"
                 horizontalAlignment: Text.AlignHCenter

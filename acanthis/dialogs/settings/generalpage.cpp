@@ -14,11 +14,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "generalpage.h"
+
 #include "../../settings.h"
+
 #include <QtWidgets>
 
-GeneralPage::GeneralPage(Settings &settings, QWidget *parent)
-    : SettingsPage(settings, parent) {
+GeneralPage::GeneralPage(Settings &settings, QWidget *parent) : SettingsPage(settings, parent) {
     readSettings(settings);
     QGroupBox *configGroup = new QGroupBox(tr("General configuration"));
     QCheckBox *simpleModeCheckBox = new QCheckBox(tr("Simple mode"));

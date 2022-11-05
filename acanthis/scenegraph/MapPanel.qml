@@ -15,54 +15,96 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Templates as T
 
 import acanthis 1.0
 
-import "." as Ui
-
 Panel {
-    id: root
+    id: mappnl
     objectName: "mapPanel"
     title: qsTr("Maps")
-    padding: 0
 
     background: Rectangle {
         color: Theme.panelColour
     }
-
     property GraphDocument graphDocument
 
-    readonly property int minimumUsefulHeight: header.implicitHeight
-    // Estimate delegate height since we can't easily know what it is for all styles.
-                                               + 48 + footer.implicitHeight
-
-    //    UiStateSerialisation {
-    //        project: root.project
-    //        onReadyToLoad: {
-    //            root.expanded = root.project.uiState.value("layerPanelExpanded", true)
-    //            layerListView.contentY = root.project.uiState.value("layerListViewContentY", 0)
-    //        }
-    //        onReadyToSave: {
-    //            root.project.uiState.setValue("layerPanelExpanded", root.expanded)
-    //            root.project.uiState.setValue("layerListViewContentY", layerListView.contentY)
-    //        }
-    //    }
-
-    //    ButtonGroup {
-    //        objectName: "layerPanelButtonGroup"
-    //        buttons: layerListView.contentItem.children
-    //    }
-    contentItem: ColumnLayout {
-        visible: true
+    header: RowLayout {
+        objectName: parent.objectName + "Header"
         spacing: 0
-        width: 600
-        height: 400
 
-        MapTreeView {}
+        Label {
+            objectName: parent.objectName + "TitleLabel"
+            text: parent.parent.title
+            font.bold: true
+            color: Theme.panelTextColour
+
+            Layout.leftMargin: 16
+        }
+
+        Item {
+            Layout.fillWidth: true
+        }
+
+        ToolButton {
+            id: settingsPopupToolButton
+            objectName: parent.objectName + "SettingsToolButton"
+
+            contentItem: Text {
+                text: "⚙"
+                horizontalAlignment: Text.AlignHCenter
+                color: Theme.toolbarButtonTextColour
+            }
+            focusPolicy: Qt.NoFocus
+            visible: settingsPopup
+
+            Layout.preferredWidth: implicitHeight
+
+            onClicked: settingsPopup.open()
+            background: Rectangle {
+                Layout.fillHeight: true
+                implicitWidth: parent.height
+                radius: Theme.tabButtonHoverRadius
+                color: parent.hovered ? Theme.toolbarButtonHoverColour : Theme.toolbarButtonColour
+            }
+        }
+
+        ToolButton {
+            objectName: parent.objectName + "HideShowToolButton"
+            contentItem: Text {
+                text: expanded ? "⯇" : "⯆"
+                horizontalAlignment: Text.AlignHCenter
+                color: Theme.toolbarButtonTextColour
+            }
+            focusPolicy: Qt.NoFocus
+
+            Layout.leftMargin: -8
+            Layout.preferredWidth: implicitHeight
+
+            onClicked: expanded = !expanded
+            background: Rectangle {
+                Layout.fillHeight: true
+                implicitWidth: parent.height
+                radius: Theme.tabButtonHoverRadius
+                color: parent.hovered ? Theme.toolbarButtonHoverColour : Theme.toolbarButtonColour
+            }
+        }
+    }
+    contentItem: Item {
+        visible: true
+        clip: true
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+
+        MapTreeView {
+            anchors.fill: parent
+            anchors.margins: 10
+            visible: true
+        }
     }
 
     footer: RowLayout {
-        visible: root.expanded
+        visible: mappnl.expanded
 
         RowActionButton {
             objectName: "newMapButton"
@@ -124,7 +166,6 @@ Panel {
             font.family: "FontAwesome"
             enabled: true
 
-            //enabled: project && project.currentLayer && project.layerCount > 1
             ToolTip.text: qsTr("Delete the current layer")
 
             onClicked: graphDocument.deleteCurrentLayer()

@@ -1,0 +1,38 @@
+target_sources(acanthis
+    PUBLIC
+        agldynamicline.h
+        agldynamicrect.h
+        agllines.h
+        agllinesuniform.h
+        aglpolygons.h
+        aglrastertexture.h
+        aglregularpolygons.h
+        agltriangles.h
+        agltrianglesuniform.h
+        aglutriangulator.h
+        aglmap.h
+        aglshapemap.h
+        aglshapegraph.h
+        aglpixelmap.h
+        aglmapviewrenderer.h
+        aglmapview.h
+    PRIVATE
+        agldynamicline.cpp
+        agldynamicrect.cpp
+        agllines.cpp
+        agllinesuniform.cpp
+        aglpolygons.cpp
+        aglrastertexture.cpp
+        aglregularpolygons.cpp
+        agltriangles.cpp
+        agltrianglesuniform.cpp
+        aglutriangulator.cpp
+        aglshapemap.cpp
+        aglshapegraph.cpp
+        aglpixelmap.cpp
+        aglmapviewrenderer.cpp
+        aglmapview.cpp
+)
+
+
+

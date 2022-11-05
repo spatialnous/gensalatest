@@ -15,9 +15,9 @@
 
 #pragma once
 
-#include "salalib/mgraph.h"
-
 #include "maplayer.h"
+
+#include "salalib/mgraph.h"
 
 #include <QObject>
 
@@ -34,9 +34,7 @@ class GraphDocument : public QObject {
     std::vector<std::unique_ptr<MapLayer>> &getMapLayers() { return m_mapLayers; }
 
     MapLayer *layerAt(std::size_t index) { return m_mapLayers[index].get(); }
-    AttributeLayer *attributeAt(std::size_t mapIndex, std::size_t attributeIndex) {
-        return &(m_mapLayers[mapIndex]->getAttribute(attributeIndex));
-    }
+
     std::size_t layerCount() { return m_mapLayers.size(); }
     std::string getFilenameStr() { return m_filename; }
     Q_INVOKABLE QString getFilename() { return QString::fromStdString(m_filename); }

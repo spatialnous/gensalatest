@@ -31,8 +31,6 @@ Button {
 
     ToolTip.visible: hovered
 
-    //ToolTip.delay: UiConstants.toolTipDelay
-    //ToolTip.timeout: UiConstants.toolTipTimeout
     contentItem: Text {
         text: rowButton.text
         horizontalAlignment: Text.AlignHCenter

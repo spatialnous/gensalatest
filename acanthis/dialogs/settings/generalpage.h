@@ -15,8 +15,10 @@
 
 #pragma once
 
-#include <QWidget>
 #include "settingspage.h"
+
+#include <QWidget>
+
 #include <iostream>
 
 class GeneralPage : public SettingsPage

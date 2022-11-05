@@ -13,11 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <QtWidgets>
+#include "settingsdialog.h"
 
 #include "generalpage.h"
 #include "interfacepage.h"
-#include "settingsdialog.h"
+
+#include <QtWidgets>
 
 SettingsDialog::SettingsDialog(Settings &settings) : m_settings(settings) {
     contentsWidget = new QListWidget;
@@ -37,8 +38,7 @@ SettingsDialog::SettingsDialog(Settings &settings) : m_settings(settings) {
     }
 
     QPushButton *saveButton = new QPushButton(tr("Save"));
-    connect(saveButton, &QAbstractButton::clicked, this,
-            &SettingsDialog::saveChangesAndClose);
+    connect(saveButton, &QAbstractButton::clicked, this, &SettingsDialog::saveChangesAndClose);
 
     QPushButton *cancelButton = new QPushButton(tr("Cancel"));
     connect(cancelButton, &QAbstractButton::clicked, this, &QDialog::reject);
@@ -89,8 +89,7 @@ void SettingsDialog::createIcons() {
     interfaceButton->setText(tr("Interface"));
     interfaceButton->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 
-    connect(contentsWidget, &QListWidget::currentItemChanged, this,
-            &SettingsDialog::changePage);
+    connect(contentsWidget, &QListWidget::currentItemChanged, this, &SettingsDialog::changePage);
 }
 
 void SettingsDialog::changePage(QListWidgetItem *current, QListWidgetItem *previous) {

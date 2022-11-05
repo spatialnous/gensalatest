@@ -15,30 +15,36 @@
 
 #pragma once
 
-#include "attributelayer.h"
-#include "glmapview/glmap.h"
 #include "treeitem.h"
+
+#include "aglmapview/aglmap.h"
+
+#include "salalib/attributetable.h"
 
 #include <QObject>
 #include <QString>
+
 #include <memory>
 
-class MapLayer : public TreeItem {
+class MapLayer : public QObject, public TreeItem {
     Q_OBJECT
     Q_PROPERTY(QString name MEMBER m_name NOTIFY nameChanged)
     Q_PROPERTY(bool visible MEMBER m_visible NOTIFY visibilityChanged)
 
   protected:
-    std::vector<std::unique_ptr<AttributeLayer>> m_attributes;
-    const std::unique_ptr<GLMap> m_glMap;
+    AttributeTable &m_attributes;
+    const std::unique_ptr<AGLMap> m_glMap;
 
   public:
-    MapLayer(){};
-    MapLayer(std::unique_ptr<GLMap> glMap) : m_glMap(std::move(glMap)){};
-    AttributeLayer &getAttribute(std::size_t index) { return *m_attributes[index]; }
-    GLMap &getGLMap() { return *m_glMap.get(); }
+    MapLayer(std::unique_ptr<AGLMap> glMap, QString mapName, AttributeTable &attributes)
+        : TreeItem(mapName), m_glMap(std::move(glMap)), m_attributes(attributes){};
+
+    AGLMap &getGLMap() { return *m_glMap.get(); }
     bool isVisible() { return m_visible; }
     QString getName() { return m_name; }
+    AttributeTable &getAttributes() { return m_attributes; }
+
+    virtual bool hasGraph() { return false; }
 
   signals:
     void nameChanged();

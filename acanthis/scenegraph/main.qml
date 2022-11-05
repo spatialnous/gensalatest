@@ -393,13 +393,11 @@ ApplicationWindow {
                 objectName: "mainSplitView"
                 anchors.top: parent == null ? window.top : parent.top
                 width: parent == null ? 0 : parent.width
-                height: graphListGLView.height
-                orientation: Qt.Horizontal
+                height: parent == null ? 0 : parent.parent.height
                 handle: Item {
                     implicitWidth: 4
                 }
-                visible: graphListNameView.currentIndex == index
-                Layout.fillWidth: true
+                visible: graphListNameView.currentIndex === index
 
                 SplitView {
                     id: graphView
@@ -413,7 +411,6 @@ ApplicationWindow {
                         backgroundColour: settings.glViewBackgroundColour
                         antialiasingSamples: 0
                         highlightOnHover: true
-                        //anchors.fill: parent
 
                         // it is necessary to "flip" the FBO here because the default assumes
                         // that y is already flipped. Instead this will be handled internally
@@ -421,39 +418,16 @@ ApplicationWindow {
                         mirrorVertically: true
 
                         SplitView.preferredWidth: window.width / 3
-                        anchors.fill: parent
                         focus: true
                     }
                 }
 
-                SplitView {
-                    id: panelSplitView
-                    objectName: "panelSplitView"
-                    orientation: Qt.Vertical
-                    handle: Rectangle {
-                        implicitHeight: 4
-
-                        color: Qt.darker(Theme.panelColour, 1.1)
-                    }
-
-                    readonly property int defaultPreferredWidth: 240
-
-                    SplitView.minimumWidth: 200
-                    SplitView.preferredWidth: defaultPreferredWidth
-                    SplitView.maximumWidth: window.width / 3
-
-                    Loader {
-                        objectName: "mapsLoader"
-                        active: true
-                        visible: active
-                        sourceComponent: Ui.MapPanel {
-                            graphDocument: graphDocumentFile
-                        }
-
-                        SplitView.minimumHeight: active
-                                                 && item.expanded ? item.minimumUsefulHeight : undefined
-                        SplitView.maximumHeight: active ? (item.expanded ? Infinity : item.header.implicitHeight) : 0
-                        SplitView.fillHeight: active && item.expanded
+                Loader {
+                    objectName: "mapsLoader"
+                    active: true
+                    visible: active
+                    sourceComponent: MapPanel {
+                        graphDocument: graphDocumentFile
                     }
                 }
             }

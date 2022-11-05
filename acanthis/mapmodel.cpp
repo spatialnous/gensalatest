@@ -1,27 +1,31 @@
+// Copyright (C) 2022, Petros Koutsolampros
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #include "mapmodel.h"
+
+#include "attributeitem.h"
 
 #include <QString>
 
-MapModel::MapModel(QObject *parent) : QAbstractItemModel(parent), m_rootItem(new TreeItem) {
-
-    // make sure that the whole model is reset when the graph document changes
-    connect(this, &MapModel::graphDocumentChanged, [=]() { updateAfterGraphDocumentChange(); });
-}
-
-void MapModel::updateAfterGraphDocumentChange() {
-    beginResetModel();
-    //    m_rootItem = new TreeItem({"root1"});
-
-    //    for (std::unique_ptr<MapLayer> &mapLayer : m_graphDocument->getMapLayers())
-    //        m_rootItem->appendChild(new TreeItem({mapLayer->getName()}, m_rootItem));
-    endResetModel();
-}
+MapModel::MapModel(QObject *parent) : QAbstractItemModel(parent), m_rootItem(new TreeItem("")) {}
 
 QModelIndex MapModel::index(int row, int column, const QModelIndex &parent) const {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
     TreeItem *parentItem = getItem(parent);
-    auto childPtr = parentItem->subItems.at(row);
+    auto childPtr = parentItem->getChild(row);
     if (childPtr) {
         return createIndex(row, column, childPtr.get());
     } else {
@@ -34,21 +38,21 @@ QModelIndex MapModel::parent(const QModelIndex &index) const {
         return QModelIndex();
     }
     TreeItem *childItem = getItem(index);
-    auto parentPtr = childItem->parentItem;
+    auto parentPtr = childItem->getParent();
     if (!parentPtr || parentPtr == m_rootItem) {
         return QModelIndex();
     }
-    return createIndex(parentPtr.get()->row, 0, parentPtr.get());
+    return createIndex(parentPtr.get()->getRow(), 0, parentPtr.get());
 }
 
 int MapModel::rowCount(const QModelIndex &parent) const {
     TreeItem *parentItem = getItem(parent);
-    return parentItem->subItems.size();
+    return parentItem->nChildren();
 }
 
 int MapModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
-    return 1;
+    return 2;
 }
 
 QVariant MapModel::data(const QModelIndex &index, int role) const {
@@ -56,10 +60,18 @@ QVariant MapModel::data(const QModelIndex &index, int role) const {
         return QVariant();
     }
     TreeItem *item = getItem(index);
-    // MapLayer *layer = m_graphDocument->layerAt(index.row());
+    role = VisibilityRole;
+
+    if (index.column() == 0) {
+        role = VisibilityRole;
+    } else if (index.column() == 1) {
+        role = NameRole;
+    }
     switch (role) {
-    case LayerRole:
-        return QVariant::fromValue(item);
+    case NameRole:
+        return item->getName();
+    case VisibilityRole:
+        return item->isVisible();
     default:
         break;
     }
@@ -68,21 +80,38 @@ QVariant MapModel::data(const QModelIndex &index, int role) const {
 
 QHash<int, QByteArray> MapModel::roleNames() const {
     QHash<int, QByteArray> names = QAbstractItemModel::roleNames();
-    names.insert(QHash<int, QByteArray>{{LayerRole, "treeitem"}});
+    names.insert(QHash<int, QByteArray>{{VisibilityRole, "visibility"}, {NameRole, "name"}});
     return names;
 }
 
 void MapModel::resetItems() {
     beginResetModel();
+    int row = 0;
     for (std::unique_ptr<MapLayer> &mapLayer : m_graphDocument->getMapLayers()) {
 
-        //        QSharedPointer<TreeItem> mappl{new TreeItem};
-        mapLayer->parentItem = m_rootItem;
-        m_rootItem->subItems.append(QSharedPointer<TreeItem>(mapLayer.get()));
-        //        mapLayer->m_name = QString(mapLayer->getName()).arg(0);
-        //        mappl->name = QString(mapLayer->getName()).arg(0);
+        auto mapItem = m_rootItem->addChildItem(QSharedPointer<MapLayer>(mapLayer.get()), row);
+        mapItem->setVisible(true);
+        ++row;
+        if (mapLayer->hasGraph())
+            auto graphItem = mapItem->addChildItem("Graph", row);
+        ++row;
+        auto attrItem = mapItem->addChildItem("Attributes", row);
+        ++row;
+        for (int col = 0; col < mapLayer->getAttributes().getNumColumns(); ++col) {
+            attrItem->addChildItem(QSharedPointer<AttributeItem>(
+                                       new AttributeItem(mapLayer->getAttributes().getColumn(col))),
+                                   row);
+            ++row;
+        }
+
+        ++row;
     }
     endResetModel();
+}
+
+void MapModel::setItemVisibility(const QModelIndex &idx, bool visibility) {
+    getItem(idx)->setVisible(visibility);
+    emit dataChanged(idx, idx, QVector<int>() << VisibilityRole);
 }
 
 TreeItem *MapModel::getItem(const QModelIndex &idx) const {
@@ -94,81 +123,3 @@ TreeItem *MapModel::getItem(const QModelIndex &idx) const {
     }
     return m_rootItem.get();
 }
-
-//// void MapModel::setGraphDocument(GraphDocument *layeredImageProject) {
-////    if (layeredImageProject == mLayeredImageProject)
-////        return;
-
-////    if (mLayeredImageProject) {
-////        mLayeredImageProject->disconnect(this);
-////    }
-
-////    beginResetModel();
-////    mLayeredImageProject = layeredImageProject;
-////    endResetModel();
-////    emit layeredImageProjectChanged();
-
-////    if (mLayeredImageProject) {
-////        connect(mLayeredImageProject, &LayeredImageProject::preLayersCleared, this,
-////        &MapModel::onPreLayersCleared); connect(mLayeredImageProject,
-////        &LayeredImageProject::postLayersCleared, this, &MapModel::onPostLayersCleared);
-////        connect(mLayeredImageProject, &LayeredImageProject::preLayerAdded, this,
-////        &MapModel::onPreLayerAdded); connect(mLayeredImageProject,
-////        &LayeredImageProject::postLayerAdded, this, &MapModel::onPostLayerAdded);
-////        connect(mLayeredImageProject, &LayeredImageProject::preLayerRemoved, this,
-////        &MapModel::onPreLayerRemoved); connect(mLayeredImageProject,
-////        &LayeredImageProject::postLayerRemoved, this, &MapModel::onPostLayerRemoved);
-////        connect(mLayeredImageProject, &LayeredImageProject::preLayerMoved, this,
-////        &MapModel::onPreLayerMoved); connect(mLayeredImageProject,
-////        &LayeredImageProject::postLayerMoved, this, &MapModel::onPostLayerMoved);
-////    }
-////}
-
-void MapModel::onPreLayersCleared() {
-    //    qCDebug(lcMapModel) << "about to call beginResetModel()";
-    beginResetModel();
-    //    qCDebug(lcMapModel) << "called beginResetModel()";
-}
-
-void MapModel::onPostLayersCleared() {
-    //    qCDebug(lcMapModel) << "about to call endResetModel()";
-    endResetModel();
-    //    qCDebug(lcMapModel) << "called endResetModel()";
-}
-
-void MapModel::onPreLayerAdded(int index) {
-    //    qCDebug(lcMapModel) << "index" << index;
-    beginInsertRows(QModelIndex(), index, index);
-}
-
-void MapModel::onPostLayerAdded(int index) {
-    //    qCDebug(lcMapModel) << "index" << index;
-    endInsertRows();
-}
-
-void MapModel::onPreLayerRemoved(int index) {
-    //    qCDebug(lcMapModel) << "index" << index;
-    beginRemoveRows(QModelIndex(), index, index);
-}
-
-void MapModel::onPostLayerRemoved(int index) {
-    //    qCDebug(lcMapModel) << "index" << index;
-    endRemoveRows();
-}
-
-void MapModel::onPreLayerMoved(int fromIndex, int toIndex) {
-    // Ahhh... what a mess. The behaviour of beginMoveRows() is super confusing
-    // when moving an item down within the same parent, so we account for that weirdness
-    // here. http://doc.qt.io/qt-5/qabstractitemmodel.html#beginMoveRows
-    const int actualToIndex = toIndex > fromIndex ? toIndex + 1 : toIndex;
-
-    //    if (!beginMoveRows(QModelIndex(), fromIndex, fromIndex, QModelIndex(),
-    //    actualToIndex)) {
-    //        qWarning() << "beginMoveRows() failed when trying to move" << fromIndex <<
-    //        "to" << toIndex
-    //                   << "- weird stuff might be about to happen since we're not going
-    //                   to cancel the move operation";
-    //    }
-}
-
-void MapModel::onPostLayerMoved(int, int) { endMoveRows(); }

@@ -1,9 +1,23 @@
+// Copyright (C) 2022, Petros Koutsolampros
+
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 #include "shapemaplayer.h"
 
-#include "glmapview/glshapemap.h"
+#include "aglmapview/aglshapemap.h"
 
-ShapeMapLayer::ShapeMapLayer(ShapeMap &shapeMap)
-    : m_shapeMap(shapeMap), MapLayer(std::unique_ptr<GLShapeMap>(
-                                new GLShapeMap(shapeMap, 8, shapeMap.getSpacing() * 0.1))) {
-    m_name = QString::fromStdString(shapeMap.getName());
-}
+ShapeMapLayer::ShapeMapLayer(ShapeMap &map)
+    : m_shapeMap(map),
+      MapLayer(std::unique_ptr<AGLShapeMap>(new AGLShapeMap(map, 8, map.getSpacing() * 0.1)),
+               QString::fromStdString(map.getName()), map.getAttributeTable()) {}

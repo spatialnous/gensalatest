@@ -16,6 +16,7 @@
 #include "graphdocument.h"
 
 #include "pixelmaplayer.h"
+#include "shapegraphlayer.h"
 #include "shapemaplayer.h"
 
 GraphDocument::GraphDocument(std::string filename) : m_filename(filename) {
@@ -29,8 +30,8 @@ GraphDocument::GraphDocument(std::string filename) : m_filename(filename) {
             m_mapLayers.push_back(std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(shapeMap)));
         }
     }
-    for (auto &shapeMap : m_metaGraph->getShapeGraphs()) {
-        m_mapLayers.push_back(std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(*shapeMap)));
+    for (auto &shapeGraph : m_metaGraph->getShapeGraphs()) {
+        m_mapLayers.push_back(std::unique_ptr<ShapeGraphLayer>(new ShapeGraphLayer(*shapeGraph)));
     }
     for (PointMap &pointMap : m_metaGraph->getPointMaps()) {
         m_mapLayers.push_back(std::unique_ptr<PixelMapLayer>(new PixelMapLayer(pointMap)));

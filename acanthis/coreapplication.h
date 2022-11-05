@@ -16,9 +16,6 @@
 #pragma once
 
 #include "documentmanager.h"
-#include "interfaceversion.h"
-#include "mainwindow.h"
-#include "settingsimpl.h"
 
 #include <QFileOpenEvent>
 #include <QGuiApplication>
@@ -27,7 +24,6 @@
 class CoreApplication : public QGuiApplication {
   private:
     std::string m_fileToLoad;
-    std::unique_ptr<MainWindow> m_mainWindow;
     DocumentManager m_documentManager;
 
   public:
@@ -40,7 +36,6 @@ class CoreApplication : public QGuiApplication {
         if (event->type() == QEvent::FileOpen) {
             QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
             m_fileToLoad = openEvent->file().toStdString();
-            m_mainWindow->loadFile(m_fileToLoad);
         }
 
         return QGuiApplication::event(event);
