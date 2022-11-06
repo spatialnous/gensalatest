@@ -16,107 +16,80 @@
 #include "stepdepthparser.h"
 #include "exceptions.h"
 #include "parsingutils.h"
-#include "salalib/entityparsing.h"
 #include "runmethods.h"
-#include <sstream>
+#include "salalib/entityparsing.h"
 #include <cstring>
+#include <sstream>
 
 using namespace depthmapX;
 
-void StepDepthParser::parse(int argc, char ** argv)
-{
+void StepDepthParser::parse(int argc, char **argv) {
 
     std::vector<std::string> points;
     std::string pointFile;
-    for ( int i = 1; i < argc; ++i )
-    {
-        if ( std::strcmp ("-sdp", argv[i]) == 0)
-        {
-            if (!pointFile.empty())
-            {
+    for (int i = 1; i < argc; ++i) {
+        if (std::strcmp("-sdp", argv[i]) == 0) {
+            if (!pointFile.empty()) {
                 throw CommandLineException("-sdp cannot be used together with -sdf");
             }
             ENFORCE_ARGUMENT("-sdp", i)
-            if (!has_only_digits_dots_commas(argv[i]))
-            {
+            if (!has_only_digits_dots_commas(argv[i])) {
                 std::stringstream message;
-                message << "Invalid step depth point provided ("
-                        << argv[i]
-                        << "). Should only contain digits dots and commas"
-                        << std::flush;
+                message << "Invalid step depth point provided (" << argv[i]
+                        << "). Should only contain digits dots and commas" << std::flush;
                 throw CommandLineException(message.str().c_str());
             }
             points.push_back(argv[i]);
-        }
-        else if ( std::strcmp("-sdf", argv[i]) == 0 )
-        {
-            if (!points.empty())
-            {
+        } else if (std::strcmp("-sdf", argv[i]) == 0) {
+            if (!points.empty()) {
                 throw CommandLineException("-sdf cannot be used together with -sdp");
             }
             ENFORCE_ARGUMENT("-sdf", i)
             pointFile = argv[i];
-        }
-        else if ( std::strcmp ("-sdt", argv[i]) == 0)
-        {
+        } else if (std::strcmp("-sdt", argv[i]) == 0) {
             ENFORCE_ARGUMENT("-sdt", i)
-            if ( std::strcmp(argv[i], "angular") == 0 )
-            {
+            if (std::strcmp(argv[i], "angular") == 0) {
                 m_stepType = StepType::ANGULAR;
-            }
-            else if ( std::strcmp(argv[i], "metric") == 0 )
-            {
+            } else if (std::strcmp(argv[i], "metric") == 0) {
                 m_stepType = StepType::METRIC;
-            }
-            else if ( std::strcmp(argv[i], "visual") == 0 )
-            {
+            } else if (std::strcmp(argv[i], "visual") == 0) {
                 m_stepType = StepType::VISUAL;
-            }
-            else
-            {
+            } else {
                 throw CommandLineException(std::string("Invalid step type: ") + argv[i]);
             }
         }
     }
 
-    if (pointFile.empty() && points.empty())
-    {
+    if (pointFile.empty() && points.empty()) {
         throw CommandLineException("Either -sdp or -sdf must be given");
     }
 
-    if(!pointFile.empty())
-    {
+    if (!pointFile.empty()) {
         std::ifstream pointsStream(pointFile);
-        if (!pointsStream)
-        {
+        if (!pointsStream) {
             std::stringstream message;
-            message << "Failed to load file " << pointFile << ", error " << std::strerror(errno) << std::flush;
+            message << "Failed to load file " << pointFile << ", error " << std::strerror(errno)
+                    << std::flush;
             throw depthmapX::RuntimeException(message.str().c_str());
         }
         std::vector<Point2f> parsed = EntityParsing::parsePoints(pointsStream, '\t');
         m_stepDepthPoints.insert(std::end(m_stepDepthPoints), std::begin(parsed), std::end(parsed));
-    }
-    else if(!points.empty())
-    {
+    } else if (!points.empty()) {
         std::stringstream pointsStream;
         pointsStream << "x,y";
-        std::vector<std::string>::iterator iter = points.begin(), end =
-        points.end();
-        for ( ; iter != end; ++iter )
-        {
+        std::vector<std::string>::iterator iter = points.begin(), end = points.end();
+        for (; iter != end; ++iter) {
             pointsStream << "\n" << *iter;
         }
         std::vector<Point2f> parsed = EntityParsing::parsePoints(pointsStream, ',');
         m_stepDepthPoints.insert(std::end(m_stepDepthPoints), std::begin(parsed), std::end(parsed));
     }
 
-    if (m_stepType == StepType::NONE)
-    {
+    if (m_stepType == StepType::NONE) {
         throw CommandLineException("Step depth type (-sdt) must be provided");
     }
 }
 
-void StepDepthParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const
-{
+void StepDepthParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
     dm_runmethods::runStepDepth(clp, m_stepType, m_stepDepthPoints, perfWriter);
 }

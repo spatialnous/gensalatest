@@ -49,13 +49,14 @@ TEST_CASE("Simple Isovist") {
         std::unique_ptr<Communicator> comm(new ICommunicator);
         metaGraph->makeIsovist(comm.get(), isovistOrigin, 0, 0, false);
     }
-    SECTION("Without a communicator") { metaGraph->makeIsovist(nullptr, isovistOrigin, 0, 0, false); }
+    SECTION("Without a communicator") {
+        metaGraph->makeIsovist(nullptr, isovistOrigin, 0, 0, false);
+    }
 
     SalaShape &isovist = metaGraph->getDataMaps().front().getAllShapes().begin()->second;
 
     REQUIRE(isovist.isClosed());
     REQUIRE(isovist.isPolygon());
-
 
     // TODO: The current implementation generates a polygon of 12 points, potentially
     // because it takes them directly from the isovist gaps. This isovist only really

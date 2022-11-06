@@ -88,7 +88,8 @@ void SegmentShortestPathParser::parse(int argc, char **argv) {
     }
 }
 
-void SegmentShortestPathParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
+void SegmentShortestPathParser::run(const CommandLineParser &clp,
+                                    IPerformanceSink &perfWriter) const {
     auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::cout << "ok\nSelecting cells... " << std::flush;

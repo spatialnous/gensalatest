@@ -17,8 +17,8 @@
 #include "modules/segmentshortestpaths/core/segmmetricshortestpath.h"
 #include "modules/segmentshortestpaths/core/segmtopologicalshortestpath.h"
 #include "modules/segmentshortestpaths/core/segmtulipshortestpath.h"
-#include "salalib/shapegraph.h"
 #include "salalib/mapconverter.h"
+#include "salalib/shapegraph.h"
 
 TEST_CASE("Shortest paths working examples", "") {
     const float EPSILON = 0.001;
@@ -45,8 +45,8 @@ TEST_CASE("Shortest paths working examples", "") {
 
     REQUIRE(axialMap.getShapeCount() == 10);
 
-    std::unique_ptr<ShapeGraph> segmentMap =
-        MapConverter::convertAxialToSegment(nullptr, axialMap, "Dummy segment map", true, true, 0.4);
+    std::unique_ptr<ShapeGraph> segmentMap = MapConverter::convertAxialToSegment(
+        nullptr, axialMap, "Dummy segment map", true, true, 0.4);
 
     REQUIRE(segmentMap->getShapeCount() == 10);
 
@@ -64,14 +64,17 @@ TEST_CASE("Shortest paths working examples", "") {
         SegmentTulipShortestPath(*segmentMap.get()).run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Angle"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Order"));
-        int angleColIdx = segmentMap->getAttributeTable().getColumnIndex("Angular Shortest Path Angle");
-        int orderColIdx = segmentMap->getAttributeTable().getColumnIndex("Angular Shortest Path Order");
-        std::vector<double> expectedAngles = {-1, 0, 0.54297, 1.42969, -1, -1, -1, 1.24219, 0.734375, 1.82422};
+        int angleColIdx =
+            segmentMap->getAttributeTable().getColumnIndex("Angular Shortest Path Angle");
+        int orderColIdx =
+            segmentMap->getAttributeTable().getColumnIndex("Angular Shortest Path Order");
+        std::vector<double> expectedAngles = {-1, 0,  0.54297, 1.42969,  -1,
+                                              -1, -1, 1.24219, 0.734375, 1.82422};
         std::vector<int> expectedOrder = {-1, 0, 1, 4, -1, -1, -1, 3, 2, 5};
         for (int i = 0; i < lines.size(); i++) {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
-            AttributeRow &shapeRow =
-                segmentMap->getAttributeRowFromShapeIndex(segmentMap->getShapesInRegion(selRegion).begin()->first);
+            AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
+                segmentMap->getShapesInRegion(selRegion).begin()->first);
 
             REQUIRE(shapeRow.getValue(angleColIdx) == Approx(expectedAngles[i]).epsilon(EPSILON));
             REQUIRE(shapeRow.getValue(orderColIdx) == expectedOrder[i]);
@@ -84,15 +87,19 @@ TEST_CASE("Shortest paths working examples", "") {
         SegmentMetricShortestPath(*segmentMap.get()).run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Distance"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Order"));
-        int distanceColIdx = segmentMap->getAttributeTable().getColumnIndex("Metric Shortest Path Distance");
-        int orderColIdx = segmentMap->getAttributeTable().getColumnIndex("Metric Shortest Path Order");
-        std::vector<double> expectedDistances = {-1, 0, 1, 3.57756, -1, 2.67689, 1.89156, -1, -1, 4.58446};
+        int distanceColIdx =
+            segmentMap->getAttributeTable().getColumnIndex("Metric Shortest Path Distance");
+        int orderColIdx =
+            segmentMap->getAttributeTable().getColumnIndex("Metric Shortest Path Order");
+        std::vector<double> expectedDistances = {-1,      0,       1,  3.57756, -1,
+                                                 2.67689, 1.89156, -1, -1,      4.58446};
         std::vector<int> expectedOrder = {-1, 0, 1, 4, -1, 3, 2, -1, -1, 5};
         for (int i = 0; i < lines.size(); i++) {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
-            AttributeRow &shapeRow =
-                segmentMap->getAttributeRowFromShapeIndex(segmentMap->getShapesInRegion(selRegion).begin()->first);
-            REQUIRE(shapeRow.getValue(distanceColIdx) == Approx(expectedDistances[i]).epsilon(EPSILON));
+            AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
+                segmentMap->getShapesInRegion(selRegion).begin()->first);
+            REQUIRE(shapeRow.getValue(distanceColIdx) ==
+                    Approx(expectedDistances[i]).epsilon(EPSILON));
             REQUIRE(shapeRow.getValue(orderColIdx) == expectedOrder[i]);
         }
     }
@@ -103,14 +110,16 @@ TEST_CASE("Shortest paths working examples", "") {
         SegmentTopologicalShortestPath(*segmentMap.get()).run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Depth"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Order"));
-        int depthColIdx = segmentMap->getAttributeTable().getColumnIndex("Topological Shortest Path Depth");
-        int orderColIdx = segmentMap->getAttributeTable().getColumnIndex("Topological Shortest Path Order");
+        int depthColIdx =
+            segmentMap->getAttributeTable().getColumnIndex("Topological Shortest Path Depth");
+        int orderColIdx =
+            segmentMap->getAttributeTable().getColumnIndex("Topological Shortest Path Order");
         std::vector<double> expectedDepths = {2, 0, -1, -1, 1, -1, -1, -1, -1, 3};
         std::vector<int> expectedOrder = {2, 0, -1, -1, 1, -1, -1, -1, -1, 3};
         for (int i = 0; i < lines.size(); i++) {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
-            AttributeRow &shapeRow =
-                segmentMap->getAttributeRowFromShapeIndex(segmentMap->getShapesInRegion(selRegion).begin()->first);
+            AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
+                segmentMap->getShapesInRegion(selRegion).begin()->first);
             REQUIRE(shapeRow.getValue(depthColIdx) == Approx(expectedDepths[i]).epsilon(EPSILON));
             REQUIRE(shapeRow.getValue(orderColIdx) == expectedOrder[i]);
         }

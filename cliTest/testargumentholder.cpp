@@ -13,17 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "catch.hpp"
 #include "argumentholder.h"
+#include "catch.hpp"
 #include <cstring>
 
-
-
-TEST_CASE("Test ArgumentHolder", "Constructor")
-{
+TEST_CASE("Test ArgumentHolder", "Constructor") {
     ArgumentHolder ah{"foo", "bar"};
     REQUIRE(ah.argc() == 2);
-    REQUIRE(std::strcmp(ah.argv()[0], "foo") == 0 );
-    REQUIRE(std::strcmp(ah.argv()[1], "bar") == 0 );
+    REQUIRE(std::strcmp(ah.argv()[0], "foo") == 0);
+    REQUIRE(std::strcmp(ah.argv()[1], "bar") == 0);
 }
-

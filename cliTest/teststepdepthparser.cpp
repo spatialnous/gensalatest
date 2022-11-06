@@ -13,64 +13,63 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <catch.hpp>
-#include "depthmapXcli/stepdepthparser.h"
 #include "argumentholder.h"
+#include "depthmapXcli/stepdepthparser.h"
 #include "selfcleaningfile.h"
+#include <catch.hpp>
 
-TEST_CASE("StepDepthParserFail", "Error cases")
-{
-    SECTION("Missing argument to -sdp")
-    {
+TEST_CASE("StepDepthParserFail", "Error cases") {
+    SECTION("Missing argument to -sdp") {
         StepDepthParser parser;
         ArgumentHolder ah{"prog", "-sdp"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("-sdp requires an argument"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("-sdp requires an argument"));
     }
 
-    SECTION("Missing argument to -sdf")
-    {
+    SECTION("Missing argument to -sdf") {
         StepDepthParser parser;
         ArgumentHolder ah{"prog", "-sdf"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("-sdf requires an argument"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("-sdf requires an argument"));
     }
 
-    SECTION("Missing argument to -sdt")
-    {
+    SECTION("Missing argument to -sdt") {
         StepDepthParser parser;
         ArgumentHolder ah{"prog", "-sdt"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("-sdt requires an argument"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("-sdt requires an argument"));
     }
 
-    SECTION("rubbish input to -sdp")
-    {
+    SECTION("rubbish input to -sdp") {
         StepDepthParser parser;
         ArgumentHolder ah{"prog", "-sdp", "foo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("Invalid step depth point provided (foo). Should only contain digits dots and commas"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("Invalid step depth point provided (foo). Should only "
+                                            "contain digits dots and commas"));
     }
 
-    SECTION("rubbish input to -sdt")
-    {
+    SECTION("rubbish input to -sdt") {
         StepDepthParser parser;
         ArgumentHolder ah{"prog", "-sdt", "foo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("Invalid step type: foo"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("Invalid step type: foo"));
     }
 
-    SECTION("Non-existing file provided")
-    {
+    SECTION("Non-existing file provided") {
         StepDepthParser parser;
         ArgumentHolder ah{"prog", "-sdf", "foo.csv"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("Failed to load file foo.csv, error"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("Failed to load file foo.csv, error"));
     }
 
-    SECTION("Neiter points nor point file provided")
-    {
+    SECTION("Neiter points nor point file provided") {
         StepDepthParser parser;
         ArgumentHolder ah{"prog"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("Either -sdp or -sdf must be given"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("Either -sdp or -sdf must be given"));
     }
 
-    SECTION("Points and pointfile provided")
-    {
+    SECTION("Points and pointfile provided") {
         StepDepthParser parser;
         SelfCleaningFile scf("testpoints.csv");
         {
@@ -78,11 +77,11 @@ TEST_CASE("StepDepthParserFail", "Error cases")
             f << "x\ty\n1\t2\n" << std::flush;
         }
         ArgumentHolder ah{"prog", "-sdp", "0.1,5.2", "-sdf", "testpoints.csv"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("-sdf cannot be used together with -sdp"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("-sdf cannot be used together with -sdp"));
     }
 
-    SECTION("Pointfile and points provided")
-    {
+    SECTION("Pointfile and points provided") {
         StepDepthParser parser;
         SelfCleaningFile scf("testpoints.csv");
         {
@@ -90,11 +89,11 @@ TEST_CASE("StepDepthParserFail", "Error cases")
             f << "x\ty\n1\t2\n" << std::flush;
         }
         ArgumentHolder ah{"prog", "-sdf", "testpoints.csv", "-sdp", "0.1,5.2"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("-sdp cannot be used together with -sdf"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("-sdp cannot be used together with -sdf"));
     }
 
-    SECTION("Malformed pointfile")
-    {
+    SECTION("Malformed pointfile") {
         StepDepthParser parser;
         SelfCleaningFile scf("testpoints.csv");
         {
@@ -102,11 +101,11 @@ TEST_CASE("StepDepthParserFail", "Error cases")
             f << "x\ty\n1\n" << std::flush;
         }
         ArgumentHolder ah{"prog", "-sdf", "testpoints.csv"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("Error parsing line: 1"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("Error parsing line: 1"));
     }
 
-    SECTION("Malformed point arg")
-    {
+    SECTION("Malformed point arg") {
         StepDepthParser parser;
         SelfCleaningFile scf("testpoints.csv");
         {
@@ -114,21 +113,19 @@ TEST_CASE("StepDepthParserFail", "Error cases")
             f << "x\ty\n1\n" << std::flush;
         }
         ArgumentHolder ah{"prog", "-sdp", "0.1"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("Error parsing line: 0.1"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("Error parsing line: 0.1"));
     }
-
 }
 
-TEST_CASE("StepDepthParserSuccess", "Read successfully")
-{
+TEST_CASE("StepDepthParserSuccess", "Read successfully") {
     StepDepthParser parser;
     double x1 = 1.0;
     double y1 = 2.0;
     double x2 = 1.1;
     double y2 = 1.2;
 
-    SECTION("Read from commandline")
-    {
+    SECTION("Read from commandline") {
         std::stringstream p1;
         p1 << x1 << "," << y1 << std::flush;
         std::stringstream p2;
@@ -138,16 +135,14 @@ TEST_CASE("StepDepthParserSuccess", "Read successfully")
         parser.parse(ah.argc(), ah.argv());
     }
 
-    SECTION("Read from file")
-    {
+    SECTION("Read from file") {
         SelfCleaningFile scf("testpoints.csv");
         {
             std::ofstream f(scf.Filename().c_str());
-            f << "x\ty\n" << x1 << "\t" << y1 << "\n"
-                          << x2 << "\t" << y2 << "\n" << std::flush;
+            f << "x\ty\n" << x1 << "\t" << y1 << "\n" << x2 << "\t" << y2 << "\n" << std::flush;
         }
         ArgumentHolder ah{"prog", "-sdf", scf.Filename(), "-sdt", "visual"};
-        parser.parse(ah.argc(), ah.argv() );
+        parser.parse(ah.argc(), ah.argv());
     }
 
     auto points = parser.getStepDepthPoints();

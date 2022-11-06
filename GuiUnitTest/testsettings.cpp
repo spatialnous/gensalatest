@@ -13,26 +13,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <catch.hpp>
 #include <../cliTest/selfcleaningfile.h>
 #include <../depthmapX/settingsimpl.h>
+#include <catch.hpp>
 
-
-class TestSettingsFactory : public QSettingsFactory
-{
-public:
-    TestSettingsFactory(const QString &filename) : mFilename(filename)
-    {}
-    virtual std::unique_ptr<QSettings> getSettings() const
-    {
+class TestSettingsFactory : public QSettingsFactory {
+  public:
+    TestSettingsFactory(const QString &filename) : mFilename(filename) {}
+    virtual std::unique_ptr<QSettings> getSettings() const {
         return std::unique_ptr<QSettings>(new QSettings(mFilename, QSettings::IniFormat));
     }
-private:
+
+  private:
     QString mFilename;
 };
 
-TEST_CASE("Test simple settings")
-{
+TEST_CASE("Test simple settings") {
     SelfCleaningFile scf("./test.ini");
     SettingsImpl settings(new TestSettingsFactory(scf.Filename().c_str()));
 
@@ -41,9 +37,7 @@ TEST_CASE("Test simple settings")
     REQUIRE(settings.readSetting("test1", "bar").toString().toStdString() == "foo");
 }
 
-
-TEST_CASE("Test settings transaction")
-{
+TEST_CASE("Test settings transaction") {
     SelfCleaningFile scf("./test.ini");
     SettingsImpl settings(new TestSettingsFactory(scf.Filename().c_str()));
 
@@ -53,5 +47,4 @@ TEST_CASE("Test settings transaction")
         transaction->writeSetting("test1", "foo");
     }
     REQUIRE(settings.readSetting("test1", "bar").toString() == "foo");
-
 }

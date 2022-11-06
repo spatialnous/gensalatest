@@ -14,15 +14,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "catch.hpp"
+
 #include "Catch/fakeit.hpp"
-#include <salalib/attributetable.h>
+
 #include <cliTest/selfcleaningfile.h>
 #include <fstream>
-#include <salalib/mgraph_consts.h>
+#include <salalib/attributetable.h>
 #include <salalib/layermanagerimpl.h>
+#include <salalib/mgraph_consts.h>
 
-TEST_CASE("test attribute column")
-{
+TEST_CASE("test attribute column") {
     AttributeColumnImpl col("colName");
     REQUIRE(col.getName() == "colName");
     REQUIRE(col.getFormula() == "");
@@ -61,7 +62,7 @@ TEST_CASE("test attribute column")
     REQUIRE(col.m_stats.visibleMin == -1.0);
     REQUIRE(col.m_stats.visibleTotal == -1.0);
 
-    col.updateStats(3.0f,1.2f);
+    col.updateStats(3.0f, 1.2f);
     REQUIRE(col.m_stats.max == Approx(3.0));
     REQUIRE(col.m_stats.min == Approx(1.2));
     REQUIRE(col.m_stats.total == Approx(5));
@@ -90,26 +91,24 @@ TEST_CASE("test attribute column")
     REQUIRE(copy.m_stats.visibleMax == -1.0);
     REQUIRE(copy.m_stats.visibleMin == -1.0);
     REQUIRE(copy.m_stats.visibleTotal == -1.0);
-
-
 }
 
-TEST_CASE("test attribute row")
-{
+TEST_CASE("test attribute row") {
     using namespace fakeit;
     Mock<AttributeColumnManager> colMan;
-    When(Method(colMan,getColumnIndex).Using(std::string("col1"))).AlwaysReturn(0);
-    When(Method(colMan,getColumnIndex).Using(std::string("col2"))).AlwaysReturn(1);
-    When(Method(colMan,getColumnIndex).Using(std::string("colx"))).AlwaysThrow(std::out_of_range("mock out of range"));
+    When(Method(colMan, getColumnIndex).Using(std::string("col1"))).AlwaysReturn(0);
+    When(Method(colMan, getColumnIndex).Using(std::string("col2"))).AlwaysReturn(1);
+    When(Method(colMan, getColumnIndex).Using(std::string("colx")))
+        .AlwaysThrow(std::out_of_range("mock out of range"));
 
-    When(Method(colMan,getNumColumns)).Return(2);
+    When(Method(colMan, getNumColumns)).Return(2);
 
     Mock<AttributeColumn> col1;
     Mock<AttributeColumn> col2;
     When(Method(colMan, getColumn).Using(0)).AlwaysReturn(col1.get());
     When(Method(colMan, getColumn).Using(1)).AlwaysReturn(col2.get());
-    When(Method(col1,updateStats)).AlwaysReturn();
-    When(Method(col2,updateStats)).AlwaysReturn();
+    When(Method(col1, updateStats)).AlwaysReturn();
+    When(Method(col2, updateStats)).AlwaysReturn();
 
     AttributeRowImpl row(colMan.get());
     row.setValue("col1", 1.2f);
@@ -124,10 +123,9 @@ TEST_CASE("test attribute row")
     REQUIRE(row.getValue("col2") == Approx(3.2f));
     REQUIRE(row.getValue(1) == Approx(3.2f));
 
-
-    Verify(Method(col1,updateStats).Using(1.2f,0.0f)).Once();
-    Verify(Method(col2,updateStats).Using(2.2f,0.0f)).Once();
-    Verify(Method(col2,updateStats).Using(3.2f,2.2f)).Once();
+    Verify(Method(col1, updateStats).Using(1.2f, 0.0f)).Once();
+    Verify(Method(col2, updateStats).Using(2.2f, 0.0f)).Once();
+    Verify(Method(col2, updateStats).Using(3.2f, 2.2f)).Once();
 
     REQUIRE_THROWS_AS(row.setValue("colx", 1.1f), std::out_of_range);
     REQUIRE_THROWS_AS(row.setValue(2, 1.2f), std::out_of_range);
@@ -145,14 +143,14 @@ TEST_CASE("test attribute row")
     REQUIRE(row.getValue(0) == Approx(1.2f));
     REQUIRE_THROWS_AS(row.getValue(2), std::out_of_range);
 
-    //test reading/writing
+    // test reading/writing
     SelfCleaningFile scf("rowfile.bin");
     {
         std::ofstream outfile(scf.Filename());
         row.write(outfile);
     }
     Mock<AttributeColumnManager> copiedColMan;
-    When(Method(copiedColMan,getNumColumns)).Return(2);
+    When(Method(copiedColMan, getNumColumns)).Return(2);
     AttributeRowImpl copiedRow(copiedColMan.get());
     {
         std::ifstream infile(scf.Filename());
@@ -163,18 +161,15 @@ TEST_CASE("test attribute row")
 
     row.incrValue(0, 1.0f);
     REQUIRE(row.getValue(0) == Approx(2.2f));
-    Verify(Method(col1,updateStats).Using(2.2f,1.2f)).Once();
+    Verify(Method(col1, updateStats).Using(2.2f, 1.2f)).Once();
 
-    AttributeRow& ifRef = row;
+    AttributeRow &ifRef = row;
     ifRef.incrValue(0);
     REQUIRE(row.getValue(0) == Approx(3.2f));
-    Verify(Method(col1,updateStats).Using(3.2f,2.2f)).Once();
-
-
+    Verify(Method(col1, updateStats).Using(3.2f, 2.2f)).Once();
 }
 
-TEST_CASE("test attribute table")
-{
+TEST_CASE("test attribute table") {
     AttributeTable table;
 
     table.insertOrResetColumn("col1");
@@ -191,15 +186,15 @@ TEST_CASE("test attribute table")
     REQUIRE(table.getColumn(3).isLocked());
 
     table.addRow(AttributeKey(0));
-    REQUIRE(table.getRow(AttributeKey(0)).getValue("col1") == -1 );
-    table.getRow(AttributeKey(0)).setValue("col1", 1.2f );
-    REQUIRE(table.getRow(AttributeKey(0)).getValue("col1") == Approx(1.2f) );
-    REQUIRE(table.getRow(AttributeKey(0)).getValue(0) == Approx(1.2f) );
+    REQUIRE(table.getRow(AttributeKey(0)).getValue("col1") == -1);
+    table.getRow(AttributeKey(0)).setValue("col1", 1.2f);
+    REQUIRE(table.getRow(AttributeKey(0)).getValue("col1") == Approx(1.2f));
+    REQUIRE(table.getRow(AttributeKey(0)).getValue(0) == Approx(1.2f));
 
-    REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == -1 );
-    table.getRow(AttributeKey(0)).setValue(3, 1.4f );
-    REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == Approx(1.4f) );
-    REQUIRE(table.getRow(AttributeKey(0)).getValue(3) == Approx(1.4f) );
+    REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == -1);
+    table.getRow(AttributeKey(0)).setValue(3, 1.4f);
+    REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == Approx(1.4f));
+    REQUIRE(table.getRow(AttributeKey(0)).getValue(3) == Approx(1.4f));
 
     REQUIRE_THROWS_AS(table.getRow(AttributeKey(0)).getValue(4), std::out_of_range);
 
@@ -211,34 +206,33 @@ TEST_CASE("test attribute table")
     REQUIRE(table.getColumn(1).getName() == "lcol2");
     REQUIRE(table.getColumnIndex("lcol2") == 1);
 
-    REQUIRE(table.getRow(AttributeKey(0)).getValue("col2") == -1.0 );
-    REQUIRE(table.getRow(AttributeKey(0)).getValue(0) == -1.0 );
-    REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == Approx(1.4f) );
-    REQUIRE(table.getRow(AttributeKey(0)).getValue(1) == Approx(1.4f) );
-
+    REQUIRE(table.getRow(AttributeKey(0)).getValue("col2") == -1.0);
+    REQUIRE(table.getRow(AttributeKey(0)).getValue(0) == -1.0);
+    REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == Approx(1.4f));
+    REQUIRE(table.getRow(AttributeKey(0)).getValue(1) == Approx(1.4f));
 
     REQUIRE_THROWS_AS(table.getRow(AttributeKey(0)).getValue(2), std::out_of_range);
 
     table.addRow(AttributeKey(1));
     REQUIRE_THROWS_AS(table.getRow(AttributeKey(1)).getValue(2), std::out_of_range);
-    REQUIRE(table.getRow(AttributeKey(1)).getValue("col2") == -1.0 );
-    REQUIRE(table.getRow(AttributeKey(1)).getValue(0) == -1.0 );
-    REQUIRE(table.getRow(AttributeKey(1)).getValue("lcol2") == -1.0 );
-    REQUIRE(table.getRow(AttributeKey(1)).getValue(1) == -1.0 );
+    REQUIRE(table.getRow(AttributeKey(1)).getValue("col2") == -1.0);
+    REQUIRE(table.getRow(AttributeKey(1)).getValue(0) == -1.0);
+    REQUIRE(table.getRow(AttributeKey(1)).getValue("lcol2") == -1.0);
+    REQUIRE(table.getRow(AttributeKey(1)).getValue(1) == -1.0);
 
     table.getRow(AttributeKey(1)).setValue(0, 2.4f);
     table.getRow(AttributeKey(1)).setValue("lcol2", 2.6f);
-    REQUIRE(table.getRow(AttributeKey(1)).getValue("col2") == Approx(2.4) );
-    REQUIRE(table.getRow(AttributeKey(1)).getValue(1) == Approx(2.6) );
+    REQUIRE(table.getRow(AttributeKey(1)).getValue("col2") == Approx(2.4));
+    REQUIRE(table.getRow(AttributeKey(1)).getValue(1) == Approx(2.6));
 
     size_t idx = table.getOrInsertColumn("col2");
     REQUIRE(idx == 0);
-    REQUIRE(table.getRow(AttributeKey(1)).getValue("col2") == Approx(2.4) );
+    REQUIRE(table.getRow(AttributeKey(1)).getValue("col2") == Approx(2.4));
     REQUIRE(table.getColumn(0).getStats().max == Approx(2.4));
 
     idx = table.insertOrResetColumn("col2");
     REQUIRE(idx == 0);
-    REQUIRE(table.getRow(AttributeKey(1)).getValue("col2") == -1.0 );
+    REQUIRE(table.getRow(AttributeKey(1)).getValue("col2") == -1.0);
     REQUIRE(table.getColumn(0).getStats().max == -1.0);
 
     size_t newColIndex = table.getOrInsertColumn("newCol");
@@ -265,8 +259,7 @@ TEST_CASE("test attribute table")
     REQUIRE_FALSE(iter->getRow().isSelected());
 
     table.deselectAllRows();
-    for (auto& item : table)
-    {
+    for (auto &item : table) {
         REQUIRE_FALSE(item.getRow().isSelected());
     }
 
@@ -279,8 +272,7 @@ TEST_CASE("test attribute table")
     }
 }
 
-TEST_CASE("Existing and non-existing rows")
-{
+TEST_CASE("Existing and non-existing rows") {
     AttributeTable table;
     table.getOrInsertColumn("col1");
     table.getOrInsertColumn("col2");
@@ -288,21 +280,21 @@ TEST_CASE("Existing and non-existing rows")
     table.addRow(AttributeKey(1)).setValue(0, 0.5f);
     table.addRow(AttributeKey(2)).setValue(0, 2.0f);
 
-    const AttributeTable& constRef = table;
+    const AttributeTable &constRef = table;
 
     table.getRow(AttributeKey(0));
     constRef.getRow(AttributeKey(0));
     REQUIRE_THROWS_AS(table.getRow(AttributeKey(5)), std::out_of_range);
     REQUIRE_THROWS_AS(constRef.getRow(AttributeKey(5)), std::out_of_range);
 
-    REQUIRE( table.getRowPtr(AttributeKey(1)) != 0);
-    REQUIRE( constRef.getRowPtr(AttributeKey(1)) != 0);
+    REQUIRE(table.getRowPtr(AttributeKey(1)) != 0);
+    REQUIRE(constRef.getRowPtr(AttributeKey(1)) != 0);
 
-    REQUIRE( table.getRowPtr(AttributeKey(5)) == 0);
-    REQUIRE( constRef.getRowPtr(AttributeKey(5)) == 0);
+    REQUIRE(table.getRowPtr(AttributeKey(5)) == 0);
+    REQUIRE(constRef.getRowPtr(AttributeKey(5)) == 0);
 }
 
-TEST_CASE("normalised values"){
+TEST_CASE("normalised values") {
     AttributeTable table;
     table.getOrInsertColumn("col1");
     table.getOrInsertColumn("col2");
@@ -315,28 +307,25 @@ TEST_CASE("normalised values"){
     REQUIRE(table.getRow(AttributeKey(1)).getNormalisedValue(0) == Approx(0.0f));
     REQUIRE(table.getRow(AttributeKey(2)).getNormalisedValue(0) == Approx(1.0f));
 
-    table.addRow(AttributeKey(3)).setValue(1,1.0f);
+    table.addRow(AttributeKey(3)).setValue(1, 1.0f);
 
     REQUIRE(table.getRow(AttributeKey(1)).getNormalisedValue(1) == Approx(0.5f));
     REQUIRE(table.getRow(AttributeKey(3)).getNormalisedValue(1) == Approx(0.5f));
 
-    table.getRow(AttributeKey(0)).setValue(1,1.1f);
+    table.getRow(AttributeKey(0)).setValue(1, 1.1f);
     REQUIRE(table.getRow(AttributeKey(3)).getNormalisedValue(1) == Approx(0.0f));
     REQUIRE(table.getRow(AttributeKey(1)).getNormalisedValue(1) == Approx(-1.0f));
-
-
 }
 
-TEST_CASE("attibute table iterations")
-{
+TEST_CASE("attibute table iterations") {
     AttributeTable table;
 
     table.insertOrResetColumn("col1");
     table.getOrInsertColumn("col2");
 
-    auto& row = table.addRow(AttributeKey(0));
+    auto &row = table.addRow(AttributeKey(0));
     row.setValue(0, 0.5f);
-    auto& row2 = table.addRow(AttributeKey(1));
+    auto &row2 = table.addRow(AttributeKey(1));
     row2.setValue(0, 1.0f);
 
     AttributeTable::iterator iter = table.begin();
@@ -349,15 +338,14 @@ TEST_CASE("attibute table iterations")
 
     REQUIRE(iter == table.end());
 
-    for( auto& item :  table)
-    {
+    for (auto &item : table) {
         item.getRow().setValue(1, 2.0f);
     }
 
     REQUIRE(table.getRow(AttributeKey(0)).getValue(1) == Approx(2.0));
     REQUIRE(table.getRow(AttributeKey(1)).getValue(1) == Approx(2.0));
 
-    const AttributeTable& const_table = table;
+    const AttributeTable &const_table = table;
 
     auto citer = const_table.begin();
     REQUIRE((*citer).getKey().value == 0);
@@ -384,7 +372,7 @@ TEST_CASE("attibute table iterations")
 
     cfoo = foo;
 
-    foo->getRow().setValue(1,2.2f);
+    foo->getRow().setValue(1, 2.2f);
     ++foo;
     foo->getRow().setValue(1, 3.2f);
 
@@ -394,8 +382,7 @@ TEST_CASE("attibute table iterations")
 
 #include <salalib/attributetablehelpers.h>
 
-TEST_CASE("Attribute Table - serialisation")
-{
+TEST_CASE("Attribute Table - serialisation") {
     LayerManagerImpl layerManager;
     layerManager.addLayer("extra layer");
     REQUIRE(layerManager.getLayerIndex("extra layer") == 1);
@@ -406,7 +393,7 @@ TEST_CASE("Attribute Table - serialisation")
 
     DisplayParams overAllDp;
     overAllDp.blue = 1.2f;
-    overAllDp.red  = 1.3f;
+    overAllDp.red = 1.3f;
 
     DisplayParams fooDp;
     fooDp.blue = 2.2f;
@@ -418,11 +405,11 @@ TEST_CASE("Attribute Table - serialisation")
     newTable.getColumn(colIndex2).setDisplayParams(barDp);
     newTable.setDisplayParams(overAllDp);
 
-    auto& row = newTable.addRow(AttributeKey(0));
-    auto& row2 = newTable.addRow(AttributeKey(10));
+    auto &row = newTable.addRow(AttributeKey(0));
+    auto &row2 = newTable.addRow(AttributeKey(10));
 
-    row.setValue(0,1.0f);
-    row.setValue(1,2.0f);
+    row.setValue(0, 1.0f);
+    row.setValue(1, 2.0f);
 
     row2.setValue(0, 11.0f);
     row2.setValue(1, 12.0f);
@@ -431,8 +418,6 @@ TEST_CASE("Attribute Table - serialisation")
     dXreimpl::pushSelectionToLayer(newTable, layerManager, "sel layer");
     REQUIRE(isObjectVisible(layerManager, row2));
     REQUIRE_FALSE(isObjectVisible(layerManager, row));
-
-
 
     SelfCleaningFile newTableFile("newtable.bin");
 
@@ -448,11 +433,11 @@ TEST_CASE("Attribute Table - serialisation")
         copyTable.read(infile, copyLayerManager);
     }
 
-    auto& copyRow = copyTable.getRow(AttributeKey(0));
+    auto &copyRow = copyTable.getRow(AttributeKey(0));
     REQUIRE(copyRow.getValue(0) == Approx(1.0f));
     REQUIRE(copyRow.getValue(1) == Approx(2.0f));
 
-    auto& copyRow2 = copyTable.getRow(AttributeKey(10));
+    auto &copyRow2 = copyTable.getRow(AttributeKey(10));
     REQUIRE(copyRow2.getValue(0) == Approx(11.0f));
     REQUIRE(copyRow2.getValue(1) == Approx(12.0f));
 
@@ -464,6 +449,4 @@ TEST_CASE("Attribute Table - serialisation")
 
     REQUIRE(copyTable.getColumn(colIndex1).getDisplayParams().blue == Approx(fooDp.blue));
     REQUIRE(copyTable.getDisplayParams().blue == Approx(overAllDp.blue));
-
 }
-

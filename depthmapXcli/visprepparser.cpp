@@ -16,15 +16,14 @@
 #include "visprepparser.h"
 #include "exceptions.h"
 #include "parsingutils.h"
-#include "salalib/entityparsing.h"
 #include "runmethods.h"
-#include <sstream>
+#include "salalib/entityparsing.h"
 #include <cstring>
+#include <sstream>
 
 using namespace depthmapX;
 
-void VisPrepParser::parse(int argc, char ** argv)
-{
+void VisPrepParser::parse(int argc, char **argv) {
 
     // All options:
     // Create grid (m_grid > 0)
@@ -46,132 +45,101 @@ void VisPrepParser::parse(int argc, char ** argv)
 
     std::vector<std::string> points;
     std::string pointFile;
-    for ( int i = 1; i < argc; ++i )
-    {
-        if ( std::strcmp ("-pg", argv[i]) == 0)
-        {
-            if (m_grid >= 0)
-            {
+    for (int i = 1; i < argc; ++i) {
+        if (std::strcmp("-pg", argv[i]) == 0) {
+            if (m_grid >= 0) {
                 throw CommandLineException("-pg can only be used once");
             }
             ENFORCE_ARGUMENT("-pg", i)
             m_grid = std::atof(argv[i]);
-            if (m_grid <= 0)
-            {
+            if (m_grid <= 0) {
                 throw CommandLineException(std::string("-pg must be a number >0, got ") + argv[i]);
             }
-        }
-        else if ( std::strcmp ("-pp", argv[i]) == 0)
-        {
-            if (!pointFile.empty())
-            {
+        } else if (std::strcmp("-pp", argv[i]) == 0) {
+            if (!pointFile.empty()) {
                 throw CommandLineException("-pp cannot be used together with -pf");
             }
             ENFORCE_ARGUMENT("-pp", i)
-            if (!has_only_digits_dots_commas(argv[i]))
-            {
+            if (!has_only_digits_dots_commas(argv[i])) {
                 std::stringstream message;
-                message << "Invalid fill point provided ("
-                        << argv[i]
-                        << "). Should only contain digits dots and commas"
-                        << std::flush;
+                message << "Invalid fill point provided (" << argv[i]
+                        << "). Should only contain digits dots and commas" << std::flush;
                 throw CommandLineException(message.str().c_str());
             }
             points.push_back(argv[i]);
-        }
-        else if ( std::strcmp("-pf", argv[i]) == 0 )
-        {
-            if (!points.empty())
-            {
+        } else if (std::strcmp("-pf", argv[i]) == 0) {
+            if (!points.empty()) {
                 throw CommandLineException("-pf cannot be used together with -pp");
             }
             ENFORCE_ARGUMENT("-pf", i)
             pointFile = argv[i];
-        }
-        else if ( std::strcmp("-pr", argv[i]) == 0)
-        {
+        } else if (std::strcmp("-pr", argv[i]) == 0) {
             ENFORCE_ARGUMENT("-pr", i);
             m_maxVisibility = std::atof(argv[i]);
-            if ( m_maxVisibility == 0.0)
-            {
+            if (m_maxVisibility == 0.0) {
                 std::stringstream message;
-                message << "Restricted visibility of '" << argv[i] << "' makes no sense, use a positive number or -1 for unrestricted";
+                message << "Restricted visibility of '" << argv[i]
+                        << "' makes no sense, use a positive number or -1 for unrestricted";
                 throw CommandLineException(message.str());
             }
-        }
-        else if ( std::strcmp("-pb", argv[i]) == 0 )
-        {
+        } else if (std::strcmp("-pb", argv[i]) == 0) {
             m_boundaryGraph = true;
-        }
-        else if ( std::strcmp("-pm", argv[i]) == 0 )
-        {
-            if (getUnmakeGraph())
-            {
+        } else if (std::strcmp("-pm", argv[i]) == 0) {
+            if (getUnmakeGraph()) {
                 throw CommandLineException("-pm cannot be used together with -pu");
             }
             m_makeGraph = true;
-        }
-        else if ( std::strcmp("-pu", argv[i]) == 0 )
-        {
-            if (getMakeGraph())
-            {
+        } else if (std::strcmp("-pu", argv[i]) == 0) {
+            if (getMakeGraph()) {
                 throw CommandLineException("-pu cannot be used together with -pm");
             }
             m_unmakeGraph = true;
-        }
-        else if ( std::strcmp("-pl", argv[i]) == 0 )
-        {
+        } else if (std::strcmp("-pl", argv[i]) == 0) {
             m_removeLinksWhenUnmaking = true;
         }
     }
 
-    if(!getMakeGraph() && !getUnmakeGraph() && m_grid <= 0 && pointFile.empty() && points.empty())
-    {
+    if (!getMakeGraph() && !getUnmakeGraph() && m_grid <= 0 && pointFile.empty() &&
+        points.empty()) {
         throw CommandLineException("Nothing to do");
     }
 
-    if(m_grid > 0 && getMakeGraph() && pointFile.empty() && points.empty()) {
-        throw CommandLineException("Creating a graph for an unfilled grid is not possible. " \
+    if (m_grid > 0 && getMakeGraph() && pointFile.empty() && points.empty()) {
+        throw CommandLineException("Creating a graph for an unfilled grid is not possible. "
                                    "Either -pp or -pf must be given");
     }
 
-    if(!pointFile.empty())
-    {
+    if (!pointFile.empty()) {
         std::ifstream pointsStream(pointFile);
-        if (!pointsStream)
-        {
+        if (!pointsStream) {
             std::stringstream message;
-            message << "Failed to load file " << pointFile << ", error " << std::strerror(errno) << std::flush;
+            message << "Failed to load file " << pointFile << ", error " << std::strerror(errno)
+                    << std::flush;
             throw depthmapX::RuntimeException(message.str().c_str());
         }
         std::vector<Point2f> parsed = EntityParsing::parsePoints(pointsStream, '\t');
         m_fillPoints.insert(std::end(m_fillPoints), std::begin(parsed), std::end(parsed));
-    }
-    else if(!points.empty())
-    {
+    } else if (!points.empty()) {
         std::stringstream pointsStream;
         pointsStream << "x,y";
-        std::vector<std::string>::iterator iter = points.begin(), end =
-        points.end();
-        for ( ; iter != end; ++iter )
-        {
+        std::vector<std::string>::iterator iter = points.begin(), end = points.end();
+        for (; iter != end; ++iter) {
             pointsStream << "\n" << *iter;
         }
         std::vector<Point2f> parsed = EntityParsing::parsePoints(pointsStream, ',');
         m_fillPoints.insert(std::end(m_fillPoints), std::begin(parsed), std::end(parsed));
-
     }
 
-    if(getUnmakeGraph() && (m_grid > 0 || !m_fillPoints.empty())) {
+    if (getUnmakeGraph() && (m_grid > 0 || !m_fillPoints.empty())) {
         throw CommandLineException("-pu can not be used with any other option apart from -pl");
     }
 
-    if(m_removeLinksWhenUnmaking && !m_unmakeGraph) {
+    if (m_removeLinksWhenUnmaking && !m_unmakeGraph) {
         throw CommandLineException("-pl can only be used together with -pu");
     }
 }
 
-void VisPrepParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const
-{
-    dm_runmethods::runVisualPrep(clp, m_grid, m_fillPoints, m_maxVisibility, m_boundaryGraph, m_makeGraph, m_unmakeGraph, m_removeLinksWhenUnmaking, perfWriter);
+void VisPrepParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
+    dm_runmethods::runVisualPrep(clp, m_grid, m_fillPoints, m_maxVisibility, m_boundaryGraph,
+                                 m_makeGraph, m_unmakeGraph, m_removeLinksWhenUnmaking, perfWriter);
 }

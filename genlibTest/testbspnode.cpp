@@ -14,12 +14,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "catch.hpp"
+#include "genlib/bsptree.h"
 #include "genlib/comm.h"
 #include "genlib/p2dpoly.h"
-#include "genlib/bsptree.h"
 
-TEST_CASE("BSPTree::pickMidpointLine")
-{
+TEST_CASE("BSPTree::pickMidpointLine") {
     std::vector<TaggedLine> lines;
     lines.push_back(TaggedLine(Line(Point2f(1, 2), Point2f(2, 2)), 0));
     lines.push_back(TaggedLine(Line(Point2f(2, 2), Point2f(3, 2)), 0));
@@ -62,10 +61,9 @@ void compareLines(Line l1, Line l2, float EPSILON) {
     REQUIRE(l1.end().y == Approx(l2.end().y).epsilon(EPSILON));
 }
 
-TEST_CASE("BSPTree::makeLines")
-{
+TEST_CASE("BSPTree::makeLines") {
     const float EPSILON = 0.001f;
-    typedef std::pair<std::vector<TaggedLine>, std::vector<TaggedLine> > TagLineVecPair;
+    typedef std::pair<std::vector<TaggedLine>, std::vector<TaggedLine>> TagLineVecPair;
 
     std::vector<TaggedLine> lines;
     lines.push_back(TaggedLine(Line(Point2f(1, 2), Point2f(2, 2)), 0));
@@ -84,9 +82,7 @@ TEST_CASE("BSPTree::makeLines")
     compareLines(result.first[1].line, lines[2].line, EPSILON);
     compareLines(result.first[2].line, lines[3].line, EPSILON);
 
-
-    SECTION("One on the right")
-    {
+    SECTION("One on the right") {
         lines.push_back(TaggedLine(Line(Point2f(5, 1), Point2f(6, 1)), 0));
 
         result = BSPTree::makeLines(0, 0, lines, node.get());
@@ -96,8 +92,7 @@ TEST_CASE("BSPTree::makeLines")
 
         compareLines(result.second[0].line, lines[4].line, EPSILON);
     }
-    SECTION("One line with height > width becomes chosen")
-    {
+    SECTION("One line with height > width becomes chosen") {
         // height > width, rotated, not close to midpoint
         lines.push_back(TaggedLine(Line(Point2f(5.5, 1), Point2f(5.5, 3)), 0));
 
@@ -115,8 +110,7 @@ TEST_CASE("BSPTree::makeLines")
         compareLines(result.second[0].line, lines[5].line, EPSILON);
     }
 
-    SECTION("One broken between")
-    {
+    SECTION("One broken between") {
         // height > width, rotated, close to midpoint
         lines.push_back(TaggedLine(Line(Point2f(5.5, 1), Point2f(5.5, 3)), 0));
 
@@ -149,8 +143,7 @@ TEST_CASE("BSPTree::makeLines")
     }
 }
 
-TEST_CASE("BSPTree::make (all horizontal lines)", "all-left tree")
-{
+TEST_CASE("BSPTree::make (all horizontal lines)", "all-left tree") {
     const float EPSILON = 0.001f;
 
     std::vector<TaggedLine> lines;
@@ -184,8 +177,7 @@ TEST_CASE("BSPTree::make (all horizontal lines)", "all-left tree")
     REQUIRE(node->m_left->m_left->m_left->m_right == nullptr);
 }
 
-TEST_CASE("BSPTree::make (all vertical lines)", "split tree")
-{
+TEST_CASE("BSPTree::make (all vertical lines)", "split tree") {
     const float EPSILON = 0.001f;
 
     std::vector<TaggedLine> lines;

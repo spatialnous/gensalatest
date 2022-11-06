@@ -13,28 +13,31 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "modules/segmentshortestpaths/cli/segmentshortestpathparser.h"
 #include "cliTest/argumentholder.h"
 #include "cliTest/selfcleaningfile.h"
-#include "modules/segmentshortestpaths/cli/segmentshortestpathparser.h"
 #include <catch.hpp>
 
 TEST_CASE("SegmentShortestPathParser", "Error cases") {
     SECTION("Missing argument to -sspo") {
         SegmentShortestPathParser parser;
         ArgumentHolder ah{"prog", "-sspd", "0,0", "-sspo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("-sspo requires an argument"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("-sspo requires an argument"));
     }
 
     SECTION("Missing argument to -sspd") {
         SegmentShortestPathParser parser;
         ArgumentHolder ah{"prog", "-sspo", "0,0", "-sspd"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("-sspd requires an argument"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("-sspd requires an argument"));
     }
 
     SECTION("Missing argument to -sspt") {
         SegmentShortestPathParser parser;
         ArgumentHolder ah{"prog", "-sspo", "0,0", "-sspd", "0,0", "-sspt"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("-sspt requires an argument"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("-sspt requires an argument"));
     }
 
     SECTION("rubbish input to -sspo") {
@@ -42,21 +45,23 @@ TEST_CASE("SegmentShortestPathParser", "Error cases") {
         ArgumentHolder ah{"prog", "-sspd", "0,0", "-sspo", "foo"};
         REQUIRE_THROWS_WITH(
             parser.parse(ah.argc(), ah.argv()),
-            Catch::Contains("Invalid origin point provided (foo). Should only contain digits dots and commas"));
+            Catch::Contains(
+                "Invalid origin point provided (foo). Should only contain digits dots and commas"));
     }
 
     SECTION("rubbish input to -sspd") {
         SegmentShortestPathParser parser;
         ArgumentHolder ah{"prog", "-sspo", "0,0", "-sspd", "foo"};
-        REQUIRE_THROWS_WITH(
-            parser.parse(ah.argc(), ah.argv()),
-            Catch::Contains("Invalid destination point provided (foo). Should only contain digits dots and commas"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("Invalid destination point provided (foo). Should only "
+                                            "contain digits dots and commas"));
     }
 
     SECTION("rubbish input to -sspt") {
         SegmentShortestPathParser parser;
         ArgumentHolder ah{"prog", "-sspo", "0,0", "-sspd", "0,0", "-sspt", "foo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()), Catch::Contains("Invalid step type: foo"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Contains("Invalid step type: foo"));
     }
 
     SECTION("Neiter points nor point file provided") {
@@ -80,8 +85,9 @@ TEST_CASE("Successful SegmentShortestPathParser", "Read successfully") {
         std::stringstream destinationStream;
         destinationStream << destinationX << "," << destinationY << std::flush;
 
-        ArgumentHolder ah{"prog",  "-sspo",      originStream.str(), "-sspd", destinationStream.str(),
-                          "-sspt", "topological"};
+        ArgumentHolder ah{
+            "prog",  "-sspo",      originStream.str(), "-sspd", destinationStream.str(),
+            "-sspt", "topological"};
         parser.parse(ah.argc(), ah.argv());
     }
 

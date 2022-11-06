@@ -72,7 +72,8 @@ bool SegmentTulipShortestPath::run(Communicator *) {
         SegmentData lineindex;
         if (binIter->size() > 1) {
             // it is slightly slower to delete from an arbitrary place in the bin,
-            // but it is necessary to use random paths to even out the number of times through equal paths
+            // but it is necessary to use random paths to even out the number of times through equal
+            // paths
             int curr = pafrand() % binIter->size();
             auto currIter = binIter->begin() + curr;
             lineindex = *currIter;
@@ -96,8 +97,9 @@ bool SegmentTulipShortestPath::run(Communicator *) {
                     if (!covered[segconn.first.ref]) {
                         extradepth = (int)floor(segconn.second * tulip_bins * 0.5);
                         bins[(currentbin + tulip_bins + extradepth) % tulip_bins].push_back(
-                            SegmentData(segconn.first, lineindex.ref, lineindex.segdepth + 1, 0.0, 0));
-                        if(parents.find(segconn.first.ref) == parents.end()) {
+                            SegmentData(segconn.first, lineindex.ref, lineindex.segdepth + 1, 0.0,
+                                        0));
+                        if (parents.find(segconn.first.ref) == parents.end()) {
                             parents[segconn.first.ref] = lineindex.ref;
                         }
                         opencount++;
@@ -109,8 +111,9 @@ bool SegmentTulipShortestPath::run(Communicator *) {
                     if (!covered[segconn.first.ref]) {
                         extradepth = (int)floor(segconn.second * tulip_bins * 0.5);
                         bins[(currentbin + tulip_bins + extradepth) % tulip_bins].push_back(
-                            SegmentData(segconn.first, lineindex.ref, lineindex.segdepth + 1, 0.0, 0));
-                        if(parents.find(segconn.first.ref) == parents.end()) {
+                            SegmentData(segconn.first, lineindex.ref, lineindex.segdepth + 1, 0.0,
+                                        0));
+                        if (parents.find(segconn.first.ref) == parents.end()) {
                             parents[segconn.first.ref] = lineindex.ref;
                         }
                         opencount++;

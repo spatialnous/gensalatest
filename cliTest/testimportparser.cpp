@@ -13,21 +13,22 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "catch.hpp"
 #include "../depthmapXcli/importparser.h"
 #include "argumentholder.h"
+#include "catch.hpp"
 
-TEST_CASE("Import args valid", "valid")
-{
+TEST_CASE("Import args valid", "valid") {
     {
-        ArgumentHolder ah{"prog", "-f", "infile", "-o", "outfile", "-m", "IMPORT", "-if", "importfile"};
+        ArgumentHolder ah{"prog", "-f",     "infile", "-o",        "outfile",
+                          "-m",   "IMPORT", "-if",    "importfile"};
         ImportParser cmdP;
         cmdP.parse(ah.argc(), ah.argv());
         REQUIRE(cmdP.getFilesToImport().size() == 1);
         REQUIRE(cmdP.getFilesToImport()[0] == "importfile");
     }
     {
-        ArgumentHolder ah{"prog", "-f", "infile", "-o", "outfile", "-m", "IMPORT", "-if", "importfile1", "-if", "importfile2"};
+        ArgumentHolder ah{"prog",   "-f",  "infile",      "-o",  "outfile",    "-m",
+                          "IMPORT", "-if", "importfile1", "-if", "importfile2"};
         ImportParser cmdP;
         cmdP.parse(ah.argc(), ah.argv());
         REQUIRE(cmdP.getFilesToImport().size() == 2);

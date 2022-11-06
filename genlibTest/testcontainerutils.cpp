@@ -17,9 +17,8 @@
 #include <genlib/containerutils.h>
 #include <vector>
 
-
-TEST_CASE("Test binary search helper with container", ""){
-    std::vector<int> testVec{ 1, 2, 4, 5};
+TEST_CASE("Test binary search helper with container", "") {
+    std::vector<int> testVec{1, 2, 4, 5};
 
     REQUIRE(*depthmapX::findBinary(testVec, 2) == 2);
     REQUIRE(depthmapX::findBinary(testVec, 3) == testVec.end());
@@ -28,7 +27,7 @@ TEST_CASE("Test binary search helper with container", ""){
     *iter = 3;
     REQUIRE(*depthmapX::findBinary(testVec, 3) == 3);
 
-    const std::vector<int>& constVec = testVec;
+    const std::vector<int> &constVec = testVec;
     REQUIRE(*depthmapX::findBinary(constVec, 3) == 3);
     REQUIRE(depthmapX::findBinary(constVec, 2) == testVec.end());
     REQUIRE(depthmapX::findBinary(constVec, 6) == testVec.end());

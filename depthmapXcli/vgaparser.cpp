@@ -15,98 +15,71 @@
 
 #include "vgaparser.h"
 #include "exceptions.h"
-#include <cstring>
+#include "parsingutils.h"
 #include "radiusconverter.h"
 #include "runmethods.h"
-#include "parsingutils.h"
+#include <cstring>
 
 using namespace depthmapX;
 
+VgaParser::VgaParser()
+    : m_vgaMode(VgaMode::NONE), m_localMeasures(false), m_globalMeasures(false) {}
 
-VgaParser::VgaParser() : m_vgaMode(VgaMode::NONE), m_localMeasures(false), m_globalMeasures(false)
-{}
+void VgaParser::parse(int argc, char *argv[]) {
+    for (int i = 1; i < argc;) {
 
-void VgaParser::parse(int argc, char *argv[])
-{
-    for ( int i = 1; i < argc;  )
-    {
-
-        if ( std::strcmp ("-vm", argv[i]) == 0)
-        {
-            if (m_vgaMode != VgaMode::NONE)
-            {
-                throw CommandLineException("-vm can only be used once, modes are mutually exclusive");
+        if (std::strcmp("-vm", argv[i]) == 0) {
+            if (m_vgaMode != VgaMode::NONE) {
+                throw CommandLineException(
+                    "-vm can only be used once, modes are mutually exclusive");
             }
             ENFORCE_ARGUMENT("-vm", i)
-            if ( std::strcmp(argv[i], "isovist") == 0 )
-            {
+            if (std::strcmp(argv[i], "isovist") == 0) {
                 m_vgaMode = VgaMode::ISOVIST;
-            }
-            else if ( std::strcmp(argv[i], "visibility") == 0 )
-            {
+            } else if (std::strcmp(argv[i], "visibility") == 0) {
                 m_vgaMode = VgaMode::VISBILITY;
-            }
-            else if ( std::strcmp(argv[i], "metric") == 0 )
-            {
+            } else if (std::strcmp(argv[i], "metric") == 0) {
                 m_vgaMode = VgaMode::METRIC;
-            }
-            else if ( std::strcmp(argv[i], "angular") == 0 )
-            {
+            } else if (std::strcmp(argv[i], "angular") == 0) {
                 m_vgaMode = VgaMode::ANGULAR;
-            }
-            else if ( std::strcmp(argv[i], "thruvision") == 0)
-            {
+            } else if (std::strcmp(argv[i], "thruvision") == 0) {
                 m_vgaMode = VgaMode::THRU_VISION;
-            }
-            else
-            {
+            } else {
                 throw CommandLineException(std::string("Invalid VGA mode: ") + argv[i]);
             }
-        }
-        else if ( std::strcmp(argv[i], "-vg") == 0 )
-        {
+        } else if (std::strcmp(argv[i], "-vg") == 0) {
             m_globalMeasures = true;
-        }
-        else if ( std::strcmp(argv[i], "-vl") == 0 )
-        {
+        } else if (std::strcmp(argv[i], "-vl") == 0) {
             m_localMeasures = true;
-        }
-        else if (std::strcmp(argv[i], "-vr") == 0)
-        {
+        } else if (std::strcmp(argv[i], "-vr") == 0) {
             ENFORCE_ARGUMENT("-vr", i)
             m_radius = argv[i];
         }
         ++i;
     }
 
-    if(m_vgaMode == VgaMode::NONE)
-    {
+    if (m_vgaMode == VgaMode::NONE) {
         m_vgaMode = VgaMode::ISOVIST;
     }
 
-    if (m_vgaMode == VgaMode::VISBILITY && m_globalMeasures)
-    {
-        if (m_radius.empty())
-        {
-            throw CommandLineException("Global measures in VGA/visibility analysis require a radius, use -vr <radius>");
+    if (m_vgaMode == VgaMode::VISBILITY && m_globalMeasures) {
+        if (m_radius.empty()) {
+            throw CommandLineException(
+                "Global measures in VGA/visibility analysis require a radius, use -vr <radius>");
         }
-        if (m_radius != "n" && !has_only_digits(m_radius))
-        {
-            throw CommandLineException(std::string("Radius must be a positive integer number or n, got ") + m_radius);
+        if (m_radius != "n" && !has_only_digits(m_radius)) {
+            throw CommandLineException(
+                std::string("Radius must be a positive integer number or n, got ") + m_radius);
         }
 
-    }
-    else if (m_vgaMode == VgaMode::METRIC)
-    {
-        if (m_radius.empty())
-        {
+    } else if (m_vgaMode == VgaMode::METRIC) {
+        if (m_radius.empty()) {
             throw CommandLineException("Metric vga requires a radius, use -vr <radius>");
         }
     }
 }
 
-void VgaParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const
-{
+void VgaParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
     RadiusConverter radiusConverter;
     dm_runmethods::runVga(clp, *this, radiusConverter, perfWriter);
 }

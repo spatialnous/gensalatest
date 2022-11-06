@@ -13,35 +13,28 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 #include "catch.hpp"
 #include "selfcleaningfile.h"
 #include <fstream>
 
-namespace
-{
-    bool fileExists(const std::string &filename)
-    {
+namespace {
+    bool fileExists(const std::string &filename) {
         std::ifstream f(filename.c_str());
         return f.good();
     }
 
-    bool writeToFile(const std::string &filename, const std::string &content)
-    {
+    bool writeToFile(const std::string &filename, const std::string &content) {
         std::ofstream f(filename.c_str());
-        if (!f.good())
-        {
+        if (!f.good()) {
             return false;
         }
         f << content;
         f.flush();
         return true;
     }
-}
+} // namespace
 
-
-TEST_CASE("TestSelfCleaningFile", "Check it is deleted, doesn't fail when not present")
-{
+TEST_CASE("TestSelfCleaningFile", "Check it is deleted, doesn't fail when not present") {
     {
         SelfCleaningFile scf("foo.txt");
         REQUIRE(scf.Filename() == "foo.txt");
@@ -57,6 +50,4 @@ TEST_CASE("TestSelfCleaningFile", "Check it is deleted, doesn't fail when not pr
         REQUIRE(fileExists("foo.txt") == false);
     }
     REQUIRE(fileExists("foo.txt") == false);
-
 }
-

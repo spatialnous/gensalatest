@@ -14,22 +14,20 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "modeparserregistry.h"
-#include "importparser.h"
-#include "linkparser.h"
-#include "vgaparser.h"
-#include "visprepparser.h"
-#include "axialparser.h"
-#include "segmentparser.h"
 #include "agentparser.h"
-#include "isovistparser.h"
+#include "axialparser.h"
 #include "exportparser.h"
-#include "stepdepthparser.h"
+#include "importparser.h"
+#include "isovistparser.h"
+#include "linkparser.h"
 #include "mapconvertparser.h"
 #include "modules/segmentshortestpaths/cli/segmentshortestpathparser.h"
+#include "segmentparser.h"
+#include "stepdepthparser.h"
+#include "vgaparser.h"
+#include "visprepparser.h"
 
-
-void ModeParserRegistry::populateParsers()
-{
+void ModeParserRegistry::populateParsers() {
     // Register any mode parsers here
     REGISTER_PARSER(VgaParser);
     REGISTER_PARSER(LinkParser);

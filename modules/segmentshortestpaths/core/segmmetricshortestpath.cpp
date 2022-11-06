@@ -117,7 +117,8 @@ bool SegmentMetricShortestPath::run(Communicator *) {
                 open++;
                 //
                 // better to divide by 511 but have 512 bins...
-                list[(bin + int(floor(0.5 + 511 * length / maxseglength))) % 512].push_back(connected_cursor);
+                list[(bin + int(floor(0.5 + 511 * length / maxseglength))) % 512].push_back(
+                    connected_cursor);
                 AttributeRow &row = m_map.getAttributeRowFromShapeIndex(connected_cursor);
                 row.setValue(dist_col, here.dist + length * 0.5);
             }

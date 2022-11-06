@@ -46,8 +46,8 @@ TEST_CASE("Failing empty drawing map conversion", "") {
 TEST_CASE("Failing empty axial to segment map conversion", "") {
     ShapeGraph segmentMap("Axial map", ShapeMap::AXIALMAP);
     // TODO: Does not throw an exception but maybe it should as the axial map is empty?
-    // REQUIRE_THROWS_WITH(MapConverter::convertAxialToSegment(nullptr, segmentMap, "Segment map", false, false, 0),
-    // Catch::Contains("No lines found in drawing"));
+    // REQUIRE_THROWS_WITH(MapConverter::convertAxialToSegment(nullptr, segmentMap, "Segment map",
+    // false, false, 0), Catch::Contains("No lines found in drawing"));
 }
 
 TEST_CASE("Failing empty data map conversion", "") {
@@ -76,8 +76,9 @@ TEST_CASE("Test drawing to segment conversion", "") {
         drawingLayer.makeLineShape(line1);
 
         // TODO: This fails with std::bad_alloc because there's only 1 line in the drawing
-        REQUIRE_THROWS_WITH(MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles),
-                            Catch::Contains("std::bad_alloc"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles),
+            Catch::Contains("std::bad_alloc"));
     }
 
     SECTION("Two lines") {
@@ -85,8 +86,9 @@ TEST_CASE("Test drawing to segment conversion", "") {
         drawingLayer.makeLineShape(line2);
 
         // TODO: This fails with std::bad_alloc because there's only 2 lines in the drawing
-        REQUIRE_THROWS_WITH(MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles),
-                            Catch::Contains("std::bad_alloc"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles),
+            Catch::Contains("std::bad_alloc"));
     }
 
     SECTION("Three lines") {
@@ -144,8 +146,9 @@ TEST_CASE("Test data to segment conversion", "") {
         dataMap.makeLineShape(lines[0], false, false, extraAttributes[0]);
 
         // TODO: This fails with std::bad_alloc because there's only 1 line in the data map
-        REQUIRE_THROWS_WITH(MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true),
-                            Catch::Contains("std::bad_alloc"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true),
+            Catch::Contains("std::bad_alloc"));
     }
 
     SECTION("Two lines with extra attributes") {
@@ -153,8 +156,9 @@ TEST_CASE("Test data to segment conversion", "") {
         dataMap.makeLineShape(lines[1], false, false, extraAttributes[1]);
 
         // TODO: This fails with std::bad_alloc because there's only 2 lines in the data map
-        REQUIRE_THROWS_WITH(MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true),
-                            Catch::Contains("std::bad_alloc"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true),
+            Catch::Contains("std::bad_alloc"));
     }
 
     SECTION("Three lines") {
@@ -163,7 +167,8 @@ TEST_CASE("Test data to segment conversion", "") {
         dataMap.makeLineShape(lines[2], false, false, extraAttributes[2]);
         std::unique_ptr<ShapeGraph> segmentMap =
             MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true);
-        int segmentNewAttributeID = segmentMap->getAttributeTable().getColumnIndex(newAttributeName);
+        int segmentNewAttributeID =
+            segmentMap->getAttributeTable().getColumnIndex(newAttributeName);
         std::map<int, SalaShape> &shapes = segmentMap->getAllShapes();
         REQUIRE(shapes.size() == 3);
         auto shapeIter = shapes.begin();
@@ -183,11 +188,13 @@ TEST_CASE("Test data to segment conversion", "") {
     SECTION("Four lines, second line twice") {
         dataMap.makeLineShape(lines[0], false, false, extraAttributes[0]);
         dataMap.makeLineShape(lines[1], false, false, extraAttributes[1]);
-        dataMap.makeLineShape(lines[1], false, false, extraAttributes[1]); // this one should be removed by tidylines
+        dataMap.makeLineShape(lines[1], false, false,
+                              extraAttributes[1]); // this one should be removed by tidylines
         dataMap.makeLineShape(lines[2], false, false, extraAttributes[2]);
         std::unique_ptr<ShapeGraph> segmentMap =
             MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true);
-        int segmentNewAttributeID = segmentMap->getAttributeTable().getColumnIndex(newAttributeName);
+        int segmentNewAttributeID =
+            segmentMap->getAttributeTable().getColumnIndex(newAttributeName);
         std::map<int, SalaShape> &shapes = segmentMap->getAllShapes();
         REQUIRE(shapes.size() == 3);
         auto shapeIter = shapes.begin();

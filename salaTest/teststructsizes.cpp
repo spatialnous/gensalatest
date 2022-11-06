@@ -14,16 +14,15 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "catch.hpp"
-#include "salalib/shapegraph.h"
 #include "salalib/axialpolygons.h"
+#include "salalib/shapegraph.h"
 
 /**
- * This seems a bit silly, but this is a list of structs that are serialised by just dumping the memory content
- * into a stream, so the size/layout of these must be the same across all platforms to ensure
- * reading writing of graph files.
+ * This seems a bit silly, but this is a list of structs that are serialised by just dumping the
+ * memory content into a stream, so the size/layout of these must be the same across all platforms
+ * to ensure reading writing of graph files.
  */
-TEST_CASE("Enforce struct sizes")
-{
+TEST_CASE("Enforce struct sizes") {
     REQUIRE(sizeof(RadialKey) == 16);
     REQUIRE(sizeof(RadialLine) == 64);
     REQUIRE(sizeof(PolyConnector) == 56);

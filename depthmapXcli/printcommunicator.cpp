@@ -13,8 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <iostream>
 #include "depthmapXcli/printcommunicator.h"
+#include <iostream>
 
 void PrintCommunicator::CommPostMessage(int m, int x) const {
     switch (m) {
@@ -29,7 +29,8 @@ void PrintCommunicator::CommPostMessage(int m, int x) const {
         break;
     case Communicator::CURRENT_RECORD:
         record = x;
-        if (record > num_records) record = num_records;
+        if (record > num_records)
+            record = num_records;
         std::cout << "step: " << step << "/" << num_steps << " "
                   << "record: " << record << "/" << num_records << std::endl;
         break;

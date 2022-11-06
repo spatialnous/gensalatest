@@ -49,8 +49,9 @@ TEST_CASE("Testing deleting shapes from shapemaps") {
     SECTION("Delete from simple shapemap from the middle") {
         int shapeCount = shapeMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
-            int shapeRef =
-                depthmapX::getMapAtIndex(shapeMap->getAllShapes(), int(shapeMap->getAllShapes().size() / 2))->first;
+            int shapeRef = depthmapX::getMapAtIndex(shapeMap->getAllShapes(),
+                                                    int(shapeMap->getAllShapes().size() / 2))
+                               ->first;
             shapeMap->removeShape(shapeRef, false);
             REQUIRE(shapeMap->getAllShapes().size() == idx - 1);
         }
@@ -90,28 +91,31 @@ TEST_CASE("Testing deleting shapes from axial maps") {
     int axialConnectivityColIdx = axialMap->getAttributeTable().getColumnIndex("Connectivity");
     AttributeTable &axialTable = axialMap->getAttributeTable();
 
-    // check if shapes have connectivity attribute values that reflect the expected number of connections
+    // check if shapes have connectivity attribute values that reflect the expected number of
+    // connections
     for (const auto &shape : axialMap->getAllShapes()) {
         REQUIRE(axialTable.getRow(AttributeKey(shape.first)).getValue(axialConnectivityColIdx) ==
                 axialConnections[shape.first].size());
     }
 
-    // check if the shape connectors have the expected internal sizes and are connected to the expected
-    // other shapes
+    // check if the shape connectors have the expected internal sizes and are connected to the
+    // expected other shapes
     for (int i = 0; i < axialMap->getConnections().size(); i++) {
         Connector connector = axialMap->getConnections()[i];
-        std::vector<int> expectedConnections = axialConnections[axialMap->getShapeRefFromIndex(i)->first];
+        std::vector<int> expectedConnections =
+            axialConnections[axialMap->getShapeRefFromIndex(i)->first];
         REQUIRE(connector.count(Connector::CONN_ALL) == expectedConnections.size());
         for (int otherShapeRef : expectedConnections) {
-            REQUIRE(std::find(connector.m_connections.begin(), connector.m_connections.end(), otherShapeRef) !=
-                    connector.m_connections.end());
+            REQUIRE(std::find(connector.m_connections.begin(), connector.m_connections.end(),
+                              otherShapeRef) != connector.m_connections.end());
         }
     }
 
     SECTION("Delete from an axial map from the beginning") {
         std::map<int, int> connectivitiesAfterRemoval;
 
-        for (auto iter = axialMap->getAllShapes().begin(); iter != axialMap->getAllShapes().end(); iter++) {
+        for (auto iter = axialMap->getAllShapes().begin(); iter != axialMap->getAllShapes().end();
+             iter++) {
             connectivitiesAfterRemoval[iter->first] = axialConnections[iter->first].size();
         }
 
@@ -122,15 +126,19 @@ TEST_CASE("Testing deleting shapes from axial maps") {
             REQUIRE(axialMap->getAllShapes().size() == idx - 1);
             REQUIRE(axialMap->getConnections().size() == idx - 1);
 
-            for (auto it = axialMap->getAllShapes().begin(); it != axialMap->getAllShapes().end(); it++) {
+            for (auto it = axialMap->getAllShapes().begin(); it != axialMap->getAllShapes().end();
+                 it++) {
                 std::vector<int> connConnections = axialConnections[it->first];
-                if (std::find(connConnections.begin(), connConnections.end(), shapeRef) != connConnections.end()) {
+                if (std::find(connConnections.begin(), connConnections.end(), shapeRef) !=
+                    connConnections.end()) {
                     // if the other shape contains this one, then remove from its connectivity
-                    connectivitiesAfterRemoval[it->first] = connectivitiesAfterRemoval[it->first] - 1;
+                    connectivitiesAfterRemoval[it->first] =
+                        connectivitiesAfterRemoval[it->first] - 1;
                 }
 
-                REQUIRE(axialTable.getRow(AttributeKey(it->first)).getValue(axialConnectivityColIdx) ==
-                        connectivitiesAfterRemoval[it->first]);
+                REQUIRE(
+                    axialTable.getRow(AttributeKey(it->first)).getValue(axialConnectivityColIdx) ==
+                    connectivitiesAfterRemoval[it->first]);
             }
         }
     }
@@ -138,7 +146,8 @@ TEST_CASE("Testing deleting shapes from axial maps") {
     SECTION("Delete from an axial map from the end") {
         std::map<int, int> connectivitiesAfterRemoval;
 
-        for (auto iter = axialMap->getAllShapes().begin(); iter != axialMap->getAllShapes().end(); iter++) {
+        for (auto iter = axialMap->getAllShapes().begin(); iter != axialMap->getAllShapes().end();
+             iter++) {
             connectivitiesAfterRemoval[iter->first] = axialConnections[iter->first].size();
         }
 
@@ -149,15 +158,19 @@ TEST_CASE("Testing deleting shapes from axial maps") {
             REQUIRE(axialMap->getAllShapes().size() == idx - 1);
             REQUIRE(axialMap->getConnections().size() == idx - 1);
 
-            for (auto it = axialMap->getAllShapes().begin(); it != axialMap->getAllShapes().end(); it++) {
+            for (auto it = axialMap->getAllShapes().begin(); it != axialMap->getAllShapes().end();
+                 it++) {
                 std::vector<int> connConnections = axialConnections[it->first];
-                if (std::find(connConnections.begin(), connConnections.end(), shapeRef) != connConnections.end()) {
+                if (std::find(connConnections.begin(), connConnections.end(), shapeRef) !=
+                    connConnections.end()) {
                     // if the other shape contains this one, then remove from its connectivity
-                    connectivitiesAfterRemoval[it->first] = connectivitiesAfterRemoval[it->first] - 1;
+                    connectivitiesAfterRemoval[it->first] =
+                        connectivitiesAfterRemoval[it->first] - 1;
                 }
 
-                REQUIRE(axialTable.getRow(AttributeKey(it->first)).getValue(axialConnectivityColIdx) ==
-                        connectivitiesAfterRemoval[it->first]);
+                REQUIRE(
+                    axialTable.getRow(AttributeKey(it->first)).getValue(axialConnectivityColIdx) ==
+                    connectivitiesAfterRemoval[it->first]);
             }
         }
     }
@@ -165,27 +178,33 @@ TEST_CASE("Testing deleting shapes from axial maps") {
     SECTION("Delete from an axial map from the middle") {
         std::map<int, int> connectivitiesAfterRemoval;
 
-        for (auto iter = axialMap->getAllShapes().begin(); iter != axialMap->getAllShapes().end(); iter++) {
+        for (auto iter = axialMap->getAllShapes().begin(); iter != axialMap->getAllShapes().end();
+             iter++) {
             connectivitiesAfterRemoval[iter->first] = axialConnections[iter->first].size();
         }
 
         int shapeCount = axialMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
-            int shapeRef =
-                depthmapX::getMapAtIndex(axialMap->getAllShapes(), int(axialMap->getAllShapes().size() / 2))->first;
+            int shapeRef = depthmapX::getMapAtIndex(axialMap->getAllShapes(),
+                                                    int(axialMap->getAllShapes().size() / 2))
+                               ->first;
             axialMap->removeShape(shapeRef, false);
             REQUIRE(axialMap->getAllShapes().size() == idx - 1);
             REQUIRE(axialMap->getConnections().size() == idx - 1);
 
-            for (auto it = axialMap->getAllShapes().begin(); it != axialMap->getAllShapes().end(); it++) {
+            for (auto it = axialMap->getAllShapes().begin(); it != axialMap->getAllShapes().end();
+                 it++) {
                 std::vector<int> connConnections = axialConnections[it->first];
-                if (std::find(connConnections.begin(), connConnections.end(), shapeRef) != connConnections.end()) {
+                if (std::find(connConnections.begin(), connConnections.end(), shapeRef) !=
+                    connConnections.end()) {
                     // if the other shape contains this one, then remove from its connectivity
-                    connectivitiesAfterRemoval[it->first] = connectivitiesAfterRemoval[it->first] - 1;
+                    connectivitiesAfterRemoval[it->first] =
+                        connectivitiesAfterRemoval[it->first] - 1;
                 }
 
-                REQUIRE(axialTable.getRow(AttributeKey(it->first)).getValue(axialConnectivityColIdx) ==
-                        connectivitiesAfterRemoval[it->first]);
+                REQUIRE(
+                    axialTable.getRow(AttributeKey(it->first)).getValue(axialConnectivityColIdx) ==
+                    connectivitiesAfterRemoval[it->first]);
             }
         }
     }
@@ -260,18 +279,23 @@ TEST_CASE("Testing deleting shapes from segment maps") {
     int segmentConnectivityColIdx = segmentMap->getAttributeTable().getColumnIndex("Connectivity");
     AttributeTable &segmentTable = segmentMap->getAttributeTable();
 
-    // check if shapes have connectivity attribute values that reflect the expected number of connections
-    for (auto iter = segmentMap->getAllShapes().begin(); iter != segmentMap->getAllShapes().end(); iter++) {
-        REQUIRE(segmentTable.getRow(AttributeKey(iter->first)).getValue(segmentConnectivityColIdx) ==
-                segmentForConnections[iter->first].size() + segmentBackConnections[iter->first].size());
+    // check if shapes have connectivity attribute values that reflect the expected number of
+    // connections
+    for (auto iter = segmentMap->getAllShapes().begin(); iter != segmentMap->getAllShapes().end();
+         iter++) {
+        REQUIRE(
+            segmentTable.getRow(AttributeKey(iter->first)).getValue(segmentConnectivityColIdx) ==
+            segmentForConnections[iter->first].size() + segmentBackConnections[iter->first].size());
     }
 
-    // check if the shape connectors have the expected internal sizes and are connected to the expected
-    // other shapes
+    // check if the shape connectors have the expected internal sizes and are connected to the
+    // expected other shapes
     for (int i = 0; i < segmentMap->getConnections().size(); i++) {
         Connector connector = segmentMap->getConnections()[i];
-        std::vector<int> expectedForConnections = segmentForConnections[segmentMap->getShapeRefFromIndex(i)->first];
-        std::vector<int> expectedBackConnections = segmentBackConnections[segmentMap->getShapeRefFromIndex(i)->first];
+        std::vector<int> expectedForConnections =
+            segmentForConnections[segmentMap->getShapeRefFromIndex(i)->first];
+        std::vector<int> expectedBackConnections =
+            segmentBackConnections[segmentMap->getShapeRefFromIndex(i)->first];
         REQUIRE(connector.count(Connector::SEG_CONN_ALL) ==
                 expectedForConnections.size() + expectedBackConnections.size());
         REQUIRE(connector.count(Connector::SEG_CONN_FW) == expectedForConnections.size());
@@ -279,17 +303,19 @@ TEST_CASE("Testing deleting shapes from segment maps") {
 
         for (int otherShapeRef : expectedForConnections) {
             bool inForConnections =
-                std::find_if(connector.m_forward_segconns.begin(), connector.m_forward_segconns.end(),
+                std::find_if(connector.m_forward_segconns.begin(),
+                             connector.m_forward_segconns.end(),
                              [&otherShapeRef](const std::pair<SegmentRef, int> &segmentRef) {
                                  return segmentRef.first.ref == otherShapeRef;
                              }) != connector.m_forward_segconns.end();
             REQUIRE(inForConnections);
         }
         for (int otherShapeRef : expectedBackConnections) {
-            bool inBackConnections = std::find_if(connector.m_back_segconns.begin(), connector.m_back_segconns.end(),
-                                                  [&otherShapeRef](const std::pair<SegmentRef, int> &segmentRef) {
-                                                      return segmentRef.first.ref == otherShapeRef;
-                                                  }) != connector.m_back_segconns.end();
+            bool inBackConnections =
+                std::find_if(connector.m_back_segconns.begin(), connector.m_back_segconns.end(),
+                             [&otherShapeRef](const std::pair<SegmentRef, int> &segmentRef) {
+                                 return segmentRef.first.ref == otherShapeRef;
+                             }) != connector.m_back_segconns.end();
             REQUIRE(inBackConnections);
         }
     }
@@ -297,9 +323,10 @@ TEST_CASE("Testing deleting shapes from segment maps") {
     SECTION("Delete from a segment map from the beginning") {
         std::map<int, int> connectivitiesAfterRemoval;
 
-        for (auto iter = segmentMap->getAllShapes().begin(); iter != segmentMap->getAllShapes().end(); iter++) {
-            connectivitiesAfterRemoval[iter->first] =
-                segmentForConnections[iter->first].size() + segmentBackConnections[iter->first].size();
+        for (auto iter = segmentMap->getAllShapes().begin();
+             iter != segmentMap->getAllShapes().end(); iter++) {
+            connectivitiesAfterRemoval[iter->first] = segmentForConnections[iter->first].size() +
+                                                      segmentBackConnections[iter->first].size();
         }
 
         int shapeCount = segmentMap->getAllShapes().size();
@@ -314,9 +341,10 @@ TEST_CASE("Testing deleting shapes from segment maps") {
     SECTION("Delete from a segment map from the end") {
         std::map<int, int> connectivitiesAfterRemoval;
 
-        for (auto iter = segmentMap->getAllShapes().begin(); iter != segmentMap->getAllShapes().end(); iter++) {
-            connectivitiesAfterRemoval[iter->first] =
-                segmentForConnections[iter->first].size() + segmentBackConnections[iter->first].size();
+        for (auto iter = segmentMap->getAllShapes().begin();
+             iter != segmentMap->getAllShapes().end(); iter++) {
+            connectivitiesAfterRemoval[iter->first] = segmentForConnections[iter->first].size() +
+                                                      segmentBackConnections[iter->first].size();
         }
 
         int shapeCount = segmentMap->getAllShapes().size();
@@ -331,16 +359,17 @@ TEST_CASE("Testing deleting shapes from segment maps") {
     SECTION("Delete from a segment map from the middle") {
         std::map<int, int> connectivitiesAfterRemoval;
 
-        for (auto iter = segmentMap->getAllShapes().begin(); iter != segmentMap->getAllShapes().end(); iter++) {
-            connectivitiesAfterRemoval[iter->first] =
-                segmentForConnections[iter->first].size() + segmentBackConnections[iter->first].size();
+        for (auto iter = segmentMap->getAllShapes().begin();
+             iter != segmentMap->getAllShapes().end(); iter++) {
+            connectivitiesAfterRemoval[iter->first] = segmentForConnections[iter->first].size() +
+                                                      segmentBackConnections[iter->first].size();
         }
 
         int shapeCount = segmentMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
-            int shapeRef =
-                depthmapX::getMapAtIndex(segmentMap->getAllShapes(), int(segmentMap->getAllShapes().size() / 2))
-                    ->first;
+            int shapeRef = depthmapX::getMapAtIndex(segmentMap->getAllShapes(),
+                                                    int(segmentMap->getAllShapes().size() / 2))
+                               ->first;
             segmentMap->removeShape(shapeRef, false);
             REQUIRE(segmentMap->getAllShapes().size() == idx - 1);
             REQUIRE(segmentMap->getConnections().size() == idx - 1);

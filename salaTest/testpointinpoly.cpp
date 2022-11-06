@@ -88,7 +88,6 @@ TEST_CASE("Test point in polygon in shapemap", "") {
         },
         false);
 
-
     for (Point2f point : pointsInsidePoly) {
         REQUIRE(shapeMap->pointInPolyList(point)[0] == 0);
     }

@@ -13,26 +13,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <iostream>
 #include "commandlineparser.h"
-#include "runmethods.h"
-#include "performancewriter.h"
 #include "modeparserregistry.h"
+#include "performancewriter.h"
+#include "runmethods.h"
+#include <iostream>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     ModeParserRegistry registry;
     CommandLineParser args(registry);
-    try{
+    try {
         args.parse(argc, argv);
-        if (!args.isValid())
-        {
-            if (args.printVersionMode())
-            {
+        if (!args.isValid()) {
+            if (args.printVersionMode()) {
                 args.printVersion();
-            }
-            else
-            {
+            } else {
                 args.printHelp();
             }
             return 0;
@@ -43,9 +38,7 @@ int main(int argc, char *argv[])
         args.run(perfWriter);
         perfWriter.write();
 
-    }
-    catch( std::exception &e)
-    {
+    } catch (std::exception &e) {
         std::cout << e.what() << "\n"
                   << "Type 'depthmapXcli -h' for help" << std::endl;
         return -1;

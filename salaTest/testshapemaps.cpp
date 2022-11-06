@@ -15,19 +15,18 @@
 
 #include "../genlib/p2dpoly.h"
 #include "../salalib/mgraph.h"
-#include "../salalib/shapemap.h"
 #include "../salalib/shapegraph.h"
+#include "../salalib/shapemap.h"
 #include "catch.hpp"
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
-TEST_CASE("Testing ShapeMap::getAllShapes variants")
-{
+TEST_CASE("Testing ShapeMap::getAllShapes variants") {
     const float EPSILON = 0.001;
-    Point2f line0Start(0,1);
-    Point2f line0End  (3,2);
-    Point2f line1Start(1,1);
-    Point2f line1End  (1,-1);
+    Point2f line0Start(0, 1);
+    Point2f line0End(3, 2);
+    Point2f line1Start(1, 1);
+    Point2f line1End(1, -1);
 
     std::unique_ptr<ShapeMap> shapeMap(new ShapeMap("Test ShapeMap"));
 
@@ -35,14 +34,13 @@ TEST_CASE("Testing ShapeMap::getAllShapes variants")
     shapeMap->makeLineShape(Line(line1Start, line1End));
 
     std::vector<Point2f> polyVertices;
-    polyVertices.push_back(Point2f(-1,-1));
-    polyVertices.push_back(Point2f( 2,-1));
-    polyVertices.push_back(Point2f( 0, 0));
+    polyVertices.push_back(Point2f(-1, -1));
+    polyVertices.push_back(Point2f(2, -1));
+    polyVertices.push_back(Point2f(0, 0));
 
     shapeMap->makePolyShape(polyVertices, false, false);
 
-    SECTION("ShapeMap::getAllShapesAsLines")
-    {
+    SECTION("ShapeMap::getAllShapesAsLines") {
         std::vector<SimpleLine> lines = shapeMap->getAllShapesAsLines();
 
         REQUIRE(lines.size() == 5);
@@ -72,19 +70,23 @@ TEST_CASE("Testing ShapeMap::getAllShapes variants")
         REQUIRE(lines[4].end().x == Approx(polyVertices[0].x).epsilon(EPSILON));
         REQUIRE(lines[4].end().y == Approx(polyVertices[0].y).epsilon(EPSILON));
     }
-    SECTION("ShapeMap::getAllLinesWithColour")
-    {
+    SECTION("ShapeMap::getAllLinesWithColour") {
         shapeMap->overrideDisplayedAttribute(-2);
         shapeMap->setDisplayedAttribute(-1); // displayed attribute is shape_ref
 
-        std::vector<std::pair<SimpleLine, PafColor>> colouredLines = shapeMap->getAllLinesWithColour();
+        std::vector<std::pair<SimpleLine, PafColor>> colouredLines =
+            shapeMap->getAllLinesWithColour();
 
         REQUIRE(colouredLines.size() == 2);
 
-        REQUIRE(colouredLines[0].first.start().x == Approx(std::min(line0Start.x, line0End.x)).epsilon(EPSILON));
-        REQUIRE(colouredLines[0].first.start().y == Approx(std::min(line0Start.y, line0End.y)).epsilon(EPSILON));
-        REQUIRE(colouredLines[0].first.end().x == Approx(std::max(line0Start.x, line0End.x)).epsilon(EPSILON));
-        REQUIRE(colouredLines[0].first.end().y == Approx(std::max(line0Start.y, line0End.y)).epsilon(EPSILON));
+        REQUIRE(colouredLines[0].first.start().x ==
+                Approx(std::min(line0Start.x, line0End.x)).epsilon(EPSILON));
+        REQUIRE(colouredLines[0].first.start().y ==
+                Approx(std::min(line0Start.y, line0End.y)).epsilon(EPSILON));
+        REQUIRE(colouredLines[0].first.end().x ==
+                Approx(std::max(line0Start.x, line0End.x)).epsilon(EPSILON));
+        REQUIRE(colouredLines[0].first.end().y ==
+                Approx(std::max(line0Start.y, line0End.y)).epsilon(EPSILON));
         REQUIRE(colouredLines[0].second.redf() == Approx(0.2f).epsilon(EPSILON));
         REQUIRE(colouredLines[0].second.greenf() == Approx(0.2f).epsilon(EPSILON));
         REQUIRE(colouredLines[0].second.bluef() == Approx(0.86667f).epsilon(EPSILON));
@@ -97,12 +99,12 @@ TEST_CASE("Testing ShapeMap::getAllShapes variants")
         REQUIRE(colouredLines[1].second.greenf() == Approx(0.86667f).epsilon(EPSILON));
         REQUIRE(colouredLines[1].second.bluef() == Approx(0.53333f).epsilon(EPSILON));
     }
-    SECTION("ShapeMap::getAllPolygonsWithColour")
-    {
+    SECTION("ShapeMap::getAllPolygonsWithColour") {
         shapeMap->overrideDisplayedAttribute(-2);
         shapeMap->setDisplayedAttribute(-1); // displayed attribute is shape_ref
 
-        std::vector<std::pair<std::vector<Point2f>, PafColor>> colouredPolygons = shapeMap->getAllPolygonsWithColour();
+        std::vector<std::pair<std::vector<Point2f>, PafColor>> colouredPolygons =
+            shapeMap->getAllPolygonsWithColour();
 
         REQUIRE(colouredPolygons.size() == 1);
 

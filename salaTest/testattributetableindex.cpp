@@ -16,16 +16,15 @@
 #include "catch.hpp"
 #include <salalib/attributetableindex.h>
 
-TEST_CASE("Check index creation")
-{
+TEST_CASE("Check index creation") {
     AttributeTable table;
     table.getOrInsertColumn("col1");
     table.getOrInsertColumn("col2");
 
-    auto& row0 = table.addRow(AttributeKey(0));
-    auto& row1 = table.addRow(AttributeKey(1));
-    auto& row2 = table.addRow(AttributeKey(2));
-    auto& row3 = table.addRow(AttributeKey(3));
+    auto &row0 = table.addRow(AttributeKey(0));
+    auto &row1 = table.addRow(AttributeKey(1));
+    auto &row2 = table.addRow(AttributeKey(2));
+    auto &row3 = table.addRow(AttributeKey(3));
 
     row0.setValue(0, 10.0);
     row1.setValue(0, 8.5);
@@ -42,4 +41,3 @@ TEST_CASE("Check index creation")
     index[3].mutable_row->setValue(1, 1.5);
     REQUIRE(table.getRow(AttributeKey(2)).getValue(1) == Approx(1.5));
 }
-

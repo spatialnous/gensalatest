@@ -16,22 +16,19 @@
 #include "catch.hpp"
 #include "salalib/mgraph.h"
 
-
-TEST_CASE("Test MetaGraph construction", "")
-{
+TEST_CASE("Test MetaGraph construction", "") {
     const float EPSILON = 0.001;
     double spacing = 0.5;
-    Point2f offset(0,0); // seems that this is always set to 0,0
+    Point2f offset(0, 0); // seems that this is always set to 0,0
 
     // create a new MetaGraph
     // The PointMap needs the m_region variable from this
     // object as a definition of the area the grid needs to cover
     std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
 
-    SECTION( "Construct a plain MetaGraph without underlying geometry" )
-    {
-        Point2f bottomLeft(0,0);
-        Point2f topRight(2,4);
+    SECTION("Construct a plain MetaGraph without underlying geometry") {
+        Point2f bottomLeft(0, 0);
+        Point2f topRight(2, 4);
 
         // set m_region to the bounds
         metaGraph->setRegion(bottomLeft, topRight);
@@ -43,13 +40,12 @@ TEST_CASE("Test MetaGraph construction", "")
         REQUIRE(metaGraph->getRegion().top_right.y == Approx(topRight.y).epsilon(EPSILON));
     }
 
-    SECTION( "Construct a MetaGraph using underlying geometry" )
-    {
-        Point2f lineStart(0,0);
-        Point2f lineEnd(2,4);
+    SECTION("Construct a MetaGraph using underlying geometry") {
+        Point2f lineStart(0, 0);
+        Point2f lineEnd(2, 4);
 
-        Point2f bottomLeft(std::min(lineStart.x,lineEnd.x),std::min(lineStart.y,lineEnd.y));
-        Point2f topRight(std::max(lineStart.x,lineEnd.x),std::max(lineStart.y,lineEnd.y));
+        Point2f bottomLeft(std::min(lineStart.x, lineEnd.x), std::min(lineStart.y, lineEnd.y));
+        Point2f topRight(std::max(lineStart.x, lineEnd.x), std::max(lineStart.y, lineEnd.y));
 
         // push a SpacePixelFile in the MetaGraph
         metaGraph->m_drawingFiles.emplace_back("Test MetaGraph");
@@ -58,24 +54,34 @@ TEST_CASE("Test MetaGraph construction", "")
         metaGraph->m_drawingFiles.back().m_spacePixels.emplace_back("Test ShapeMap");
 
         // add a line to the ShapeMap
-        metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(lineStart, lineEnd));
+        metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(
+            Line(lineStart, lineEnd));
 
         // check if the ShapeMap bounds are set correctly
-        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().bottom_left.x ==
+                Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().bottom_left.y ==
+                Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().top_right.x ==
+                Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().top_right.y ==
+                Approx(topRight.y).epsilon(EPSILON));
 
         // MetaGraph and SpacePixelFile do not automatically grow
         // their region when new shapemaps/files are added to them
         // therefore we have to do this externally
-        metaGraph->m_drawingFiles.back().m_region = metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion();
+        metaGraph->m_drawingFiles.back().m_region =
+            metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion();
 
         // check if the SpacePixelFile bounds are set correctly
-        REQUIRE(metaGraph->m_drawingFiles.back().m_region.bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_region.bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_region.top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_region.top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph->m_drawingFiles.back().m_region.bottom_left.x ==
+                Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph->m_drawingFiles.back().m_region.bottom_left.y ==
+                Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph->m_drawingFiles.back().m_region.top_right.x ==
+                Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph->m_drawingFiles.back().m_region.top_right.y ==
+                Approx(topRight.y).epsilon(EPSILON));
 
         metaGraph->setRegion(metaGraph->m_drawingFiles.back().m_region.bottom_left,
                              metaGraph->m_drawingFiles.back().m_region.top_right);
@@ -91,11 +97,10 @@ TEST_CASE("Test MetaGraph construction", "")
     PointMap pointMap(metaGraph->getRegion(), metaGraph->m_drawingFiles, "Test PointMap");
 }
 
-TEST_CASE("Test grid filling", "")
-{
+TEST_CASE("Test grid filling", "") {
     const float EPSILON = 0.001;
     double spacing = 0.5;
-    Point2f offset(0,0); // seems that this is always set to 0,0
+    Point2f offset(0, 0); // seems that this is always set to 0,0
 
     // create a new MetaGraph
     // The PointMap needs the m_region variable from this
@@ -104,8 +109,8 @@ TEST_CASE("Test grid filling", "")
 
     // Construct a plain MetaGraph without underlying geometry
     {
-        Point2f bottomLeft(0,0);
-        Point2f topRight(2,4);
+        Point2f bottomLeft(0, 0);
+        Point2f topRight(2, 4);
 
         // set m_region to the bounds
         metaGraph->setRegion(bottomLeft, topRight);
@@ -140,8 +145,7 @@ TEST_CASE("Test grid filling", "")
 
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
 
-    SECTION( "Check if the points are made when fill selection in a cell" )
-    {
+    SECTION("Check if the points are made when fill selection in a cell") {
         // Check if the points are made (grid filled) when
         // the selected position is certainly in a cell
         // This calculation should make the point directly
@@ -150,11 +154,9 @@ TEST_CASE("Test grid filling", "")
                          gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5) + 0.5));
         bool pointsMade = pointMap.makePoints(midPoint, fill_type);
         REQUIRE(pointsMade);
-
     }
 
-    SECTION("Check if the points are made when fill selection between cells")
-    {
+    SECTION("Check if the points are made when fill selection between cells") {
         // Check if the points are made (grid filled) when
         // the selected position is certainly between cells
         // This calculation should make the point directly
@@ -174,18 +176,16 @@ TEST_CASE("Test grid filling", "")
 // is and the current pixel can always be calculated as if the
 // origin always falls in the centre of a cell.
 
-TEST_CASE("Quirks in grid creation - Origin always at 0", "")
-{
+TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
 
     double spacing = 0.5;
     const float EPSILON = 0.001;
-    Point2f offset(0,0); // seems that this is always set to 0,0
+    Point2f offset(0, 0); // seems that this is always set to 0,0
 
-    Point2f bottomLeft(0,0);
-    Point2f topRight(0,0);
+    Point2f bottomLeft(0, 0);
+    Point2f topRight(0, 0);
 
-    SECTION ("Region from origin to positive x, positive y quadrant")
-    {
+    SECTION("Region from origin to positive x, positive y quadrant") {
         spacing = 0.5;
         bottomLeft.x = 0;
         bottomLeft.y = 0;
@@ -193,8 +193,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
         topRight.y = 1;
     }
 
-    SECTION ("Region away from origin to positive x, positive y quadrant")
-    {
+    SECTION("Region away from origin to positive x, positive y quadrant") {
         spacing = 0.5;
         bottomLeft.x = 1;
         bottomLeft.y = 1;
@@ -202,8 +201,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
         topRight.y = 2;
     }
 
-    SECTION ("Region from origin to negative x, negative y quadrant")
-    {
+    SECTION("Region from origin to negative x, negative y quadrant") {
         spacing = 0.5;
         bottomLeft.x = -1;
         bottomLeft.y = -1;
@@ -211,8 +209,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
         topRight.y = 0;
     }
 
-    SECTION ("Region in all quadrants")
-    {
+    SECTION("Region in all quadrants") {
         spacing = 0.5;
         bottomLeft.x = -1;
         bottomLeft.y = -1;
@@ -220,8 +217,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
         topRight.y = 1;
     }
 
-    SECTION ("Region in positive x, positive y quadrant, non-rectangular")
-    {
+    SECTION("Region in positive x, positive y quadrant, non-rectangular") {
         spacing = 0.5;
         bottomLeft.x = 1;
         bottomLeft.y = 2;
@@ -229,8 +225,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
         topRight.y = 4;
     }
 
-    SECTION ("Region in positive x, positive y quadrant, floating-point limits")
-    {
+    SECTION("Region in positive x, positive y quadrant, floating-point limits") {
         spacing = 0.5;
         bottomLeft.x = 1.1;
         bottomLeft.y = 2.2;
@@ -238,8 +233,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
         topRight.y = 4.4;
     }
 
-    SECTION ("Region in positive x, positive y quadrant, floating-point limits")
-    {
+    SECTION("Region in positive x, positive y quadrant, floating-point limits") {
         spacing = 0.5;
         bottomLeft.x = 0.1;
         bottomLeft.y = 0.2;
@@ -247,8 +241,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
         topRight.y = 0.4;
     }
 
-    SECTION ("Region in negative x, negative y quadrant, floating-point limits")
-    {
+    SECTION("Region in negative x, negative y quadrant, floating-point limits") {
         spacing = 0.5;
         bottomLeft.x = -0.4;
         bottomLeft.y = -0.3;
@@ -256,8 +249,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
         topRight.y = -0.1;
     }
 
-    SECTION ("Region in all quadrants, floating-point limits")
-    {
+    SECTION("Region in all quadrants, floating-point limits") {
         spacing = 0.5;
         bottomLeft.x = -1.1;
         bottomLeft.y = -2.2;
@@ -265,8 +257,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
         topRight.y = 4.4;
     }
 
-    SECTION ("Region in all quadrants, floating-point limits, smaller spacing")
-    {
+    SECTION("Region in all quadrants, floating-point limits, smaller spacing") {
         spacing = 0.25;
         bottomLeft.x = 1.1;
         bottomLeft.y = 2.2;
@@ -300,7 +291,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
     REQUIRE(pointMap.getRegion().bottom_left.y == Approx(gridBottomLeft.y).epsilon(EPSILON));
 
     Point2f midPoint(gridBottomLeft.x + spacing * (floor(numCellsX * 0.5) + 0.5),
-                      gridBottomLeft.y + spacing * (floor(numCellsY * 0.5) + 0.5));
+                     gridBottomLeft.y + spacing * (floor(numCellsY * 0.5) + 0.5));
 
     int fill_type = 0; // = QDepthmapView::FULLFILL
 
@@ -310,24 +301,23 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "")
     REQUIRE(pointsMade);
 }
 
-TEST_CASE("Test PointMap connections output", "")
-{
+TEST_CASE("Test PointMap connections output", "") {
     const float EPSILON = 0.001;
     double spacing = 0.5;
-    Point2f offset(0,0); // seems that this is always set to 0,0
+    Point2f offset(0, 0); // seems that this is always set to 0,0
 
     std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
 
     double rectSize = 1.5;
 
-    Point2f line0Start(0,0);
-    Point2f line0End(0,rectSize);
-    Point2f line1Start(0,rectSize);
-    Point2f line1End(rectSize,rectSize);
-    Point2f line2Start(rectSize,rectSize);
-    Point2f line2End(rectSize,0);
-    Point2f line3Start(rectSize,0);
-    Point2f line3End(0,0);
+    Point2f line0Start(0, 0);
+    Point2f line0End(0, rectSize);
+    Point2f line1Start(0, rectSize);
+    Point2f line1End(rectSize, rectSize);
+    Point2f line2Start(rectSize, rectSize);
+    Point2f line2End(rectSize, 0);
+    Point2f line3Start(rectSize, 0);
+    Point2f line3End(0, 0);
 
     metaGraph->m_drawingFiles.emplace_back("Test SpacePixelGroup");
     metaGraph->m_drawingFiles.back().m_spacePixels.emplace_back("Test ShapeMap");
@@ -335,7 +325,8 @@ TEST_CASE("Test PointMap connections output", "")
     metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line1Start, line1End));
     metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line2Start, line2End));
     metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line3Start, line3End));
-    metaGraph->m_drawingFiles.back().m_region = metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion();
+    metaGraph->m_drawingFiles.back().m_region =
+        metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion();
     metaGraph->setRegion(metaGraph->m_drawingFiles.back().m_region.bottom_left,
                          metaGraph->m_drawingFiles.back().m_region.top_right);
     PointMap pointMap(metaGraph->getRegion(), metaGraph->m_drawingFiles, "Test PointMap");
@@ -368,14 +359,11 @@ TEST_CASE("Test PointMap connections output", "")
         REQUIRE(stream.good());
         char line[1000];
         std::vector<std::string> lines;
-        while( !stream.eof())
-        {
+        while (!stream.eof()) {
             stream.getline(line, 1000);
             lines.push_back(line);
         }
-        std::vector<std::string> expected{ "RefFrom,RefTo",
-                                           "65537,131074",
-                                           "65538,131073"};
+        std::vector<std::string> expected{"RefFrom,RefTo", "65537,131074", "65538,131073"};
         REQUIRE(lines == expected);
     }
 
@@ -386,14 +374,13 @@ TEST_CASE("Test PointMap connections output", "")
         REQUIRE(stream.good());
         char line[1000];
         std::vector<std::string> lines;
-        while( !stream.eof())
-        {
+        while (!stream.eof()) {
             stream.getline(line, 1000);
             lines.push_back(line);
         }
-        std::vector<std::string> expected{ "RefFrom,RefTo",
-                                           "65537,131073", "65537,131074", "65537,65538",
-                                           "65538,131074", "65538,131073", "131073,131074"};
+        std::vector<std::string> expected{"RefFrom,RefTo", "65537,131073", "65537,131074",
+                                          "65537,65538",   "65538,131074", "65538,131073",
+                                          "131073,131074"};
         REQUIRE(lines == expected);
     }
 
@@ -404,59 +391,56 @@ TEST_CASE("Test PointMap connections output", "")
         REQUIRE(stream.good());
         char line[1000];
         std::vector<std::string> lines;
-        while( !stream.eof())
-        {
+        while (!stream.eof()) {
             stream.getline(line, 1000);
             lines.push_back(line);
         }
-        std::vector<std::string> expected{ "#graph v1.0",
-                                           "node {",
-                                           "  ref    65537",
-                                           "  origin 0.5 0.5 0",
-                                           "  connections [",
-                                           "    131073,",
-                                           "    131074,",
-                                           "    65538,",
-                                           "  ]",
-                                           "}",
-                                           "node {",
-                                           "  ref    65538",
-                                           "  origin 0.5 1 0",
-                                           "  connections [",
-                                           "    131074,",
-                                           "    65537,",
-                                           "    131073,",
-                                           "  ]",
-                                           "}",
-                                           "node {",
-                                           "  ref    131073",
-                                           "  origin 1 0.5 0",
-                                           "  connections [",
-                                           "    131074,",
-                                           "    65538,",
-                                           "    65537,",
-                                           "  ]",
-                                           "}",
-                                           "node {",
-                                           "  ref    131074",
-                                           "  origin 1 1 0",
-                                           "  connections [",
-                                           "    65538,",
-                                           "    65537,",
-                                           "    131073,",
-                                           "  ]",
-                                           "}",
-                                           "" };
+        std::vector<std::string> expected{"#graph v1.0",
+                                          "node {",
+                                          "  ref    65537",
+                                          "  origin 0.5 0.5 0",
+                                          "  connections [",
+                                          "    131073,",
+                                          "    131074,",
+                                          "    65538,",
+                                          "  ]",
+                                          "}",
+                                          "node {",
+                                          "  ref    65538",
+                                          "  origin 0.5 1 0",
+                                          "  connections [",
+                                          "    131074,",
+                                          "    65537,",
+                                          "    131073,",
+                                          "  ]",
+                                          "}",
+                                          "node {",
+                                          "  ref    131073",
+                                          "  origin 1 0.5 0",
+                                          "  connections [",
+                                          "    131074,",
+                                          "    65538,",
+                                          "    65537,",
+                                          "  ]",
+                                          "}",
+                                          "node {",
+                                          "  ref    131074",
+                                          "  origin 1 1 0",
+                                          "  connections [",
+                                          "    65538,",
+                                          "    65537,",
+                                          "    131073,",
+                                          "  ]",
+                                          "}",
+                                          ""};
         REQUIRE(lines == expected);
     }
-
 }
-TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "")
-{
+TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "") {
     double spacing = 0.5;
-    Point2f offset(0,0); // seems that this is always set to 0,0
-    Point2f bottomLeft(0,0);
-    Point2f topRight(2,4);
+    Point2f offset(0, 0); // seems that this is always set to 0,0
+    Point2f bottomLeft(0, 0);
+    Point2f topRight(2, 4);
     int fill_type = 0; // = QDepthmapView::FULLFILL
 
     std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
@@ -465,7 +449,7 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "")
     pointMap.setGrid(spacing, offset);
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
     Point2f midPoint(gridBottomLeft.x + spacing * (floor(pointMap.getCols() * 0.5) + 0.5),
-                         gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5) + 0.5));
+                     gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5) + 0.5));
     pointMap.makePoints(midPoint, fill_type);
 
     std::vector<Line> mergeLines;
@@ -484,16 +468,15 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "")
     REQUIRE(pointMap.isPixelMerged(bottomLeftPixel));
     REQUIRE(pointMap.isPixelMerged(topRightPixel));
 
-    SECTION ("Make sure we get the correct number of merged pixel pairs")
-    {
-        const std::vector<std::pair<PixelRef, PixelRef>> &pixelPairs = pointMap.getMergedPixelPairs();
+    SECTION("Make sure we get the correct number of merged pixel pairs") {
+        const std::vector<std::pair<PixelRef, PixelRef>> &pixelPairs =
+            pointMap.getMergedPixelPairs();
         REQUIRE(pixelPairs.size() == 1);
         REQUIRE(pixelPairs[0].first == bottomLeftPixel);
         REQUIRE(pixelPairs[0].second == topRightPixel);
     }
 
-    SECTION ("Overwrite the pixelpair by re-merging the first pixel of the pair")
-    {
+    SECTION("Overwrite the pixelpair by re-merging the first pixel of the pair") {
         PixelRef aboveBottomLeftPixel = pointMap.pixelate(Point2f(bottomLeft.x, bottomLeft.y + 1));
 
         // merge
@@ -507,14 +490,14 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "")
         REQUIRE(!pointMap.isPixelMerged(bottomLeftPixel));
 
         // make sure we get the correct number of merged pixel pairs
-        const std::vector<std::pair<PixelRef, PixelRef>> &pixelPairs = pointMap.getMergedPixelPairs();
+        const std::vector<std::pair<PixelRef, PixelRef>> &pixelPairs =
+            pointMap.getMergedPixelPairs();
         REQUIRE(pixelPairs.size() == 1);
         REQUIRE(pixelPairs[0].first == aboveBottomLeftPixel);
         REQUIRE(pixelPairs[0].second == topRightPixel);
     }
 
-    SECTION ("Overwrite the pixelpair by re-merging the second pixel of the pair")
-    {
+    SECTION("Overwrite the pixelpair by re-merging the second pixel of the pair") {
         PixelRef belowTopRightPixel = pointMap.pixelate(Point2f(topRight.x, topRight.y - 1));
 
         // merge
@@ -528,14 +511,14 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "")
         REQUIRE(!pointMap.isPixelMerged(topRightPixel));
 
         // make sure we get the correct number of merged pixel pairs
-        const std::vector<std::pair<PixelRef, PixelRef>> &pixelPairs2 = pointMap.getMergedPixelPairs();
+        const std::vector<std::pair<PixelRef, PixelRef>> &pixelPairs2 =
+            pointMap.getMergedPixelPairs();
         REQUIRE(pixelPairs2.size() == 1);
         REQUIRE(pixelPairs2[0].first == bottomLeftPixel);
         REQUIRE(pixelPairs2[0].second == belowTopRightPixel);
     }
 
-    SECTION ("Merge the same pixel twice to erase the pair")
-    {
+    SECTION("Merge the same pixel twice to erase the pair") {
         pointMap.mergePixels(bottomLeftPixel, bottomLeftPixel);
 
         // make sure no pixel is merged
@@ -543,7 +526,8 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "")
         REQUIRE(!pointMap.isPixelMerged(topRightPixel));
 
         // make sure we get the correct number of merged pixel pairs
-        const std::vector<std::pair<PixelRef, PixelRef>> &pixelPairs3 = pointMap.getMergedPixelPairs();
+        const std::vector<std::pair<PixelRef, PixelRef>> &pixelPairs3 =
+            pointMap.getMergedPixelPairs();
         REQUIRE(pixelPairs3.size() == 0);
     }
 }

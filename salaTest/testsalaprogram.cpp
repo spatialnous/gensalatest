@@ -15,9 +15,9 @@
 
 #include "../salalib/mapconverter.h"
 #include "catch.hpp"
-#include "salalib/salaprogram.h"
 #include "genlib/p2dpoly.h"
 #include "salalib/mgraph.h"
+#include "salalib/salaprogram.h"
 #include "salalib/shapegraph.h"
 #include <sstream>
 
@@ -29,9 +29,7 @@ TEST_CASE("Trivial scripts") {
     std::stringstream script;
     SalaObj expected;
 
-    SECTION("comment") {
-        script << "# comment\n";
-    }
+    SECTION("comment") { script << "# comment\n"; }
 
     SECTION("single dimension lists") {
         script << "x = [1,2]\n"
@@ -117,8 +115,6 @@ TEST_CASE("Trivial errors") {
     SalaProgram program(context);
     program.parse(script);
     REQUIRE_THROWS_WITH(program.evaluate(), "");
-
-
 }
 
 TEST_CASE("Variables from outer scope are accessible in inner scope") {
@@ -144,16 +140,16 @@ TEST_CASE("Shapemap scripts") {
 
     const double EPSILON = 0.001;
 
-    Point2f line1Start(0,0);
-    Point2f line1End  (3,0);
-    Point2f line2Start(1,1);
-    Point2f line2End  (1,-1);
-    Point2f line3Start(2,1);
-    Point2f line3End  (2,-2);
-    Point2f line4Start(2,1);
-    Point2f line4End  (4,1);
-    Point2f line5Start(5,3);
-    Point2f line5End  (3,1);
+    Point2f line1Start(0, 0);
+    Point2f line1End(3, 0);
+    Point2f line2Start(1, 1);
+    Point2f line2End(1, -1);
+    Point2f line3Start(2, 1);
+    Point2f line3End(2, -2);
+    Point2f line4Start(2, 1);
+    Point2f line4End(4, 1);
+    Point2f line5Start(5, 3);
+    Point2f line5End(3, 1);
 
     std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test SuperSpacePixel"));
 
@@ -166,60 +162,61 @@ TEST_CASE("Shapemap scripts") {
     metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line4Start, line4End));
     metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line5Start, line5End));
 
-    auto shapeGraph = MapConverter::convertDrawingToAxial(0, "Test axial", metaGraph->m_drawingFiles);
-
+    auto shapeGraph =
+        MapConverter::convertDrawingToAxial(0, "Test axial", metaGraph->m_drawingFiles);
 
     std::stringstream script;
     std::vector<double> expectedColVals;
 
     SECTION("pass ref to new column") {
-            script << "value(\"Ref Number\")\n";
-            expectedColVals.push_back(0.0);
-            expectedColVals.push_back(1.0);
-            expectedColVals.push_back(2.0);
-            expectedColVals.push_back(3.0);
-            expectedColVals.push_back(4.0);
+        script << "value(\"Ref Number\")\n";
+        expectedColVals.push_back(0.0);
+        expectedColVals.push_back(1.0);
+        expectedColVals.push_back(2.0);
+        expectedColVals.push_back(3.0);
+        expectedColVals.push_back(4.0);
     }
 
     SECTION("if, function of a function on a range") {
-            script << "x = len(range(1,value(\"Ref Number\")))\n"
-                   << "if x == 2:\n"
-                   << "   return 5\n"
-                   << "elif x < 1:\n"
-                   << "   return 10\n"
-                   << "x\n"
-                   << "# first two objects should be set to 10, next to 5, and then ref number after that;\n";
-            expectedColVals.push_back(10.0);
-            expectedColVals.push_back(10.0);
-            expectedColVals.push_back(1.0);
-            expectedColVals.push_back(5.0);
-            expectedColVals.push_back(3.0);
+        script << "x = len(range(1,value(\"Ref Number\")))\n"
+               << "if x == 2:\n"
+               << "   return 5\n"
+               << "elif x < 1:\n"
+               << "   return 10\n"
+               << "x\n"
+               << "# first two objects should be set to 10, next to 5, and then ref number after "
+                  "that;\n";
+        expectedColVals.push_back(10.0);
+        expectedColVals.push_back(10.0);
+        expectedColVals.push_back(1.0);
+        expectedColVals.push_back(5.0);
+        expectedColVals.push_back(3.0);
     }
 
     SECTION("simple if") {
-            script << "if value(\"Ref Number\") < 2:\n"
-                   << "    0\n"
-                   << "elif value(\"Ref Number\") == 3:\n"
-                   << "    5\n"
-                   << "else\n"
-                   << "    10\n";
-            expectedColVals.push_back(0.0);
-            expectedColVals.push_back(0.0);
-            expectedColVals.push_back(10.0);
-            expectedColVals.push_back(5.0);
-            expectedColVals.push_back(10.0);
+        script << "if value(\"Ref Number\") < 2:\n"
+               << "    0\n"
+               << "elif value(\"Ref Number\") == 3:\n"
+               << "    5\n"
+               << "else\n"
+               << "    10\n";
+        expectedColVals.push_back(0.0);
+        expectedColVals.push_back(0.0);
+        expectedColVals.push_back(10.0);
+        expectedColVals.push_back(5.0);
+        expectedColVals.push_back(10.0);
     }
 
     SECTION("various member functions tests") {
-            script << "this.value(\"Ref Number\")\n"
-                   << "    len(range(1,this.value(\"Ref Number\")))\n"
-                   << "elif value(\"Ref Number\") == 3:\n"
-                   << "    range(1,this.value(\"Ref Number\")).length()\n";
-            expectedColVals.push_back(0.0);
-            expectedColVals.push_back(0.0);
-            expectedColVals.push_back(1.0);
-            expectedColVals.push_back(2.0);
-            expectedColVals.push_back(3.0);
+        script << "this.value(\"Ref Number\")\n"
+               << "    len(range(1,this.value(\"Ref Number\")))\n"
+               << "elif value(\"Ref Number\") == 3:\n"
+               << "    range(1,this.value(\"Ref Number\")).length()\n";
+        expectedColVals.push_back(0.0);
+        expectedColVals.push_back(0.0);
+        expectedColVals.push_back(1.0);
+        expectedColVals.push_back(2.0);
+        expectedColVals.push_back(3.0);
     }
 
     int newCol = shapeGraph->addAttribute("NewCol");
@@ -244,16 +241,16 @@ TEST_CASE("Shapemap scripts with unexpected results") {
 
     const double EPSILON = 0.001;
 
-    Point2f line1Start(0,0);
-    Point2f line1End  (3,0);
-    Point2f line2Start(1,1);
-    Point2f line2End  (1,-1);
-    Point2f line3Start(2,1);
-    Point2f line3End  (2,-2);
-    Point2f line4Start(2,1);
-    Point2f line4End  (4,1);
-    Point2f line5Start(5,3);
-    Point2f line5End  (3,1);
+    Point2f line1Start(0, 0);
+    Point2f line1End(3, 0);
+    Point2f line2Start(1, 1);
+    Point2f line2End(1, -1);
+    Point2f line3Start(2, 1);
+    Point2f line3End(2, -2);
+    Point2f line4Start(2, 1);
+    Point2f line4End(4, 1);
+    Point2f line5Start(5, 3);
+    Point2f line5End(3, 1);
 
     std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test SuperSpacePixel"));
 
@@ -266,94 +263,92 @@ TEST_CASE("Shapemap scripts with unexpected results") {
     metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line4Start, line4End));
     metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line5Start, line5End));
 
-    auto shapeGraph = MapConverter::convertDrawingToAxial(0, "Test axial", metaGraph->m_drawingFiles);
-
+    auto shapeGraph =
+        MapConverter::convertDrawingToAxial(0, "Test axial", metaGraph->m_drawingFiles);
 
     std::stringstream script;
     std::vector<double> expectedColVals;
 
     SECTION("for with else and 0 length ranges") {
-            script << "int x = 0\n"
-                   << "for i in range(2,value(\"Ref Number\")):\n"
-                   << "    x = x + i\n"
-                   << "    x\n"
-                   << "else:\n"
-                   << "    0\n";
-            expectedColVals.push_back(0.0);
-            expectedColVals.push_back(0.0);
-            expectedColVals.push_back(0.0);
-            expectedColVals.push_back(2.0);
-            expectedColVals.push_back(5.0);
+        script << "int x = 0\n"
+               << "for i in range(2,value(\"Ref Number\")):\n"
+               << "    x = x + i\n"
+               << "    x\n"
+               << "else:\n"
+               << "    0\n";
+        expectedColVals.push_back(0.0);
+        expectedColVals.push_back(0.0);
+        expectedColVals.push_back(0.0);
+        expectedColVals.push_back(2.0);
+        expectedColVals.push_back(5.0);
     }
 
     SECTION("Total Depth Calculation") {
-            script << "total_depth = 0\n"
-                   << "depth = 0\n"
-                   << "pop_list = [this]\n"
-                   << "push_list = []\n"
-                   << "setmark(true)\n"
-                   << "while len(pop_list):\n"
-                   << "    total_depth = total_depth + depth\n"
-                   << "    curs = pop_list.pop()\n"
-                   << "    for i in curs.connections():\n"
-                   << "        if i.mark() is none:\n"
-                   << "            i.setmark(true)\n"
-                   << "            push_list.append(i)\n"
-                   << "    if len(pop_list) == 0:\n"
-                   << "        depth = depth + 1\n"
-                   << "        pop_list = push_list\n"
-                   << "        push_list = []\n"
-                   << "total_depth\n";
-            expectedColVals.push_back(7.0);
-            expectedColVals.push_back(10.0);
-            expectedColVals.push_back(6.0);
-            expectedColVals.push_back(7.0);
-            expectedColVals.push_back(10.0);
+        script << "total_depth = 0\n"
+               << "depth = 0\n"
+               << "pop_list = [this]\n"
+               << "push_list = []\n"
+               << "setmark(true)\n"
+               << "while len(pop_list):\n"
+               << "    total_depth = total_depth + depth\n"
+               << "    curs = pop_list.pop()\n"
+               << "    for i in curs.connections():\n"
+               << "        if i.mark() is none:\n"
+               << "            i.setmark(true)\n"
+               << "            push_list.append(i)\n"
+               << "    if len(pop_list) == 0:\n"
+               << "        depth = depth + 1\n"
+               << "        pop_list = push_list\n"
+               << "        push_list = []\n"
+               << "total_depth\n";
+        expectedColVals.push_back(7.0);
+        expectedColVals.push_back(10.0);
+        expectedColVals.push_back(6.0);
+        expectedColVals.push_back(7.0);
+        expectedColVals.push_back(10.0);
     }
 
     SECTION("Shortest Cycle") {
-            script << "push_list = []\n"
-                   << "pop_list = []\n"
-                   << "live_paths = []\n"
-                   << "setmark([-1,0])\n"
-                   << "depth = 1\n"
-                   << "path_index = 0\n"
-                   << "for i in connections():\n"
-                   << "    pop_list.append([path_index,i])\n"
-                   << "    live_paths.append(1)\n"
-                   << "    i.setmark([path_index,depth])\n"
-                   << "    path_index = path_index + 1\n"
-                   << "if path_index < 2:\n"
-                   << "    return -1 # no cycle possible\n"
-                   << "live_path_count = path_index\n"
-                   << "while len(pop_list) and live_path_count > 1:\n"
-                   << "    curs = pop_list.pop()\n"
-                   << "    path_index = curs[0]\n"
-                   << "    this_node = curs[1]\n"
-                   << "    live_paths[path_index] = live_paths[path_index] - 1\n"
-                   << "    for i in this_node.connections():\n"
-                   << "        if i.mark() is none:\n"
-                   << "            i.setmark([path_index,depth+1])\n"
-                   << "            push_list.append([path_index,i])\n"
-                   << "            live_paths[path_index] = live_paths[path_index] + 1\n"
-                   << "        elif i.mark()[0] != path_index and i.mark()[0] != -1:\n"
-                   << "            # found a cycle!\n"
-                   << "            return i.mark()[1] + this_node.mark()[1] + 1\n"
-                   << "    if live_paths[path_index] == 0:\n"
-                   << "        live_path_count = live_path_count - 1\n"
-                   << "    if len(pop_list) == 0:\n"
-                   << "        depth = depth + 1\n"
-                   << "        pop_list = push_list\n"
-                   << "        push_list = []\n"
-                   << "-1 # no cycle found\n";
-            expectedColVals.push_back(-1.0);
-            expectedColVals.push_back(-1.0);
-            expectedColVals.push_back(-1.0);
-            expectedColVals.push_back(-1.0);
-            expectedColVals.push_back(-1.0);
+        script << "push_list = []\n"
+               << "pop_list = []\n"
+               << "live_paths = []\n"
+               << "setmark([-1,0])\n"
+               << "depth = 1\n"
+               << "path_index = 0\n"
+               << "for i in connections():\n"
+               << "    pop_list.append([path_index,i])\n"
+               << "    live_paths.append(1)\n"
+               << "    i.setmark([path_index,depth])\n"
+               << "    path_index = path_index + 1\n"
+               << "if path_index < 2:\n"
+               << "    return -1 # no cycle possible\n"
+               << "live_path_count = path_index\n"
+               << "while len(pop_list) and live_path_count > 1:\n"
+               << "    curs = pop_list.pop()\n"
+               << "    path_index = curs[0]\n"
+               << "    this_node = curs[1]\n"
+               << "    live_paths[path_index] = live_paths[path_index] - 1\n"
+               << "    for i in this_node.connections():\n"
+               << "        if i.mark() is none:\n"
+               << "            i.setmark([path_index,depth+1])\n"
+               << "            push_list.append([path_index,i])\n"
+               << "            live_paths[path_index] = live_paths[path_index] + 1\n"
+               << "        elif i.mark()[0] != path_index and i.mark()[0] != -1:\n"
+               << "            # found a cycle!\n"
+               << "            return i.mark()[1] + this_node.mark()[1] + 1\n"
+               << "    if live_paths[path_index] == 0:\n"
+               << "        live_path_count = live_path_count - 1\n"
+               << "    if len(pop_list) == 0:\n"
+               << "        depth = depth + 1\n"
+               << "        pop_list = push_list\n"
+               << "        push_list = []\n"
+               << "-1 # no cycle found\n";
+        expectedColVals.push_back(-1.0);
+        expectedColVals.push_back(-1.0);
+        expectedColVals.push_back(-1.0);
+        expectedColVals.push_back(-1.0);
+        expectedColVals.push_back(-1.0);
     }
-
-
 
     int newCol = shapeGraph->addAttribute("NewCol");
     SalaGrf graph;
@@ -375,7 +370,8 @@ TEST_CASE("Shapemap scripts with unexpected results") {
 
 TEST_CASE("Performance tests") {
     //# For a graph with 100000 segments for cpu timing:
-    //x=value("Angular Connectivity")*value("Angular Step Depth")+value("Axial Line Ref")+value("Connectivity")/value("Segment Length")^value("T1024 Choice R1000 metric")
-    //y=value("T1024 Choice R3000 metric")*value("T1024 Choice R4000 metric")/value("T1024 Choice R5000 metric")^value("T1024 Total Depth [Segment Length Wgt] R4000 metric")
-    //y/x
+    // x=value("Angular Connectivity")*value("Angular Step Depth")+value("Axial Line
+    // Ref")+value("Connectivity")/value("Segment Length")^value("T1024 Choice R1000 metric")
+    // y=value("T1024 Choice R3000 metric")*value("T1024 Choice R4000 metric")/value("T1024 Choice
+    // R5000 metric")^value("T1024 Total Depth [Segment Length Wgt] R4000 metric") y/x
 }

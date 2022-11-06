@@ -16,8 +16,7 @@
 #include "catch.hpp"
 #include "salalib/gridproperties.h"
 
-TEST_CASE("TestGridProperties", "Test the calculations of grid properties")
-{
+TEST_CASE("TestGridProperties", "Test the calculations of grid properties") {
     double maxDimension = 4.583;
     GridProperties gp(maxDimension);
     REQUIRE(gp.getDefault() == Approx(0.04));

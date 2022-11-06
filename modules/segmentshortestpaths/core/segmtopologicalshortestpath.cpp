@@ -122,12 +122,12 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm) {
                 } else {
                     list[(bin + 1) % 2].push_back(connected_cursor);
                     seen[connected_cursor] =
-                        segdepth +
-                        1; // this is so if another node is connected directly to this one but is found later it is
-                           // still handled -- note it can result in the connected cursor being added twice
+                        segdepth + 1; // this is so if another node is connected directly to this
+                                      // one but is found later it is still handled -- note it can
+                                      // result in the connected cursor being added twice
                     row.setValue(depth_col, segdepth + 1);
                 }
-                if(parents.find(connected_cursor) == parents.end()) {
+                if (parents.find(connected_cursor) == parents.end()) {
                     parents[connected_cursor] = here.ref;
                 }
             }

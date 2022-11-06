@@ -13,16 +13,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "catch.hpp"
 #include "../depthmapX/views/glview/gllinesuniform.h"
+#include "catch.hpp"
 
-TEST_CASE("Test GLLinesUniform::loadLineData()", "")
-{
-    Point2f line1Start(0,0);
-    Point2f line1End(2,4);
+TEST_CASE("Test GLLinesUniform::loadLineData()", "") {
+    Point2f line1Start(0, 0);
+    Point2f line1End(2, 4);
 
-    Point2f line2Start(1,1);
-    Point2f line2End(3,5);
+    Point2f line2Start(1, 1);
+    Point2f line2End(3, 5);
 
     std::vector<SimpleLine> lines;
 
@@ -32,7 +31,7 @@ TEST_CASE("Test GLLinesUniform::loadLineData()", "")
     SimpleLine line2 = SimpleLine(line2Start, line2End);
     lines.push_back(line2);
 
-    QRgb lineColour = qRgb(255,0,0);
+    QRgb lineColour = qRgb(255, 0, 0);
 
     GLLinesUniform gllinesuniform;
     gllinesuniform.loadLineData(lines, lineColour);

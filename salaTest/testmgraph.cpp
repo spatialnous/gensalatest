@@ -16,18 +16,16 @@
 #include "catch.hpp"
 #include "salalib/mgraph.h"
 
-
-TEST_CASE("Test getVisibleLines", "")
-{
+TEST_CASE("Test getVisibleLines", "") {
     const float EPSILON = 0.001;
 
     // create a new MetaGraph
     std::unique_ptr<MetaGraph> mgraph(new MetaGraph());
 
-    Point2f visibleLineStart(0,0);
-    Point2f visibleLineEnd(2,4);
-    Point2f hiddenLineStart(1,1);
-    Point2f hiddenLineEnd(3,5);
+    Point2f visibleLineStart(0, 0);
+    Point2f visibleLineEnd(2, 4);
+    Point2f hiddenLineStart(1, 1);
+    Point2f hiddenLineEnd(3, 5);
 
     // push a SpacePixelFile in the MetaGraph
     mgraph->m_drawingFiles.emplace_back("Test SpacePixelFile");
@@ -36,19 +34,20 @@ TEST_CASE("Test getVisibleLines", "")
     mgraph->m_drawingFiles.back().m_spacePixels.emplace_back("Visible ShapeMap");
 
     // add a line to the first ShapeMap
-    mgraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(visibleLineStart, visibleLineEnd));
+    mgraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(
+        Line(visibleLineStart, visibleLineEnd));
 
     // push a ShapeMap in the SpacePixelFile
     mgraph->m_drawingFiles.back().m_spacePixels.emplace_back("Hidden ShapeMap");
 
     // add a line to the second ShapeMap
-    mgraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(hiddenLineStart, hiddenLineEnd));
+    mgraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(
+        Line(hiddenLineStart, hiddenLineEnd));
 
-    SECTION( "Get visible lines when none is hidden" )
-    {
+    SECTION("Get visible lines when none is hidden") {
         // first check without hiding anything
 
-        const std::vector<SimpleLine>& visibleLines = mgraph->getVisibleDrawingLines();
+        const std::vector<SimpleLine> &visibleLines = mgraph->getVisibleDrawingLines();
 
         REQUIRE(visibleLines.size() == 2);
         REQUIRE(visibleLines[0].start().x == Approx(visibleLineStart.x).epsilon(EPSILON));
@@ -61,12 +60,11 @@ TEST_CASE("Test getVisibleLines", "")
         REQUIRE(visibleLines[1].end().y == Approx(hiddenLineEnd.y).epsilon(EPSILON));
     }
 
-    SECTION( "Get visible lines when some are hidden" )
-    {
+    SECTION("Get visible lines when some are hidden") {
         // now hide the second SpacePixelFile
         mgraph->m_drawingFiles.back().m_spacePixels.back().setShow(false);
 
-        const std::vector<SimpleLine>& visibleLines = mgraph->getVisibleDrawingLines();
+        const std::vector<SimpleLine> &visibleLines = mgraph->getVisibleDrawingLines();
 
         REQUIRE(visibleLines.size() == 1);
         REQUIRE(visibleLines[0].start().x == Approx(visibleLineStart.x).epsilon(EPSILON));
@@ -76,8 +74,7 @@ TEST_CASE("Test getVisibleLines", "")
     }
 }
 
-TEST_CASE("Test pointMaps", "")
-{
+TEST_CASE("Test pointMaps", "") {
     std::unique_ptr<MetaGraph> mgraph(new MetaGraph());
     int pointMapIdx = mgraph->addNewPointMap("Kenny");
     REQUIRE(mgraph->getPointMaps().size() == 1);
@@ -86,8 +83,7 @@ TEST_CASE("Test pointMaps", "")
     REQUIRE(mgraph->getDisplayedPointMapRef() == pointMapIdx);
     REQUIRE(mgraph->getDisplayedPointMap().getName() == "Kenny");
 
-    SECTION( "Add another and remove the first through the MetaGraph" )
-    {
+    SECTION("Add another and remove the first through the MetaGraph") {
         int pointMapIdx = mgraph->addNewPointMap("Stan");
         REQUIRE(mgraph->getPointMaps().size() == 2);
         REQUIRE(pointMapIdx == 1);

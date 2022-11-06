@@ -14,19 +14,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <catch.hpp>
-#include <salalib/layermanagerimpl.h>
 #include <cliTest/selfcleaningfile.h>
 #include <fstream>
+#include <salalib/layermanagerimpl.h>
 
-TEST_CASE("Test layer manager")
-{
+TEST_CASE("Test layer manager") {
     LayerManagerImpl manager;
     REQUIRE(manager.isVisible(1));
     REQUIRE(manager.getLayerName(0) == "Everything");
     REQUIRE(manager.isLayerVisible(0));
     REQUIRE(manager.getLayerIndex("Everything") == 0);
     REQUIRE(manager.getKey(0) == 1);
-
 
     size_t index1 = manager.addLayer("some layer");
     REQUIRE(index1 == 1);
@@ -91,6 +89,4 @@ TEST_CASE("Test layer manager")
     REQUIRE(copy.isVisible(1));
     REQUIRE_FALSE(copy.isVisible(2));
     REQUIRE_FALSE(copy.isVisible(4));
-
-
 }

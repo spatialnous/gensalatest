@@ -18,13 +18,12 @@
 
 #include "cliTest/selfcleaningfile.h"
 
-#include "genlib/readwritehelpers.h"
 #include "genlib/containerutils.h"
+#include "genlib/readwritehelpers.h"
 
 #include <fstream>
 
-TEST_CASE("vector reading and writing")
-{
+TEST_CASE("vector reading and writing") {
     using namespace dXreadwrite;
     std::vector<int> intVec{1, 5, 34, -2, 5};
     SelfCleaningFile intFile("integers.bin");
@@ -45,18 +44,16 @@ TEST_CASE("vector reading and writing")
         readIntoVector(infile, intCopy);
     }
     REQUIRE(intCopy == intVec);
-
 }
 
-TEST_CASE("map reading and writing")
-{
+TEST_CASE("map reading and writing") {
     using namespace dXreadwrite;
     std::map<int, float> intFloatMap;
-    intFloatMap.insert(std::make_pair(1,0.1f));
-    intFloatMap.insert(std::make_pair(5,5000.0f));
-    intFloatMap.insert(std::make_pair(34,-3.4f));
-    intFloatMap.insert(std::make_pair(-2,0.2f));
-    intFloatMap.insert(std::make_pair(6,0.6f));
+    intFloatMap.insert(std::make_pair(1, 0.1f));
+    intFloatMap.insert(std::make_pair(5, 5000.0f));
+    intFloatMap.insert(std::make_pair(34, -3.4f));
+    intFloatMap.insert(std::make_pair(-2, 0.2f));
+    intFloatMap.insert(std::make_pair(6, 0.6f));
     SelfCleaningFile intFloatFile("intFloatMap.bin");
     {
         std::ofstream outfile(intFloatFile.Filename());
@@ -75,5 +72,4 @@ TEST_CASE("map reading and writing")
         readIntoMap(infile, intCopy);
     }
     REQUIRE(intCopy == intFloatMap);
-
 }
