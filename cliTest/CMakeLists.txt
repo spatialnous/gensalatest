@@ -38,8 +38,7 @@ set(cliTest_SRCS
     ../depthmapXcli/mapconvertparser.cpp
     testmapconvertparser.cpp)
 
-
-include_directories("../ThirdParty/Catch" "../ThirdParty/FakeIt")
+include_directories(SYSTEM "../ThirdParty/Catch" "../ThirdParty/FakeIt")
 
 set(LINK_LIBS salalib genlib mgraph440)
 
