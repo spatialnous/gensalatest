@@ -8,6 +8,8 @@ set(CMAKE_AUTOMOC ON)
 # set(CMAKE_AUTOUIC ON)
 # set(CMAKE_AUTORCC ON)
 
+set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
+
 # Find the QtWidgets library
 find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
 
@@ -93,6 +95,9 @@ if(UNIX AND NOT APPLE)
         if (Qt5_POSITION_INDEPENDENT_CODE)
             SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
         endif()
+
+        # remove all warnings from depthmapX
+        set_target_properties(${depthmapX} PROPERTIES COMPILE_FLAGS "-w")
 endif()
 if(APPLE)
         set(MACOSX_BUNDLE_ICON_FILE depthmapX.icns)

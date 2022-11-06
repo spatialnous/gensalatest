@@ -18,7 +18,6 @@
 
 #include "cliTest/selfcleaningfile.h"
 
-#include "genlib/containerutils.h"
 #include "genlib/readwritehelpers.h"
 
 #include <fstream>

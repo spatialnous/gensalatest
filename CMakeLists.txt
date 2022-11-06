@@ -3,9 +3,11 @@ project(acanthis)
 cmake_minimum_required(VERSION 3.13.0)
 set(CMAKE_CXX_STANDARD 17)
 
+set(CMAKE_COMPILE_WARNING_AS_ERROR ON)
+
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(warnings "-Wall -Wextra")
+    set(warnings "-Wall -Wextra -Wpedantic -Weverything")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(warnings "/W4 /EHsc")
     execute_process(COMMAND make_version_header.bat WORKING_DIRECTORY depthmapX)
