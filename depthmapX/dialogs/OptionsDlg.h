@@ -16,7 +16,7 @@
 #include "ui_OptionsDlg.h"
 #include <salalib/mgraph.h>
 #include <salalib/shapemap.h>
-#include <salalib/axialmap.h>
+#include <salalib/shapegraph.h>
 
 class COptionsDlg : public QDialog, public Ui::COptionsDlg
 {

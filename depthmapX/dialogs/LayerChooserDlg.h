@@ -16,7 +16,7 @@
 #include "ui_LayerChooserDlg.h"
 #include <salalib/mgraph.h>
 #include <salalib/shapemap.h>
-#include <salalib/axialmap.h>
+#include <salalib/shapegraph.h>
 
 
 class CLayerChooserDlg : public QDialog, public Ui::CLayerChooserDlg

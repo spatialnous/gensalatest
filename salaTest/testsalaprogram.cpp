@@ -18,7 +18,7 @@
 #include "salalib/salaprogram.h"
 #include "genlib/p2dpoly.h"
 #include "salalib/mgraph.h"
-#include "salalib/axialmap.h"
+#include "salalib/shapegraph.h"
 #include <sstream>
 
 // Most of these test cases are adapted from salalib/salascript-tests.txt

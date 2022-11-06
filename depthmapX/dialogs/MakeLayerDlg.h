@@ -16,7 +16,7 @@
 #include "ui_MakeLayerDlg.h"
 #include <salalib/mgraph.h>
 #include <salalib/shapemap.h>
-#include <salalib/axialmap.h>
+#include <salalib/shapegraph.h>
 
 enum {MAKELAYER_DRAWING = 1, 
 MAKELAYER_DATA = 2,

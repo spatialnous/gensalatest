@@ -18,7 +18,7 @@
 #include "agllinesuniform.h"
 #include "aglshapemap.h"
 
-#include "salalib/axialmap.h"
+#include "salalib/shapegraph.h"
 
 class AGLShapeGraph : public AGLShapeMap {
   public:

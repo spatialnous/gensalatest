@@ -16,7 +16,7 @@
 #include "ui_AgentAnalysisDlg.h"
 #include <salalib/mgraph.h>
 #include <salalib/shapemap.h>
-#include <salalib/axialmap.h>
+#include <salalib/shapegraph.h>
 
 class CAgentAnalysisDlg : public QDialog, public Ui::CAgentAnalysisDlg
 {

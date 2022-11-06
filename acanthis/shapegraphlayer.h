@@ -17,7 +17,7 @@
 
 #include "maplayer.h"
 
-#include "salalib/axialmap.h"
+#include "salalib/shapegraph.h"
 
 class ShapeGraphLayer : public MapLayer {
     ShapeGraph &m_shapeGraph;

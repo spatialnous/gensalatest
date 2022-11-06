@@ -14,7 +14,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "ui_ColumnPropertiesDlg.h"
-#include <salalib/axialmap.h>
+#include <salalib/shapegraph.h>
 #include <salalib/mgraph.h>
 #include <salalib/shapemap.h>
 

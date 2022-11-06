@@ -14,7 +14,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "catch.hpp"
-#include "salalib/axialmap.h"
+#include "salalib/shapegraph.h"
 #include "salalib/axialpolygons.h"
 
 /**

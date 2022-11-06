@@ -17,7 +17,7 @@
 #include "ui_SegmentAnalysisDlg.h"
 #include <salalib/mgraph.h>
 #include <salalib/shapemap.h>
-#include <salalib/axialmap.h>
+#include <salalib/shapegraph.h>
 
 class CSegmentAnalysisDlg : public QDialog, public Ui::CSegmentAnalysisDlg
 {

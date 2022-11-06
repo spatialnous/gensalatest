@@ -16,7 +16,7 @@
 #include "ui_AttributeChooserDlg.h"
 #include <salalib/mgraph.h>
 #include <salalib/shapemap.h>
-#include <salalib/axialmap.h>
+#include <salalib/shapegraph.h>
 
 class CAttributeChooserDlg : public QDialog, public Ui::CAttributeChooserDlg
 {

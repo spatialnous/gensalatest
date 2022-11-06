@@ -17,7 +17,7 @@
 #include "modules/segmentshortestpaths/core/segmmetricshortestpath.h"
 #include "modules/segmentshortestpaths/core/segmtopologicalshortestpath.h"
 #include "modules/segmentshortestpaths/core/segmtulipshortestpath.h"
-#include "salalib/axialmap.h"
+#include "salalib/shapegraph.h"
 #include "salalib/mapconverter.h"
 
 TEST_CASE("Shortest paths working examples", "") {

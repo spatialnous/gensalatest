@@ -16,7 +16,7 @@
 #include "ui_AxialAnalysisOptionsDlg.h"
 #include <salalib/mgraph.h>
 #include <salalib/shapemap.h>
-#include <salalib/axialmap.h>
+#include <salalib/shapegraph.h>
 
 class CAxialAnalysisOptionsDlg : public QDialog, public Ui::CAxialAnalysisOptionsDlg
 {

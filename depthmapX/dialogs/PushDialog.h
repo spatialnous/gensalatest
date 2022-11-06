@@ -16,7 +16,7 @@
 #include "ui_PushDialog.h"
 #include <salalib/mgraph.h>
 #include <salalib/shapemap.h>
-#include <salalib/axialmap.h>
+#include <salalib/shapegraph.h>
 
 class CPushDialog : public QDialog, public Ui::CPushDialog
 {

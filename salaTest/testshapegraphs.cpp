@@ -17,7 +17,7 @@
 #include "../genlib/p2dpoly.h"
 #include "../salalib/mgraph.h"
 #include "../salalib/shapemap.h"
-#include "../salalib/axialmap.h"
+#include "../salalib/shapegraph.h"
 #include "catch.hpp"
 #include <sstream>
 #include <iostream>
