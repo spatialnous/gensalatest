@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "aglobject.h"
+
 #include <QOpenGLBuffer>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLTexture>
@@ -23,15 +25,16 @@
 #include <QVector>
 #include <qopengl.h>
 
-class AGLRasterTexture {
+class AGLRasterTexture : public AGLObject {
   public:
     AGLRasterTexture();
     void loadRegionData(float minX, float minY, float maxX, float maxY);
     void loadPixelData(QImage &data);
-    void paintGL(const QMatrix4x4 &m_proj, const QMatrix4x4 &m_camera, const QMatrix4x4 &m_mModel);
-    void initializeGL(bool coreProfile);
-    void updateGL(bool coreProfile);
-    void cleanup();
+    void paintGL(const QMatrix4x4 &m_proj, const QMatrix4x4 &m_camera,
+                 const QMatrix4x4 &m_mModel) override;
+    void initializeGL(bool coreProfile) override;
+    void updateGL(bool coreProfile) override;
+    void cleanup() override;
     int vertexCount() const { return m_count / DATA_DIMENSIONS; }
     AGLRasterTexture(const AGLRasterTexture &) = delete;
     AGLRasterTexture &operator=(const AGLRasterTexture &) = delete;

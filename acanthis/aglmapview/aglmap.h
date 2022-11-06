@@ -15,27 +15,19 @@
 
 #pragma once
 
+#include "aglobjects.h"
+
 #include "genlib/p2dpoly.h"
 
-#include <QMatrix4x4>
+class AGLMap : public AGLObjects {
 
-class AGLMap {
-
-  protected: // variables available to implementing classes
-    bool m_datasetChanged = false;
+  protected:
     bool m_hoverStoreInvalid = false;
     bool m_hoverHasShapes = false;
 
-  public: // functions
-    virtual void loadGLObjects() = 0;
-    virtual void initializeGL(bool m_core) = 0;
-    virtual void updateGL(bool m_core) { updateGL(m_core, true); }
+  public:
+    void updateGL(bool m_core) { updateGL(m_core, true); }
     virtual void updateGL(bool m_core, bool reloadGLObjects) = 0;
     virtual void updateHoverGL(bool m_core) = 0;
-    virtual void cleanup() = 0;
-    virtual void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView,
-                         const QMatrix4x4 &m_mModel) = 0;
     virtual void highlightHoveredItems(const QtRegion &region) = 0;
-
-    virtual void loadGLObjectsRequiringGLContext() {}
 };

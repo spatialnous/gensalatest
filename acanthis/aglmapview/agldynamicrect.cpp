@@ -144,14 +144,14 @@ void AGLDynamicRect::cleanup() {
     m_program = 0;
 }
 
-void AGLDynamicRect::paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView,
-                             const QMatrix4x4 &m_mModel, const QMatrix2x2 &m_selectionBounds) {
+void AGLDynamicRect::paintGL(const QMatrix4x4 &mProj, const QMatrix4x4 &mView,
+                             const QMatrix4x4 &mModel) {
     if (!m_built)
         return;
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
     m_program->bind();
-    m_program->setUniformValue(m_projMatrixLoc, m_mProj);
-    m_program->setUniformValue(m_mvMatrixLoc, m_mView * m_mModel);
+    m_program->setUniformValue(m_projMatrixLoc, mProj);
+    m_program->setUniformValue(m_mvMatrixLoc, mView * mModel);
     m_program->setUniformValue(m_diagVertices2DLoc, m_selectionBounds);
 
     m_program->setUniformValue(m_colourVectorLoc, m_colour_fill);

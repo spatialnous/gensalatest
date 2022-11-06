@@ -117,7 +117,8 @@ void AGLMapViewRenderer::render() {
         float(std::min(m_mouseDragRect.bottomRight().y(), m_mouseDragRect.topLeft().y())),
         float(std::max(m_mouseDragRect.bottomRight().x(), m_mouseDragRect.topLeft().x())),
         float(std::max(m_mouseDragRect.bottomRight().y(), m_mouseDragRect.topLeft().y()))};
-    m_selectionRect.paintGL(m_mProj, m_mView, m_mModel, QMatrix2x2(pos));
+    m_selectionRect.setSelectionBounds(QMatrix2x2(pos));
+    m_selectionRect.paintGL(m_mProj, m_mView, m_mModel);
 
     //    if ((m_mouseMode & MOUSE_MODE_SECOND_POINT) == MOUSE_MODE_SECOND_POINT) {
     //        float pos[] = {float(m_tempFirstPoint.x), float(m_tempFirstPoint.y),

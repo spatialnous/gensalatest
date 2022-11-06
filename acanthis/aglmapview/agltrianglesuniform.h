@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "aglobject.h"
+
 #include "genlib/p2dpoly.h"
 
 #include <QOpenGLBuffer>
@@ -30,14 +32,15 @@
  * @brief General triangles representation. All same colour
  */
 
-class AGLTrianglesUniform {
+class AGLTrianglesUniform : public AGLObject {
   public:
     AGLTrianglesUniform();
     void loadTriangleData(const std::vector<Point2f> &points, const QRgb &polyColour);
-    void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView, const QMatrix4x4 &m_mModel);
-    void initializeGL(bool m_core);
-    void updateGL(bool m_core);
-    void cleanup();
+    void paintGL(const QMatrix4x4 &mProj, const QMatrix4x4 &mView,
+                 const QMatrix4x4 &mModel) override;
+    void initializeGL(bool core) override;
+    void updateGL(bool core) override;
+    void cleanup() override;
     void updateColour(const QRgb &polyColour);
     int vertexCount() const { return m_count / DATA_DIMENSIONS; }
     AGLTrianglesUniform(const AGLTrianglesUniform &) = delete;

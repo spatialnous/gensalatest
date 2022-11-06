@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "aglobject.h"
+
 #include "agltrianglesuniform.h"
 
 #include "salalib/pafcolor.h"
@@ -35,7 +37,7 @@
  * @brief The GLPolygons class is a plain wrapper class for multiple GLPolygon
  * that acts as if it's a single globject
  */
-class AGLPolygons {
+class AGLPolygons : public AGLObject {
   public:
     void
     loadPolygonData(const std::vector<std::pair<std::vector<Point2f>, PafColor>> &colouredPolygons);

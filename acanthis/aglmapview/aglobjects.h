@@ -15,10 +15,14 @@
 
 #pragma once
 
-#include "agldynamicrect.h"
+#include "aglobject.h"
 
-class AGLDynamicLine : public AGLDynamicRect {
+class AGLObjects : public AGLObject {
+
+  protected:
+    bool m_datasetChanged = false;
+
   public:
-    AGLDynamicLine();
-    void paintGL(const QMatrix4x4 &mProj, const QMatrix4x4 &mView, const QMatrix4x4 &mModel);
+    virtual void loadGLObjects() = 0;
+    virtual void loadGLObjectsRequiringGLContext() = 0;
 };

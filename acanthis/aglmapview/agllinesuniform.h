@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "aglobject.h"
+
 #include "genlib/p2dpoly.h"
 
 #include <QColor>
@@ -26,14 +28,14 @@
 #include <QVector>
 #include <qopengl.h>
 
-class AGLLinesUniform {
+class AGLLinesUniform : public AGLObject {
   public:
     AGLLinesUniform();
     void loadLineData(const std::vector<SimpleLine> &lines, const QColor &lineColour);
     void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView, const QMatrix4x4 &m_mModel);
-    void initializeGL(bool coreProfile);
-    void updateGL(bool coreProfile);
-    void cleanup();
+    void initializeGL(bool core) override;
+    void updateGL(bool core) override;
+    void cleanup() override;
     void updateColour(const QColor &lineColour);
     int vertexCount() const { return m_count / DATA_DIMENSIONS; }
     AGLLinesUniform(const AGLLinesUniform &) = delete;

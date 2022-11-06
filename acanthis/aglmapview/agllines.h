@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include "aglobject.h"
+
 #include "salalib/pafcolor.h"
 
 #include "genlib/p2dpoly.h"
@@ -28,16 +30,17 @@
 #include <QVector>
 #include <qopengl.h>
 
-class AGLLines {
+class AGLLines : public AGLObject {
     friend class testgllines;
 
   public:
     AGLLines();
     void loadLineData(const std::vector<std::pair<SimpleLine, PafColor>> &colouredLines);
-    void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView, const QMatrix4x4 &m_mModel);
-    void initializeGL(bool coreProfile);
-    void updateGL(bool coreProfile);
-    void cleanup();
+    void paintGL(const QMatrix4x4 &mProj, const QMatrix4x4 &mView,
+                 const QMatrix4x4 &mModel) override;
+    void initializeGL(bool core) override;
+    void updateGL(bool coreProfile) override;
+    void cleanup() override;
     int vertexCount() const { return m_count / DATA_DIMENSIONS; }
     AGLLines(const AGLLines &) = delete;
     AGLLines &operator=(const AGLLines &) = delete;

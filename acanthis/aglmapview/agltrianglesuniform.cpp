@@ -78,14 +78,14 @@ void AGLTrianglesUniform::setupVertexAttribs() {
     m_vbo.release();
 }
 
-void AGLTrianglesUniform::initializeGL(bool m_core) {
+void AGLTrianglesUniform::initializeGL(bool core) {
     if (m_data.size() == 0)
         return;
     m_program = new QOpenGLShaderProgram;
     m_program->addShaderFromSourceCode(QOpenGLShader::Vertex,
-                                       m_core ? vertexShaderSourceCore : vertexShaderSource);
+                                       core ? vertexShaderSourceCore : vertexShaderSource);
     m_program->addShaderFromSourceCode(QOpenGLShader::Fragment,
-                                       m_core ? fragmentShaderSourceCore : fragmentShaderSource);
+                                       core ? fragmentShaderSourceCore : fragmentShaderSource);
     m_program->bindAttributeLocation("vertex", 0);
     m_program->link();
 
@@ -136,14 +136,14 @@ void AGLTrianglesUniform::cleanup() {
     m_program = 0;
 }
 
-void AGLTrianglesUniform::paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView,
-                                  const QMatrix4x4 &m_mModel) {
+void AGLTrianglesUniform::paintGL(const QMatrix4x4 &mProj, const QMatrix4x4 &mView,
+                                  const QMatrix4x4 &mModel) {
     if (!m_built)
         return;
     QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
     m_program->bind();
-    m_program->setUniformValue(m_projMatrixLoc, m_mProj);
-    m_program->setUniformValue(m_mvMatrixLoc, m_mView * m_mModel);
+    m_program->setUniformValue(m_projMatrixLoc, mProj);
+    m_program->setUniformValue(m_mvMatrixLoc, mView * mModel);
 
     QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
     glFuncs->glDrawArrays(GL_TRIANGLES, 0, vertexCount());

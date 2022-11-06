@@ -71,6 +71,7 @@ class AGLShapeMap : public AGLMap {
     }
 
     void loadGLObjects() override;
+    void loadGLObjectsRequiringGLContext() override{};
     void highlightHoveredItems(const QtRegion &region) override { highlightHoveredShapes(region); };
 
     void highlightHoveredShapes(const QtRegion &region);

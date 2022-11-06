@@ -1,4 +1,4 @@
-// Copyright (C) 2017, Petros Koutsolampros
+// Copyright (C) 2022, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,12 +13,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+// Interface meant
+
 #pragma once
 
-#include "agldynamicrect.h"
+#include <QMatrix4x4>
 
-class AGLDynamicLine : public AGLDynamicRect {
+class AGLObject {
   public:
-    AGLDynamicLine();
-    void paintGL(const QMatrix4x4 &mProj, const QMatrix4x4 &mView, const QMatrix4x4 &mModel);
+    virtual void initializeGL(bool m_core) = 0;
+    virtual void updateGL(bool m_core) = 0;
+    virtual void cleanup() = 0;
+    virtual void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView,
+                         const QMatrix4x4 &m_mModel) = 0;
 };
