@@ -129,6 +129,7 @@ void AGLLines::updateGL(bool core) {
         // has not been initialised yet, do that instead
         initializeGL(core);
     } else {
+        QOpenGLVertexArrayObject::Binder vaoBinder(&m_vao);
         m_vbo.bind();
         m_vbo.allocate(constData(), m_count * sizeof(GLfloat));
         m_vbo.release();
