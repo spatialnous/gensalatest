@@ -39,7 +39,7 @@ class AGLLines : public AGLObject {
     void paintGL(const QMatrix4x4 &mProj, const QMatrix4x4 &mView,
                  const QMatrix4x4 &mModel) override;
     void initializeGL(bool core) override;
-    void updateGL(bool coreProfile) override;
+    void updateGL(bool core) override;
     void cleanup() override;
     int vertexCount() const { return m_count / DATA_DIMENSIONS; }
     AGLLines(const AGLLines &) = delete;

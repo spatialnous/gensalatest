@@ -124,10 +124,10 @@ void AGLLines::initializeGL(bool core) {
     m_built = true;
 }
 
-void AGLLines::updateGL(bool coreProfile) {
+void AGLLines::updateGL(bool core) {
     if (m_program == 0) {
         // has not been initialised yet, do that instead
-        initializeGL(coreProfile);
+        initializeGL(core);
     } else {
         m_vbo.bind();
         m_vbo.allocate(constData(), m_count * sizeof(GLfloat));
