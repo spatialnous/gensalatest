@@ -65,6 +65,8 @@ if(UNIX AND NOT APPLE)
     if (Qt6_POSITION_INDEPENDENT_CODE)
         SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
     endif()
+
+    set_target_properties(${depthmapX} PROPERTIES COMPILE_FLAGS "-Wall -Wextra -Wpedantic -Weverything")
 endif()
 if(APPLE)
     set(MACOSX_BUNDLE_ICON_FILE acanthis.icns)
