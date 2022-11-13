@@ -32,7 +32,8 @@ class AGLLinesUniform : public AGLObject {
   public:
     AGLLinesUniform();
     void loadLineData(const std::vector<SimpleLine> &lines, const QColor &lineColour);
-    void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView, const QMatrix4x4 &m_mModel);
+    void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView,
+                 const QMatrix4x4 &m_mModel) override;
     void initializeGL(bool core) override;
     void updateGL(bool core) override;
     void cleanup() override;

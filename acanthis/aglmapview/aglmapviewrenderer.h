@@ -108,6 +108,5 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
             double((b.x() - a.x()) * (b.x() - a.x()) + (b.y() - a.y()) * (b.y() - a.y())));
     }
 
-    // MetaGraph &getMetaGraph();
     std::vector<std::unique_ptr<MapLayer>> &getMaps();
 };

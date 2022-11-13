@@ -295,8 +295,8 @@ void AGLMapView::mousePressEvent(QMouseEvent *event) {
 }
 
 void AGLMapView::mouseMoveEvent(QMouseEvent *event) {
-    int dx = event->x() - m_mouseLastPos.x();
-    int dy = event->y() - m_mouseLastPos.y();
+    int dx = event->position().x() - m_mouseLastPos.x();
+    int dy = event->position().y() - m_mouseLastPos.y();
 
     Point2f worldPoint = getWorldPoint(event->pos());
 

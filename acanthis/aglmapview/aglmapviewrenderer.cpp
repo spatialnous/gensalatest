@@ -18,9 +18,6 @@
 
 #include <QQuickOpenGLUtils>
 
-// MetaGraph &GLMapViewRenderer::getMetaGraph() { return m_item->getGraphDocument().getMetaGraph();
-// }
-
 std::vector<std::unique_ptr<MapLayer>> &AGLMapViewRenderer::getMaps() {
     return m_item->getGraphDocument().getMapLayers();
 }

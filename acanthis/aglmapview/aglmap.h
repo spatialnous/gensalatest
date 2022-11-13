@@ -26,8 +26,7 @@ class AGLMap : public AGLObjects {
     bool m_hoverHasShapes = false;
 
   public:
-    void updateGL(bool m_core) { updateGL(m_core, true); }
-    virtual void updateGL(bool m_core, bool reloadGLObjects) = 0;
+    virtual ~AGLMap() {}
     virtual void updateHoverGL(bool m_core) = 0;
     virtual void highlightHoveredItems(const QtRegion &region) = 0;
 };
