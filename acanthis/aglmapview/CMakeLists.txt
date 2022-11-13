@@ -1,5 +1,7 @@
 target_sources(acanthis
     PUBLIC
+        aglobject.h
+        aglobjects.h
         agldynamicline.h
         agldynamicrect.h
         agllines.h
