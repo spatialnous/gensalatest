@@ -18,6 +18,7 @@
 #include "agldynamicline.h"
 #include "agldynamicrect.h"
 #include "agllines.h"
+#include "aglmap.h"
 
 #include "graphdocument.h"
 
@@ -79,6 +80,8 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
     QColor m_foregroundColour;
     QColor m_backgroundColour;
 
+    std::map<MapLayer *, std::unique_ptr<AGLMap>> m_glMaps;
+
     AGLDynamicRect m_selectionRect;
     AGLDynamicLine m_dragLine;
     AGLLines m_axes;
@@ -109,4 +112,5 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
     }
 
     std::vector<std::unique_ptr<MapLayer>> &getMaps();
+    AGLMap &getGLMap(MapLayer *mapLayer);
 };

@@ -24,4 +24,6 @@ class ShapeMapLayer : public MapLayer {
 
   public:
     explicit ShapeMapLayer(ShapeMap &map);
+
+    std::unique_ptr<AGLMap> constructGLMap() override;
 };

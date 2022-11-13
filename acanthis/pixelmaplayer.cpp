@@ -18,5 +18,8 @@
 #include "aglmapview/aglpixelmap.h"
 
 PixelMapLayer::PixelMapLayer(PointMap &map)
-    : m_pointMap(map), MapLayer(std::unique_ptr<AGLPixelMap>(new AGLPixelMap(map)),
-                                QString::fromStdString(map.getName()), map.getAttributeTable()) {}
+    : m_pointMap(map), MapLayer(QString::fromStdString(map.getName()), map.getAttributeTable()) {}
+
+std::unique_ptr<AGLMap> PixelMapLayer::constructGLMap() {
+    return std::unique_ptr<AGLPixelMap>(std::unique_ptr<AGLPixelMap>(new AGLPixelMap(m_pointMap)));
+};

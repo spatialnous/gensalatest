@@ -18,6 +18,9 @@
 #include "aglmapview/aglshapemap.h"
 
 ShapeMapLayer::ShapeMapLayer(ShapeMap &map)
-    : m_shapeMap(map),
-      MapLayer(std::unique_ptr<AGLShapeMap>(new AGLShapeMap(map, 8, map.getSpacing() * 0.1)),
-               QString::fromStdString(map.getName()), map.getAttributeTable()) {}
+    : m_shapeMap(map), MapLayer(QString::fromStdString(map.getName()), map.getAttributeTable()) {}
+
+std::unique_ptr<AGLMap> ShapeMapLayer::constructGLMap() {
+    return std::unique_ptr<AGLShapeMap>(std::unique_ptr<AGLShapeMap>(
+        new AGLShapeMap(m_shapeMap, 8, m_shapeMap.getSpacing() * 0.1)));
+};

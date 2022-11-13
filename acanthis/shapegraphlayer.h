@@ -25,5 +25,7 @@ class ShapeGraphLayer : public MapLayer {
   public:
     explicit ShapeGraphLayer(ShapeGraph &map);
 
-    bool hasGraph() { return true; }
+    std::unique_ptr<AGLMap> constructGLMap() override;
+
+    bool hasGraph() override { return true; }
 };

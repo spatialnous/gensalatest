@@ -33,16 +33,16 @@ class MapLayer : public QObject, public TreeItem {
 
   protected:
     AttributeTable &m_attributes;
-    const std::unique_ptr<AGLMap> m_glMap;
 
   public:
-    MapLayer(std::unique_ptr<AGLMap> glMap, QString mapName, AttributeTable &attributes)
-        : TreeItem(mapName), m_glMap(std::move(glMap)), m_attributes(attributes){};
+    MapLayer(QString mapName, AttributeTable &attributes)
+        : TreeItem(mapName), m_attributes(attributes){};
 
-    AGLMap &getGLMap() { return *m_glMap.get(); }
     bool isVisible() { return m_visible; }
     QString getName() { return m_name; }
     AttributeTable &getAttributes() { return m_attributes; }
+
+    virtual std::unique_ptr<AGLMap> constructGLMap() = 0;
 
     virtual bool hasGraph() { return false; }
 

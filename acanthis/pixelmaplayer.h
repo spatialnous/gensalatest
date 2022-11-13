@@ -25,4 +25,8 @@ class PixelMapLayer : public MapLayer {
 
   public:
     explicit PixelMapLayer(PointMap &map);
+
+    std::unique_ptr<AGLMap> constructGLMap() override;
+
+    bool hasGraph() override { return m_pointMap.isProcessed(); }
 };
