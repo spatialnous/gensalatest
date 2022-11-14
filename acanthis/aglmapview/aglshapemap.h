@@ -35,11 +35,13 @@ class AGLShapeMap : public AGLMap {
         m_hoveredShapes.initializeGL(m_core);
     }
 
-    void updateGL(bool m_core, bool reloadGLObjects) override {
+    void updateGL(bool m_core) override {
         if (!m_datasetChanged)
             return;
-        if (reloadGLObjects)
+        if (m_forceReloadGLObjects) {
             loadGLObjects();
+            m_forceReloadGLObjects = false;
+        }
         m_lines.updateGL(m_core);
         m_polygons.updateGL(m_core);
         m_points.updateGL(m_core);

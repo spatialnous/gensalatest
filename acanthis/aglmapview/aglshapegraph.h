@@ -33,12 +33,15 @@ class AGLShapeGraph : public AGLShapeMap {
         m_unlinkLines.initializeGL(m_core);
     }
 
-    void updateGL(bool m_core, bool reloadGLObjects) override {
+    void updateGL(bool m_core) override {
         if (!m_datasetChanged)
             return;
-        AGLShapeMap::updateGL(m_core, false);
-        if (reloadGLObjects)
+        if (m_forceReloadGLObjects) {
             loadGLObjects();
+            AGLShapeMap::loadGLObjects();
+            m_forceReloadGLObjects = false;
+        }
+        AGLShapeMap::updateGL(m_core);
         m_linkLines.updateGL(m_core);
         m_linkFills.updateGL(m_core);
         m_unlinkFills.updateGL(m_core);

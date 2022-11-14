@@ -21,8 +21,10 @@ class AGLObjects : public AGLObject {
 
   protected:
     bool m_datasetChanged = false;
+    bool m_forceReloadGLObjects = false;
 
   public:
     virtual void loadGLObjects() = 0;
     virtual void loadGLObjectsRequiringGLContext() = 0;
+    void forceReloadGLObjects() { m_forceReloadGLObjects = true; }
 };

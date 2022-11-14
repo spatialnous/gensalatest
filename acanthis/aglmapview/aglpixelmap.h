@@ -34,11 +34,13 @@ class AGLPixelMap : public AGLMap {
         m_hoveredPixels.initializeGL(m_core);
     }
 
-    void updateGL(bool m_core, bool reloadGLObjects) override {
+    void updateGL(bool m_core) override {
         if (!m_datasetChanged)
             return;
-        if (reloadGLObjects)
+        if (m_forceReloadGLObjects) {
             loadGLObjects();
+            m_forceReloadGLObjects = false;
+        }
         loadGLObjectsRequiringGLContext();
         m_rasterTexture.updateGL(m_core);
         m_grid.updateGL(m_core);
