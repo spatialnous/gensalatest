@@ -90,8 +90,8 @@ AGLMapViewRenderer::~AGLMapViewRenderer() {
     m_selectionRect.cleanup();
     m_dragLine.cleanup();
     m_axes.cleanup();
-    for (auto &map : getMaps()) {
-        getGLMap(map.get()).cleanup();
+    for (auto &glMap : m_glMaps) {
+        glMap.second->cleanup();
     }
 }
 
