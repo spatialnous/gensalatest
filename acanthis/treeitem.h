@@ -22,7 +22,7 @@
 
 class TreeItem {
     int m_row;
-    QSharedPointer<TreeItem> m_parentItem;
+    QWeakPointer<TreeItem> m_parentItem;
     QList<QSharedPointer<TreeItem>> m_children;
 
   protected:
@@ -44,7 +44,7 @@ class TreeItem {
     const bool isVisible() const { return m_visible; }
     const QSharedPointer<TreeItem> getChild(size_t idx) { return m_children.at(idx); }
 
-    void setParentItem(QSharedPointer<TreeItem> parent) { m_parentItem = parent; }
+    void setParentItem(QWeakPointer<TreeItem> parent) { m_parentItem = parent; }
     void setRow(int row) { m_row = row; }
     void setVisible(bool visible) { m_visible = visible; }
 };
