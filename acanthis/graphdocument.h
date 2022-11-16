@@ -31,7 +31,10 @@ class GraphDocument : public QObject {
 
     MetaGraph &getMetaGraph() const { return *m_metaGraph; }
     bool hasMetaGraph() const { return m_metaGraph.get() != nullptr; }
-    std::vector<std::unique_ptr<MapLayer>> &getMapLayers() { return m_mapLayers; }
+
+    // These are stored as QSharedPointers so that they can be used by the map view tree
+    // which stores everything in QSharedPointers
+    QList<QSharedPointer<MapLayer>> &getMapLayers() { return m_mapLayers; }
 
     MapLayer *layerAt(std::size_t index) { return m_mapLayers[index].get(); }
 
@@ -41,5 +44,5 @@ class GraphDocument : public QObject {
 
   private:
     std::unique_ptr<MetaGraph> m_metaGraph = nullptr;
-    std::vector<std::unique_ptr<MapLayer>> m_mapLayers;
+    QList<QSharedPointer<MapLayer>> m_mapLayers;
 };

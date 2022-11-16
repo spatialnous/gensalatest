@@ -84,23 +84,36 @@ QHash<int, QByteArray> MapModel::roleNames() const {
     return names;
 }
 
+QSharedPointer<TreeItem> MapModel::addChildItem(QSharedPointer<TreeItem> parent,
+                                                QSharedPointer<TreeItem> newChild, int row) {
+    auto mapItem = parent->addChildItem(newChild, row);
+    mapItem->setParentItem(parent);
+    return mapItem;
+}
+
+QSharedPointer<TreeItem> MapModel::addChildItem(QSharedPointer<TreeItem> parent, QString newChild,
+                                                int row) {
+    return addChildItem(parent, QSharedPointer<TreeItem>(new TreeItem(newChild)), row);
+}
+
 void MapModel::resetItems() {
     beginResetModel();
     int row = 0;
-    for (std::unique_ptr<MapLayer> &mapLayer : m_graphDocument->getMapLayers()) {
+    for (QSharedPointer<MapLayer> &mapLayer : m_graphDocument->getMapLayers()) {
 
-        auto mapItem = m_rootItem->addChildItem(QSharedPointer<MapLayer>(mapLayer.get()), row);
+        auto mapItem = addChildItem(m_rootItem, mapLayer, row);
         mapItem->setVisible(true);
         ++row;
         if (mapLayer->hasGraph())
-            auto graphItem = mapItem->addChildItem("Graph", row);
+            auto graphItem = addChildItem(mapItem, "Graph", row);
         ++row;
-        auto attrItem = mapItem->addChildItem("Attributes", row);
+        auto attrItem = addChildItem(mapItem, "Attributes", row);
         ++row;
         for (int col = 0; col < mapLayer->getAttributes().getNumColumns(); ++col) {
-            attrItem->addChildItem(QSharedPointer<AttributeItem>(
-                                       new AttributeItem(mapLayer->getAttributes().getColumn(col))),
-                                   row);
+            addChildItem(attrItem,
+                         QSharedPointer<AttributeItem>(
+                             new AttributeItem(mapLayer->getAttributes().getColumn(col))),
+                         row);
             ++row;
         }
 

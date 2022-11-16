@@ -18,7 +18,7 @@
 
 #include <QQuickOpenGLUtils>
 
-std::vector<std::unique_ptr<MapLayer>> &AGLMapViewRenderer::getMaps() {
+QList<QSharedPointer<MapLayer>> &AGLMapViewRenderer::getMaps() {
     return m_item->getGraphDocument().getMapLayers();
 }
 

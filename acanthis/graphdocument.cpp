@@ -23,17 +23,17 @@ GraphDocument::GraphDocument(std::string filename) : m_filename(filename) {
     m_metaGraph = std::unique_ptr<MetaGraph>(new MetaGraph(filename));
     m_metaGraph->readFromFile(filename);
     for (ShapeMap &shapeMap : m_metaGraph->getDataMaps()) {
-        m_mapLayers.push_back(std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(shapeMap)));
+        m_mapLayers.append(QSharedPointer<ShapeMapLayer>(new ShapeMapLayer(shapeMap)));
     }
     for (auto &drawingFile : m_metaGraph->m_drawingFiles) {
         for (ShapeMap &shapeMap : drawingFile.m_spacePixels) {
-            m_mapLayers.push_back(std::unique_ptr<ShapeMapLayer>(new ShapeMapLayer(shapeMap)));
+            m_mapLayers.append(QSharedPointer<ShapeMapLayer>(new ShapeMapLayer(shapeMap)));
         }
     }
     for (auto &shapeGraph : m_metaGraph->getShapeGraphs()) {
-        m_mapLayers.push_back(std::unique_ptr<ShapeGraphLayer>(new ShapeGraphLayer(*shapeGraph)));
+        m_mapLayers.append(QSharedPointer<ShapeGraphLayer>(new ShapeGraphLayer(*shapeGraph)));
     }
     for (PointMap &pointMap : m_metaGraph->getPointMaps()) {
-        m_mapLayers.push_back(std::unique_ptr<PixelMapLayer>(new PixelMapLayer(pointMap)));
+        m_mapLayers.append(QSharedPointer<PixelMapLayer>(new PixelMapLayer(pointMap)));
     }
 }

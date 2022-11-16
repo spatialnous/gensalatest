@@ -111,6 +111,6 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
             double((b.x() - a.x()) * (b.x() - a.x()) + (b.y() - a.y()) * (b.y() - a.y())));
     }
 
-    std::vector<std::unique_ptr<MapLayer>> &getMaps();
+    QList<QSharedPointer<MapLayer>> &getMaps();
     AGLMap &getGLMap(MapLayer *mapLayer);
 };

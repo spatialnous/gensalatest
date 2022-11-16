@@ -33,12 +33,8 @@ class TreeItem {
     TreeItem(QString name) : m_name(name) {}
     const QSharedPointer<TreeItem> addChildItem(QSharedPointer<TreeItem> treeItem, int row) {
         m_children.push_back(treeItem);
-        treeItem->setParentItem(QSharedPointer<TreeItem>(this));
         m_row = row;
         return m_children.back();
-    }
-    const QSharedPointer<TreeItem> addChildItem(QString treeItemName, int row) {
-        return addChildItem(QSharedPointer<TreeItem>(new TreeItem(treeItemName)), row);
     }
 
     const QSharedPointer<TreeItem> getParent() const { return m_parentItem; };

@@ -31,6 +31,11 @@ class MapModel : public QAbstractItemModel {
 
     enum LayerModelRoles { NameRole = Qt::UserRole, VisibilityRole };
 
+    QSharedPointer<TreeItem> addChildItem(QSharedPointer<TreeItem> parent,
+                                          QSharedPointer<TreeItem> newChild, int row);
+    QSharedPointer<TreeItem> addChildItem(QSharedPointer<TreeItem> parent, QString newChild,
+                                          int row);
+
   public:
     explicit MapModel(QObject *parent = nullptr);
 
