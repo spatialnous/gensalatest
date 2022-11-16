@@ -19,7 +19,8 @@
 
 #include <QString>
 
-MapModel::MapModel(QObject *parent) : QAbstractItemModel(parent), m_rootItem(new TreeItem("")) {}
+MapModel::MapModel(QObject *parent)
+    : QAbstractItemModel(parent), m_rootItem(new TreeItem("Root")) {}
 
 QModelIndex MapModel::index(int row, int column, const QModelIndex &parent) const {
     if (!hasIndex(row, column, parent))
