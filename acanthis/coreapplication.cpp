@@ -49,8 +49,11 @@ int CoreApplication::exec() {
 
     qmlRegisterType<AGLMapView>("acanthis", 1, 0, "GLMapView");
     qmlRegisterType<MapModel>("acanthis", 1, 0, "MapModel");
-    //    qmlRegisterType<MyTreeModel>("acanthis", 1, 0, "MyTreeModel");
-    qmlRegisterType<DocumentManager>("acanthis", 1, 0, "DocumentManager");
+    qmlRegisterSingletonType<DocumentManager>("acanthis", 1, 0, "DocumentManager",
+                                              [&](QQmlEngine *, QJSEngine *) -> QObject * {
+                                                  return new DocumentManager;
+                                                  // the QML engine takes ownership of the singleton
+                                              });
 
     qmlRegisterUncreatableType<GraphDocument>(
         "acanthis", 1, 0, "GraphDocument",
@@ -59,7 +62,6 @@ int CoreApplication::exec() {
     qmlRegisterSingletonType(QUrl("qrc:///scenegraph/Theme.qml"), "acanthis", 1, 0, "Theme");
 
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextProperty("documentManager", &m_documentManager);
     engine.load(QUrl(QStringLiteral("qrc:/scenegraph/main.qml")));
     //    mMainWindow->setResizeMode(QQuickView::SizeRootObjectToView);
     //    engine->show();

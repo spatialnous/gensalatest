@@ -24,7 +24,6 @@
 class CoreApplication : public QGuiApplication {
   private:
     std::string m_fileToLoad;
-    DocumentManager m_documentManager;
 
   public:
     CoreApplication(int &argc, char **argv) : QGuiApplication(argc, argv) {}

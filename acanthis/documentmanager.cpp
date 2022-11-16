@@ -34,7 +34,8 @@ void DocumentManager::createEmptyDocument() {
 }
 
 void DocumentManager::removeDocument(unsigned int index) {
-    m_openedDocuments.erase(m_openedDocuments.begin() + index);
+    auto openDocument = m_openedDocuments.begin() + index;
+    m_openedDocuments.erase(openDocument);
 }
 
 void DocumentManager::openDocument(QString urlString) {

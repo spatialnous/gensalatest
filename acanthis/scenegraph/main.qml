@@ -116,12 +116,12 @@ ApplicationWindow {
     FileDialog {
         id: openDialog
         onAccepted: {
-            documentManager.openDocument(openDialog.selectedFile)
-            let lastDocumentIndex = documentManager.lastDocumentIndex()
-            if (lastDocumentIndex === (documentManager.numOpenedDocuments(
+            DocumentManager.openDocument(openDialog.selectedFile)
+            let lastDocumentIndex = DocumentManager.lastDocumentIndex()
+            if (lastDocumentIndex === (DocumentManager.numOpenedDocuments(
                                            ) - 1)) {
                 graphDisplayModel.append({
-                                             "graphDocumentFile": documentManager.lastDocument,
+                                             "graphDocumentFile": DocumentManager.lastDocument,
                                              "current": true
                                          })
             }
@@ -183,6 +183,7 @@ ApplicationWindow {
                             ToolTip.visible: hovered
                             ToolTip.delay: Theme.tooltipDelay
                             ToolTip.text: graphDocumentFile.getFilename()
+                            property int listIndex: index
 
                             background: Rectangle {
                                 color: {
@@ -228,8 +229,9 @@ ApplicationWindow {
                                         color: parent.hovered ? Theme.tabCloseButtonHoverColour : Theme.tabCloseButtonColour
                                     }
                                     onClicked: {
-                                        documentManager.removeDocument(index)
                                         graphDisplayModel.remove(index)
+                                        DocumentManager.removeDocument(
+                                                    listIndex)
                                     }
                                 }
                             }
@@ -299,12 +301,12 @@ ApplicationWindow {
                     ToolButton {
                         id: newButton
                         onClicked: {
-                            documentManager.createEmptyDocument()
+                            DocumentManager.createEmptyDocument()
                             graphDisplayModel.append({
-                                                         "graphDocumentFile": documentManager.lastDocument,
+                                                         "graphDocumentFile": DocumentManager.lastDocument,
                                                          "current": true
                                                      })
-                            graphListNameView.currentIndex = documentManager.lastDocumentIndex()
+                            graphListNameView.currentIndex = DocumentManager.lastDocumentIndex()
                         }
                         Layout.fillHeight: true
                         contentItem: Text {
