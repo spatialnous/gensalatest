@@ -4,7 +4,25 @@
 
 void AGLGraph::loadGLObjects() {
 
+    {
+        std::vector<Point2f> intersectionLocations;
+        for (auto &connection : m_connections) {
+            intersectionLocations.push_back(connection.second);
+        }
+
+        const std::vector<Point2f> &nodeFillTriangles =
+            GeometryGenerators::generateMultipleDiskTriangles(32, m_nodeSize,
+                                                              intersectionLocations);
+
+        m_intersectionFills.loadTriangleData(nodeFillTriangles, qRgb(0, 0, 255));
+
+        std::vector<SimpleLine> nodeEdgeLines =
+            GeometryGenerators::generateMultipleCircleLines(32, m_nodeSize, intersectionLocations);
+        m_intersectionLines.loadLineData(nodeEdgeLines, qRgb(0, 255, 255));
+    }
+
     std::vector<Point2f> nodeLocations;
+    std::vector<SimpleLine> nodeEdgeLines;
 
     switch (m_graphDisplay) {
     case GraphDisplay::MIDPOINT: {
@@ -30,6 +48,8 @@ void AGLGraph::loadGLObjects() {
             intTo.y *= m_graphCornerRadius;
             intTo += intp;
             nodeLocations.push_back(intTo);
+            if (m_graphDisplay == GraphDisplay::CORNERLINE)
+                nodeEdgeLines.push_back(SimpleLine(intFrom.x, intFrom.y, intTo.x, intTo.y));
         }
 
         break;
@@ -38,16 +58,20 @@ void AGLGraph::loadGLObjects() {
 
     const std::vector<Point2f> &nodeFillTriangles =
         GeometryGenerators::generateMultipleDiskTriangles(32, m_nodeSize, nodeLocations);
-    m_fills.loadTriangleData(nodeFillTriangles, qRgb(0, 0, 0));
 
-    std::vector<SimpleLine> nodeFillPerimeters =
-        GeometryGenerators::generateMultipleCircleLines(32, m_nodeSize, nodeLocations);
+    {
+        std::vector<SimpleLine> nodePetrimeters =
+            GeometryGenerators::generateMultipleCircleLines(32, m_nodeSize, nodeLocations);
+        nodeEdgeLines.insert(nodeEdgeLines.end(), nodePetrimeters.begin(), nodePetrimeters.end());
+    }
 
     switch (m_graphDisplay) {
-    case GraphDisplay::MIDPOINT:
     case GraphDisplay::CORNERLINE: {
+        break;
+    }
+    case GraphDisplay::MIDPOINT: {
         for (auto &connection : m_connections)
-            nodeFillPerimeters.push_back(connection.first);
+            nodeEdgeLines.push_back(connection.first);
         break;
     }
     case GraphDisplay::CORNERARC: {
@@ -81,11 +105,10 @@ void AGLGraph::loadGLObjects() {
                 for (float a = startFrom * angleDiff; a > toAngle - 2 * M_PI; a -= angleDiff) {
                     Point2f newTo =
                         Point2f(m_graphCornerRadius * cos(a), m_graphCornerRadius * sin(a)) + intp;
-                    nodeFillPerimeters.push_back(
-                        SimpleLine(intFrom.x, intFrom.y, newTo.x, newTo.y));
+                    nodeEdgeLines.push_back(SimpleLine(intFrom.x, intFrom.y, newTo.x, newTo.y));
                     intFrom = newTo;
                 }
-                nodeFillPerimeters.push_back(SimpleLine(intFrom.x, intFrom.y, intTo.x, intTo.y));
+                nodeEdgeLines.push_back(SimpleLine(intFrom.x, intFrom.y, intTo.x, intTo.y));
             } else {
                 for (float a = 0; a < 2 * M_PI; a += angleDiff) {
                     if (a < fromAngle)
@@ -94,19 +117,18 @@ void AGLGraph::loadGLObjects() {
                         break;
                     Point2f newTo =
                         Point2f(m_graphCornerRadius * cos(a), m_graphCornerRadius * sin(a)) + intp;
-                    nodeFillPerimeters.push_back(
-                        SimpleLine(intFrom.x, intFrom.y, newTo.x, newTo.y));
+                    nodeEdgeLines.push_back(SimpleLine(intFrom.x, intFrom.y, newTo.x, newTo.y));
                     intFrom = newTo;
                 }
             }
-            nodeFillPerimeters.push_back(SimpleLine(intFrom.x, intFrom.y, intTo.x, intTo.y));
+            nodeEdgeLines.push_back(SimpleLine(intFrom.x, intFrom.y, intTo.x, intTo.y));
         }
         break;
     }
     };
 
     m_fills.loadTriangleData(nodeFillTriangles, qRgb(0, 0, 0));
-    m_lines.loadLineData(nodeFillPerimeters, qRgb(0, 255, 0));
+    m_lines.loadLineData(nodeEdgeLines, qRgb(0, 255, 0));
 
     std::vector<Point2f> linkPointLocations;
     for (auto &link : m_links) {

@@ -33,6 +33,22 @@ void AGLShapeGraph::loadGLObjects() {
                 SimpleLine(fromCentroid.x, fromCentroid.y, toCentroid.x, toCentroid.y),
                 intersection_point(fromShape.getLine(), toShape.getLine()));
         }
+        for (auto &secConn : connector.m_forward_segconns) {
+            auto &toShape = shapes[secConn.first.ref];
+            auto toCentroid = toShape.getCentroid();
+            const Point2f &intp =
+                secConn.first.dir != -1 ? toShape.getLine().start() : toShape.getLine().end();
+            m_glGraph.addConnection(
+                SimpleLine(fromCentroid.x, fromCentroid.y, toCentroid.x, toCentroid.y), intp);
+        }
+        for (auto &secConn : connector.m_back_segconns) {
+            auto &toShape = shapes[secConn.first.ref];
+            auto toCentroid = toShape.getCentroid();
+            const Point2f &intp =
+                secConn.first.dir != -1 ? toShape.getLine().start() : toShape.getLine().end();
+            m_glGraph.addConnection(
+                SimpleLine(fromCentroid.x, fromCentroid.y, toCentroid.x, toCentroid.y), intp);
+        }
         shapeIter++;
     }
     m_glGraph.setLinks(m_shapeGraph.getAllLinkLines());

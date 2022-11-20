@@ -24,7 +24,7 @@ class AGLGraph : AGLObjects {
 
     enum class GraphDisplay { MIDPOINT, CORNERLINE, CORNERARC };
 
-    GraphDisplay m_graphDisplay = GraphDisplay::MIDPOINT;
+    GraphDisplay m_graphDisplay = GraphDisplay::CORNERLINE;
 
     std::vector<std::pair<SimpleLine, Point2f>> m_connections;
     std::vector<SimpleLine> m_links;
@@ -32,6 +32,9 @@ class AGLGraph : AGLObjects {
 
     AGLLinesUniform m_lines;
     AGLTrianglesUniform m_fills;
+
+    AGLLinesUniform m_intersectionLines;
+    AGLTrianglesUniform m_intersectionFills;
 
     AGLLinesUniform m_linkLines;
     AGLTrianglesUniform m_linkFills;
@@ -52,6 +55,8 @@ class AGLGraph : AGLObjects {
     void initializeGL(bool m_core) override {
         m_lines.initializeGL(m_core);
         m_fills.initializeGL(m_core);
+        m_intersectionLines.initializeGL(m_core);
+        m_intersectionFills.initializeGL(m_core);
         m_linkLines.initializeGL(m_core);
         m_linkFills.initializeGL(m_core);
         m_unlinkFills.initializeGL(m_core);
@@ -60,6 +65,8 @@ class AGLGraph : AGLObjects {
     void updateGL(bool m_core) override {
         m_lines.updateGL(m_core);
         m_fills.updateGL(m_core);
+        m_intersectionLines.updateGL(m_core);
+        m_intersectionFills.updateGL(m_core);
         m_linkLines.updateGL(m_core);
         m_linkFills.updateGL(m_core);
         m_unlinkFills.updateGL(m_core);
@@ -68,6 +75,8 @@ class AGLGraph : AGLObjects {
     void cleanup() override {
         m_lines.cleanup();
         m_fills.cleanup();
+        m_intersectionLines.cleanup();
+        m_intersectionFills.cleanup();
         m_linkLines.cleanup();
         m_linkFills.cleanup();
         m_unlinkFills.cleanup();
@@ -79,6 +88,8 @@ class AGLGraph : AGLObjects {
         glFuncs->glLineWidth(3);
         m_lines.paintGL(mProj, mView, mModel);
         m_fills.paintGL(mProj, mView, mModel);
+        m_intersectionLines.paintGL(mProj, mView, mModel);
+        m_intersectionFills.paintGL(mProj, mView, mModel);
         m_linkLines.paintGL(mProj, mView, mModel);
         m_linkFills.paintGL(mProj, mView, mModel);
         m_unlinkLines.paintGL(mProj, mView, mModel);
