@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "agllinesuniform.h"
+#include "aglgraph.h"
 #include "aglshapemap.h"
 
 #include "salalib/shapegraph.h"
@@ -25,49 +25,35 @@ class AGLShapeGraph : public AGLShapeMap {
     AGLShapeGraph(ShapeGraph &shapeGraph, int pointSides, float pointRadius)
         : AGLShapeMap(shapeGraph, pointSides, pointRadius), m_shapeGraph(shapeGraph){};
 
-    void initializeGL(bool m_core) override {
-        AGLShapeMap::initializeGL(m_core);
-        m_linkLines.initializeGL(m_core);
-        m_linkFills.initializeGL(m_core);
-        m_unlinkFills.initializeGL(m_core);
-        m_unlinkLines.initializeGL(m_core);
+    void initializeGL(bool core) override {
+        AGLShapeMap::initializeGL(core);
+        m_glGraph.initializeGL(core);
     }
 
-    void updateGL(bool m_core) override {
+    void updateGL(bool core) override {
         if (!m_datasetChanged)
             return;
         if (m_forceReloadGLObjects) {
             loadGLObjects();
             AGLShapeMap::loadGLObjects();
+            m_glGraph.loadGLObjects();
             m_forceReloadGLObjects = false;
         }
-        AGLShapeMap::updateGL(m_core);
-        m_linkLines.updateGL(m_core);
-        m_linkFills.updateGL(m_core);
-        m_unlinkFills.updateGL(m_core);
-        m_unlinkLines.updateGL(m_core);
+        AGLShapeMap::updateGL(core);
+        m_glGraph.updateGL(core);
         m_datasetChanged = false;
     }
 
     void cleanup() override {
         AGLShapeMap::cleanup();
-        m_linkLines.cleanup();
-        m_linkFills.cleanup();
-        m_unlinkFills.cleanup();
-        m_unlinkLines.cleanup();
+        m_glGraph.cleanup();
     }
 
-    void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView,
-                 const QMatrix4x4 &m_mModel) override {
-        AGLShapeMap::paintGL(m_mProj, m_mView, m_mModel);
+    void paintGL(const QMatrix4x4 &mProj, const QMatrix4x4 &mView,
+                 const QMatrix4x4 &mModel) override {
+        AGLShapeMap::paintGL(mProj, mView, mModel);
         if (m_showLinks) {
-            QOpenGLFunctions *glFuncs = QOpenGLContext::currentContext()->functions();
-            glFuncs->glLineWidth(3);
-            m_linkLines.paintGL(m_mProj, m_mView, m_mModel);
-            m_linkFills.paintGL(m_mProj, m_mView, m_mModel);
-            m_unlinkLines.paintGL(m_mProj, m_mView, m_mModel);
-            m_unlinkFills.paintGL(m_mProj, m_mView, m_mModel);
-            glFuncs->glLineWidth(1);
+            m_glGraph.paintGL(mProj, mView, mModel);
         }
     }
 
@@ -76,10 +62,8 @@ class AGLShapeGraph : public AGLShapeMap {
 
   private:
     ShapeGraph &m_shapeGraph;
-    AGLLinesUniform m_linkLines;
-    AGLTrianglesUniform m_linkFills;
-    AGLLinesUniform m_unlinkLines;
-    AGLTrianglesUniform m_unlinkFills;
 
-    bool m_showLinks = false;
+    AGLGraph m_glGraph;
+
+    bool m_showLinks = true;
 };

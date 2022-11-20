@@ -15,36 +15,27 @@
 
 #include "aglshapegraph.h"
 
-#include "salalib/geometrygenerators.h"
-
 void AGLShapeGraph::loadGLObjects() {
     AGLShapeMap::loadGLObjects();
-    const std::vector<SimpleLine> &linkLines = m_shapeGraph.getAllLinkLines();
-    std::vector<Point2f> linkPointLocations;
-    for (auto &linkLine : linkLines) {
-        linkPointLocations.push_back(linkLine.start());
-        linkPointLocations.push_back(linkLine.end());
+    m_glGraph.setNodeSize(m_shapeGraph.getSpacing() * 0.05);
+    m_glGraph.setGraphCornerRadius(m_shapeGraph.getSpacing() * 0.3);
+
+    std::vector<Connector> &connections = m_shapeGraph.getConnections();
+    auto &shapes = m_shapeGraph.getAllShapes();
+    auto shapeIter = shapes.begin();
+    for (Connector &connector : connections) {
+        auto &fromShape = shapeIter->second;
+        auto fromCentroid = fromShape.getCentroid();
+        for (int &connection : connector.m_connections) {
+            auto &toShape = shapes[connection];
+            auto toCentroid = toShape.getCentroid();
+            m_glGraph.addConnection(
+                SimpleLine(fromCentroid.x, fromCentroid.y, toCentroid.x, toCentroid.y),
+                intersection_point(fromShape.getLine(), toShape.getLine()));
+        }
+        shapeIter++;
     }
-
-    const std::vector<Point2f> &linkFillTriangles =
-        GeometryGenerators::generateMultipleDiskTriangles(32, m_shapeGraph.getSpacing() * 0.1,
-                                                          linkPointLocations);
-    m_linkFills.loadTriangleData(linkFillTriangles, qRgb(0, 0, 0));
-
-    std::vector<SimpleLine> linkFillPerimeters = GeometryGenerators::generateMultipleCircleLines(
-        32, m_shapeGraph.getSpacing() * 0.1, linkPointLocations);
-    linkFillPerimeters.insert(linkFillPerimeters.end(), linkLines.begin(), linkLines.end());
-    m_linkLines.loadLineData(linkFillPerimeters, qRgb(0, 255, 0));
-
-    const std::vector<Point2f> &unlinkPoints = m_shapeGraph.getAllUnlinkPoints();
-
-    const std::vector<Point2f> &unlinkFillTriangles =
-        GeometryGenerators::generateMultipleDiskTriangles(32, m_shapeGraph.getSpacing() * 0.1,
-                                                          unlinkPoints);
-    m_unlinkFills.loadTriangleData(unlinkFillTriangles, qRgb(255, 255, 255));
-
-    const std::vector<SimpleLine> &unlinkFillPerimeters =
-        GeometryGenerators::generateMultipleCircleLines(32, m_shapeGraph.getSpacing() * 0.1,
-                                                        unlinkPoints);
-    m_unlinkLines.loadLineData(unlinkFillPerimeters, qRgb(255, 0, 0));
+    m_glGraph.setLinks(m_shapeGraph.getAllLinkLines());
+    m_glGraph.setUnlinks(m_shapeGraph.getAllUnlinkPoints());
+    m_glGraph.loadGLObjects();
 }

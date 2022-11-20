@@ -18,6 +18,7 @@ target_sources(acanthis
         aglpixelmap.h
         aglmapviewrenderer.h
         aglmapview.h
+        aglgraph.h
     PRIVATE
         agldynamicline.cpp
         agldynamicrect.cpp
@@ -34,6 +35,7 @@ target_sources(acanthis
         aglpixelmap.cpp
         aglmapviewrenderer.cpp
         aglmapview.cpp
+        aglgraph.cpp
 )
 
 
