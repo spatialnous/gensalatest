@@ -10,5 +10,6 @@
         <file>scenegraph/MapTreeView.qml</file>
         <file>scenegraph/Theme.qml</file>
         <file>scenegraph/mainMobile.qml</file>
+        <file>scenegraph/AGLSplitView.qml</file>
     </qresource>
 </RCC>

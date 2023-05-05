@@ -47,7 +47,7 @@ int CoreApplication::exec() {
     setOrganizationDomain("acanth.is");
     setApplicationName("acanthis");
 
-    qmlRegisterType<AGLMapView>("acanthis", 1, 0, "GLMapView");
+    qmlRegisterType<AGLMapView>("acanthis", 1, 0, "AGLMapView");
     qmlRegisterType<MapModel>("acanthis", 1, 0, "MapModel");
     qmlRegisterSingletonType<DocumentManager>("acanthis", 1, 0, "DocumentManager",
                                               [&](QQmlEngine *, QJSEngine *) -> QObject * {

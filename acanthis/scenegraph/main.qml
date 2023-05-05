@@ -406,21 +406,21 @@ ApplicationWindow {
                     SplitView.fillWidth: true
                     focus: true
 
-                    GLMapView {
-                        id: gl_map_view
-                        graphDocument: graphDocumentFile
-                        foregroundColour: settings.glViewForegroundColour
-                        backgroundColour: settings.glViewBackgroundColour
-                        antialiasingSamples: 0
-                        highlightOnHover: true
+                    function addAGLSplitView(parent, orientation) {
+                        let aglSplitViewComponent = Qt.createComponent(
+                                "AGLSplitView.qml")
+                        let aglSplitView = aglSplitViewComponent.createObject(
+                                parent, {
+                                    "orientation": orientation
+                                })
 
-                        // it is necessary to "flip" the FBO here because the default assumes
-                        // that y is already flipped. Instead this will be handled internally
-                        // to be in line with depthmapX
-                        mirrorVertically: true
-
-                        SplitView.preferredWidth: window.width / 3
-                        focus: true
+                        if (aglSplitView === null) {
+                            console.log("Error creating AGLSplitView")
+                        }
+                        return aglSplitView
+                    }
+                    Component.onCompleted: {
+                        addAGLSplitView(this, Qt.Vertical)
                     }
                 }
 

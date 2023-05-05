@@ -57,7 +57,10 @@ TreeView {
                     memodl.setItemVisibility(memodl.index(model.row,
                                                           model.column),
                                              !model.visibility)
-                    gl_map_view.update()
+
+                    // TODO: Find proper update mechanism
+                    graphView.children[0].children[0].children[0].children[0].update()
+                    //gl_map_view.update()
                 }
             }
         }

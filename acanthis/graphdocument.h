@@ -35,6 +35,7 @@ class GraphDocument : public QObject {
     // These are stored as QSharedPointers so that they can be used by the map view tree
     // which stores everything in QSharedPointers
     QList<QSharedPointer<MapLayer>> &getMapLayers() { return m_mapLayers; }
+    const QList<QSharedPointer<MapLayer>> &getMapLayers() const { return m_mapLayers; }
 
     MapLayer *layerAt(std::size_t index) { return m_mapLayers[index].get(); }
 
