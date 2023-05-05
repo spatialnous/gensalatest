@@ -203,7 +203,7 @@ ApplicationWindow {
         Layout.fillWidth: true
 
         SplitView {
-            id: graphView
+            id: graphViews
             SplitView.fillWidth: true
             focus: true
 

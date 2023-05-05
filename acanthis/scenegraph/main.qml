@@ -122,7 +122,8 @@ ApplicationWindow {
                                            ) - 1)) {
                 graphDisplayModel.append({
                                              "graphDocumentFile": DocumentManager.lastDocument,
-                                             "current": true
+                                             "current": true,
+                                             "glViews": []
                                          })
             }
             graphListNameView.currentIndex = lastDocumentIndex
@@ -304,7 +305,8 @@ ApplicationWindow {
                             DocumentManager.createEmptyDocument()
                             graphDisplayModel.append({
                                                          "graphDocumentFile": DocumentManager.lastDocument,
-                                                         "current": true
+                                                         "current": true,
+                                                         "glViews": []
                                                      })
                             graphListNameView.currentIndex = DocumentManager.lastDocumentIndex()
                         }
@@ -402,9 +404,16 @@ ApplicationWindow {
                 visible: graphListNameView.currentIndex === index
 
                 SplitView {
-                    id: graphView
+                    id: graphViews
                     SplitView.fillWidth: true
                     focus: true
+
+                    function redraw() {
+                        let currentItemViews = graphDisplayModel.get(index).glViews;
+                        for (let i = 0; i < currentItemViews.count; i++) {
+                            currentItemViews.get(i)['view'].update();
+                        }
+                    }
 
                     function addAGLSplitView(parent, orientation) {
                         let aglSplitViewComponent = Qt.createComponent(
@@ -412,7 +421,7 @@ ApplicationWindow {
                         let aglSplitView = aglSplitViewComponent.createObject(
                                 parent, {
                                     "orientation": orientation
-                                })
+                                });
 
                         if (aglSplitView === null) {
                             console.log("Error creating AGLSplitView")
@@ -420,7 +429,9 @@ ApplicationWindow {
                         return aglSplitView
                     }
                     Component.onCompleted: {
-                        addAGLSplitView(this, Qt.Vertical)
+                        graphDisplayModel.get(index).glViews.append({
+                            "view": addAGLSplitView(this, Qt.Vertical)
+                        })
                     }
                 }
 

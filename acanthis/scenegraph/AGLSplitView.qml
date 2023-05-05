@@ -18,7 +18,21 @@ import QtQuick.Controls
 import acanthis 1.0
 
 SplitView {
+    SplitView.fillHeight: true
+    SplitView.fillWidth: true
+    handle: Item {
+        implicitWidth: 4
+    }
+
+    function update() {
+        left.update();
+        right.update();
+    }
+
     AGLMapView {
+        id: left
+        SplitView.preferredWidth: parent.width / 2
+        SplitView.preferredHeight: parent.height / 2
         graphDocument: graphDocumentFile
         foregroundColour: settings.glViewForegroundColour
         backgroundColour: settings.glViewBackgroundColour
@@ -34,6 +48,9 @@ SplitView {
     }
 
     AGLMapView {
+        id: right
+        SplitView.preferredWidth: parent.width / 2
+        SplitView.preferredHeight: parent.height / 2
         graphDocument: graphDocumentFile
         foregroundColour: settings.glViewForegroundColour
         backgroundColour: settings.glViewBackgroundColour
@@ -46,5 +63,5 @@ SplitView {
         mirrorVertically: true
     }
 
-    SplitView.preferredWidth: parent.width / 2
+//    SplitView.preferredWidth: parent.width / 2
 }
