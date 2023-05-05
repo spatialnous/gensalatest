@@ -430,7 +430,7 @@ ApplicationWindow {
                     }
                     Component.onCompleted: {
                         graphDisplayModel.get(index).glViews.append({
-                            "view": addAGLSplitView(this, Qt.Vertical)
+                            "view": addAGLSplitView(this, Qt.Horizontal)
                         })
                     }
                 }

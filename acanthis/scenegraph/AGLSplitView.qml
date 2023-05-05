@@ -62,6 +62,4 @@ SplitView {
         // to be in line with depthmapX
         mirrorVertically: true
     }
-
-//    SplitView.preferredWidth: parent.width / 2
 }
