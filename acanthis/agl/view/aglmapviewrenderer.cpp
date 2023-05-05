@@ -15,12 +15,9 @@
 
 #include "aglmapviewrenderer.h"
 #include "aglmapview.h"
+#include "agl/model/aglmapsmodel.h"
 
 #include <QQuickOpenGLUtils>
-
-QList<QSharedPointer<MapLayer>> &AGLMapViewRenderer::getMaps() {
-    return m_item->getGraphDocument().getMapLayers();
-}
 
 void AGLMapViewRenderer::synchronize(QQuickFramebufferObject *item) {
     AGLMapView *glView = static_cast<AGLMapView *>(item);
@@ -31,22 +28,13 @@ void AGLMapViewRenderer::synchronize(QQuickFramebufferObject *item) {
     recalcView();
 }
 
-AGLMap &AGLMapViewRenderer::getGLMap(MapLayer *mapLayer) {
-    auto glMap = m_glMaps.find(mapLayer);
-    if (glMap == m_glMaps.end()) {
-        // AGLMap has not been created, create it.
-        auto newGLMap = m_glMaps.insert(std::make_pair(mapLayer, mapLayer->constructGLMap()));
-
-        return *(newGLMap.first)->second;
-    }
-    return *glMap->second;
-}
 
 AGLMapViewRenderer::AGLMapViewRenderer(const QQuickFramebufferObject *item,
                                        const GraphDocument *pDoc, const QColor &foregrounColour,
                                        const QColor &backgroundColour, int antialiasingSamples,
                                        bool highlightOnHover)
-    : m_item(static_cast<const AGLMapView *>(item)), m_foregroundColour(foregrounColour),
+    : m_item(static_cast<const AGLMapView *>(item)), m_model(new AGLMapsModel(*pDoc)),
+      m_foregroundColour(foregrounColour),
       m_backgroundColour(backgroundColour), m_antialiasingSamples(antialiasingSamples),
       m_highlightOnHover(highlightOnHover) {
     m_core = QCoreApplication::arguments().contains(QStringLiteral("--coreprofile"));
@@ -57,9 +45,7 @@ AGLMapViewRenderer::AGLMapViewRenderer(const QQuickFramebufferObject *item,
 
     loadAxes();
 
-    for (auto &map : getMaps()) {
-        getGLMap(map.get()).loadGLObjects();
-    }
+    m_model->loadGLObjects();
 
     m_dragLine.setStrokeColour(m_foregroundColour);
     m_selectionRect.setStrokeColour(m_backgroundColour);
@@ -72,13 +58,10 @@ AGLMapViewRenderer::AGLMapViewRenderer(const QQuickFramebufferObject *item,
     m_selectionRect.initializeGL(m_core);
     m_dragLine.initializeGL(m_core);
     m_axes.initializeGL(m_core);
-    for (auto &map : getMaps()) {
-        getGLMap(map.get()).initializeGL(m_core);
-    }
 
-    for (auto &map : getMaps()) {
-        getGLMap(map.get()).loadGLObjectsRequiringGLContext();
-    }
+    m_model->initializeGL(m_core);
+
+    m_model->loadGLObjectsRequiringGLContext();
 
     m_mModel.setToIdentity();
 
@@ -90,9 +73,7 @@ AGLMapViewRenderer::~AGLMapViewRenderer() {
     m_selectionRect.cleanup();
     m_dragLine.cleanup();
     m_axes.cleanup();
-    for (auto &glMap : m_glMaps) {
-        glMap.second->cleanup();
-    }
+    m_model->cleanup();
 }
 
 void AGLMapViewRenderer::render() {
@@ -105,20 +86,11 @@ void AGLMapViewRenderer::render() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    for (auto &map : getMaps()) {
-        if (!map->isVisible())
-            continue;
-        getGLMap(map.get()).updateGL(m_core);
-        getGLMap(map.get()).updateHoverGL(m_core);
-    }
+    m_model->updateGL(m_core);
 
     m_axes.paintGL(m_mProj, m_mView, m_mModel);
 
-    for (auto &map : getMaps()) {
-        if (!map->isVisible())
-            continue;
-        getGLMap(map.get()).paintGL(m_mProj, m_mView, m_mModel);
-    }
+    m_model->paintGL(m_mProj, m_mView, m_mModel);
 
     float pos[] = {
         float(std::min(m_mouseDragRect.bottomRight().x(), m_mouseDragRect.topLeft().x())),
@@ -159,10 +131,4 @@ void AGLMapViewRenderer::loadAxes() {
     m_axes.loadLineData(axesData);
 }
 
-void AGLMapViewRenderer::highlightHoveredItems(const QtRegion &region) {
-    if (!m_highlightOnHover)
-        return;
-    for (auto &map : getMaps()) {
-        getGLMap(map.get()).highlightHoveredItems(region);
-    }
-}
+

@@ -1,4 +1,4 @@
-// Copyright (C) 2018, Petros Koutsolampros
+// Copyright (C) 2017, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,7 +15,9 @@
 
 #pragma once
 
-#include "agltriangles.h"
+#include "../base/aglobject.h"
+
+#include "../base/agltrianglesuniform.h"
 
 #include "salalib/pafcolor.h"
 
@@ -32,12 +34,18 @@
 #include <memory>
 
 /**
- * @brief Meant to represent regular polygons i.e. those that are equiangular (all angles
- * are equal in measure) and equilateral (all sides have the same length). Ideal for
- * representing sets of disks/stars/squares etc.
+ * @brief The GLPolygons class is a plain wrapper class for multiple GLPolygon
+ * that acts as if it's a single globject
  */
-class AGLRegularPolygons : public AGLTriangles {
+class AGLPolygons : public AGLObject {
   public:
-    void loadPolygonData(const std::vector<std::pair<Point2f, PafColor>> &colouredPoints,
-                         const int sides, const float radius);
+    void
+    loadPolygonData(const std::vector<std::pair<std::vector<Point2f>, PafColor>> &colouredPolygons);
+    void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView, const QMatrix4x4 &m_mModel);
+    void initializeGL(bool m_core);
+    void updateGL(bool m_core);
+    void cleanup();
+
+  private:
+    std::vector<std::unique_ptr<AGLTrianglesUniform>> m_polygons;
 };

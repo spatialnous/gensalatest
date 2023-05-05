@@ -106,4 +106,4 @@ target_link_libraries(${projectName} salalib genlib mgraph440 Qt6::Core Qt6::Gui
 
 add_subdirectory(dialogs)
 set(CMAKE_AUTOUIC_SEARCH_PATHS dialogs)
-add_subdirectory(aglmapview)
+add_subdirectory(agl)

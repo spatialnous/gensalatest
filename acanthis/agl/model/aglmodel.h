@@ -1,4 +1,4 @@
-// Copyright (C) 2021, Petros Koutsolampros
+// Copyright (C) 2022, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,18 +15,14 @@
 
 #pragma once
 
-#include "aglobjects.h"
+#include "../derived/aglobjects.h"
 
-#include "genlib/p2dpoly.h"
+#include "graphdocument.h"
 
-class AGLMap : public AGLObjects {
-
-  protected:
-    bool m_hoverStoreInvalid = false;
-    bool m_hoverHasShapes = false;
-
-  public:
-    virtual ~AGLMap() {}
-    virtual void updateHoverGL(bool m_core) = 0;
-    virtual void highlightHoveredItems(const QtRegion &region) = 0;
+class AGLModel : public AGLObjects {
+protected:
+    const GraphDocument& m_graphDoc;
+public:
+    AGLModel(const GraphDocument& graphDoc) :
+        m_graphDoc(graphDoc){}
 };

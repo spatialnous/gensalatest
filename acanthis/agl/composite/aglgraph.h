@@ -15,16 +15,16 @@
 
 #pragma once
 
-#include "aglobjects.h"
+#include "../derived/aglobjects.h"
 
-#include "agllinesuniform.h"
-#include "agltrianglesuniform.h"
+#include "../base/agllinesuniform.h"
+#include "../base/agltrianglesuniform.h"
 
 class AGLGraph : AGLObjects {
 
     enum class GraphDisplay { MIDPOINT, CORNERLINE, CORNERARC };
 
-    GraphDisplay m_graphDisplay = GraphDisplay::CORNERLINE;
+    GraphDisplay m_graphDisplay = GraphDisplay::CORNERARC;
 
     std::vector<std::pair<SimpleLine, Point2f>> m_connections;
     std::vector<SimpleLine> m_links;
@@ -88,8 +88,8 @@ class AGLGraph : AGLObjects {
         glFuncs->glLineWidth(3);
         m_lines.paintGL(mProj, mView, mModel);
         m_fills.paintGL(mProj, mView, mModel);
-        m_intersectionLines.paintGL(mProj, mView, mModel);
-        m_intersectionFills.paintGL(mProj, mView, mModel);
+        //        m_intersectionLines.paintGL(mProj, mView, mModel);
+        //        m_intersectionFills.paintGL(mProj, mView, mModel);
         m_linkLines.paintGL(mProj, mView, mModel);
         m_linkFills.paintGL(mProj, mView, mModel);
         m_unlinkLines.paintGL(mProj, mView, mModel);

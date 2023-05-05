@@ -14,7 +14,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "aglpolygons.h"
-#include "aglutriangulator.h"
+#include "../func/aglutriangulator.h"
 
 /**
  * @brief GLPolygons::GLPolygons

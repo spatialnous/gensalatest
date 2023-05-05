@@ -17,7 +17,7 @@
 
 #include "treeitem.h"
 
-#include "aglmapview/aglmap.h"
+#include "agl/composite/aglmap.h"
 
 #include "salalib/attributetable.h"
 

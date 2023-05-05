@@ -17,9 +17,9 @@
 
 #include "aglmap.h"
 
-#include "agllines.h"
-#include "aglpolygons.h"
-#include "aglregularpolygons.h"
+#include "../base/agllines.h"
+#include "../derived/aglpolygons.h"
+#include "../derived/aglregularpolygons.h"
 
 #include "salalib/shapemap.h"
 

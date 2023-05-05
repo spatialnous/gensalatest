@@ -15,7 +15,7 @@
 
 #include "shapegraphlayer.h"
 
-#include "aglmapview/aglshapegraph.h"
+#include "agl/composite/aglshapegraph.h"
 
 ShapeGraphLayer::ShapeGraphLayer(ShapeGraph &map)
     : m_shapeGraph(map), MapLayer(QString::fromStdString(map.getName()), map.getAttributeTable()) {}

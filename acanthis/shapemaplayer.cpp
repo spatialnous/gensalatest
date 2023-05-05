@@ -15,7 +15,7 @@
 
 #include "shapemaplayer.h"
 
-#include "aglmapview/aglshapemap.h"
+#include "agl/composite/aglshapemap.h"
 
 ShapeMapLayer::ShapeMapLayer(ShapeMap &map)
     : m_shapeMap(map), MapLayer(QString::fromStdString(map.getName()), map.getAttributeTable()) {}

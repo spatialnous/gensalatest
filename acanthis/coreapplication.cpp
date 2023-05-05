@@ -15,7 +15,7 @@
 
 #include "coreapplication.h"
 
-#include "aglmapview/aglmapview.h"
+#include "agl/view/aglmapview.h"
 #include "mapmodel.h"
 #include "settingsimpl.h"
 

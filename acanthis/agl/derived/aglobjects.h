@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "aglobject.h"
+#include "../base/aglobject.h"
 
 class AGLObjects : public AGLObject {
 

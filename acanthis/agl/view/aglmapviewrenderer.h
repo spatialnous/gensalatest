@@ -15,10 +15,10 @@
 
 #pragma once
 
-#include "agldynamicline.h"
-#include "agldynamicrect.h"
-#include "agllines.h"
-#include "aglmap.h"
+#include "../base/agldynamicline.h"
+#include "../base/agldynamicrect.h"
+#include "../base/agllines.h"
+#include "../model/aglmodel.h"
 
 #include "graphdocument.h"
 
@@ -80,19 +80,17 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
     QColor m_foregroundColour;
     QColor m_backgroundColour;
 
-    std::map<MapLayer *, std::unique_ptr<AGLMap>> m_glMaps;
-
     AGLDynamicRect m_selectionRect;
     AGLDynamicLine m_dragLine;
     AGLLines m_axes;
+
+    std::unique_ptr<AGLModel> m_model;
 
     bool m_highlightOnHover = true;
 
     int m_antialiasingSamples = 0; // set this to 0 if rendering is too slow
 
     bool m_datasetChanged = false;
-
-    void highlightHoveredItems(const QtRegion &region);
 
     void loadAxes();
 
@@ -111,6 +109,4 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
             double((b.x() - a.x()) * (b.x() - a.x()) + (b.y() - a.y()) * (b.y() - a.y())));
     }
 
-    QList<QSharedPointer<MapLayer>> &getMaps();
-    AGLMap &getGLMap(MapLayer *mapLayer);
 };

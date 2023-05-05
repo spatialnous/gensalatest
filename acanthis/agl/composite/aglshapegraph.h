@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "aglgraph.h"
+#include "../composite/aglgraph.h"
 #include "aglshapemap.h"
 
 #include "salalib/shapegraph.h"

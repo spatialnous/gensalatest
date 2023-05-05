@@ -1,4 +1,4 @@
-// Copyright (C) 2022, Petros Koutsolampros
+// Copyright (C) 2021, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,13 +13,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "pixelmaplayer.h"
+#pragma once
 
-#include "agl/composite/aglpixelmap.h"
+#include "../derived/aglobjects.h"
 
-PixelMapLayer::PixelMapLayer(PointMap &map)
-    : m_pointMap(map), MapLayer(QString::fromStdString(map.getName()), map.getAttributeTable()) {}
+#include "genlib/p2dpoly.h"
 
-std::unique_ptr<AGLMap> PixelMapLayer::constructGLMap() {
-    return std::unique_ptr<AGLPixelMap>(std::unique_ptr<AGLPixelMap>(new AGLPixelMap(m_pointMap)));
+class AGLMap : public AGLObjects {
+
+  protected:
+    bool m_hoverStoreInvalid = false;
+    bool m_hoverHasShapes = false;
+
+  public:
+    virtual ~AGLMap() {}
+    virtual void updateHoverGL(bool m_core) = 0;
+    virtual void highlightHoveredItems(const QtRegion &region) = 0;
 };

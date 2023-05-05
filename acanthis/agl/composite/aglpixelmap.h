@@ -17,9 +17,9 @@
 
 #include "aglmap.h"
 
-#include "agllinesuniform.h"
-#include "aglrastertexture.h"
-#include "agltrianglesuniform.h"
+#include "../base/agllinesuniform.h"
+#include "../base/aglrastertexture.h"
+#include "../base/agltrianglesuniform.h"
 
 #include "salalib/pointdata.h"
 

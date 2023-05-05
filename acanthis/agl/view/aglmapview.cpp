@@ -72,7 +72,7 @@ void AGLMapView::mouseReleaseEvent(QMouseEvent *event) {
     //            Qt::KeyboardModifiers keyMods = QApplication::keyboardModifiers();
     //            m_pDoc.getMetaGraph().setCurSel(r, keyMods & Qt::ShiftModifier);
     //            ((MainWindow *)m_pDoc.m_mainFrame)->updateToolbar();
-    //            highlightHoveredItems(r);
+    //            if (m_highlightOnHover) highlightHoveredItems(r);
     //            break;
     //        }
     //        case InteractionMode::ZOOM_IN: {
@@ -302,7 +302,8 @@ void AGLMapView::mouseMoveEvent(QMouseEvent *event) {
 
     //    if (m_mouseDragRect.isNull() &&
     //        !(m_interactionSecondPoint && m_pDoc.getMetaGraph().getViewClass() &
-    //        MetaGraph::VIEWVGA)) { highlightHoveredItems(QtRegion(worldPoint,
+    //        MetaGraph::VIEWVGA)) {
+    // if (m_highlightOnHover) highlightHoveredItems(QtRegion(worldPoint,
     //        worldPoint));
     //    }
 
@@ -329,7 +330,8 @@ void AGLMapView::mouseMoveEvent(QMouseEvent *event) {
         //        std::max(m_mouseDragRect.bottomRight().x(),
         //        m_mouseDragRect.topLeft().x()); hoverRegion.top_right.y =
         //        std::max(m_mouseDragRect.bottomRight().y(),
-        //        m_mouseDragRect.topLeft().y()); highlightHoveredItems(hoverRegion);
+        //        m_mouseDragRect.topLeft().y());
+        // if (m_highlightOnHover) highlightHoveredItems(hoverRegion);
         //        update();
         //    }
         //    if ((m_interactionMode & InteractionMode::SECOND_POINT) ==
