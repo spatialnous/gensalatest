@@ -25,12 +25,12 @@ SplitView {
     }
 
     function update() {
-        left.update();
-        right.update();
+        first.update();
+        last.update();
     }
 
     AGLMapView {
-        id: left
+        id: first
         SplitView.preferredWidth: parent.width / 2
         SplitView.preferredHeight: parent.height / 2
         graphDocument: graphDocumentFile
@@ -48,7 +48,7 @@ SplitView {
     }
 
     AGLMapView {
-        id: right
+        id: last
         SplitView.preferredWidth: parent.width / 2
         SplitView.preferredHeight: parent.height / 2
         graphDocument: graphDocumentFile
