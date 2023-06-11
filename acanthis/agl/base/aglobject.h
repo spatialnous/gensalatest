@@ -26,4 +26,5 @@ class AGLObject {
     virtual void cleanup() = 0;
     virtual void paintGL(const QMatrix4x4 &m_mProj, const QMatrix4x4 &m_mView,
                          const QMatrix4x4 &m_mModel) = 0;
+    virtual ~AGLObject() {};
 };
