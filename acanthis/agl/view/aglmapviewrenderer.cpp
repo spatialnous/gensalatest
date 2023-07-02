@@ -25,6 +25,9 @@ void AGLMapViewRenderer::synchronize(QQuickFramebufferObject *item) {
     m_eyePosY = glView->getEyePosY();
     m_zoomFactor = glView->getZoomFactor();
     m_mouseDragRect = glView->getMouseDragRect();
+    m_foregroundColour = glView->getForegroundColour();
+    m_backgroundColour = glView->getBackgroundColour();
+    m_backgroundColourChanged = true;
     recalcView();
 }
 
@@ -52,8 +55,7 @@ AGLMapViewRenderer::AGLMapViewRenderer(const QQuickFramebufferObject *item,
 
     QQuickOpenGLUtils::resetOpenGLState();
 
-    glClearColor(m_backgroundColour.redF(), m_backgroundColour.greenF(), m_backgroundColour.blueF(),
-                 1);
+    m_backgroundColourChanged = true;
 
     m_selectionRect.initializeGL(m_core);
     m_dragLine.initializeGL(m_core);
@@ -79,6 +81,18 @@ AGLMapViewRenderer::~AGLMapViewRenderer() {
 void AGLMapViewRenderer::render() {
     if (!m_item->getGraphDocument().hasMetaGraph())
         return;
+
+    if (m_backgroundColourChanged) {
+        // TODO: This should be happening in the ctor, however
+        // this particular qt opengl implementation does not
+        // work in that way, so we have to do it here
+        glClearColor(m_backgroundColour.redF(),
+                     m_backgroundColour.greenF(),
+                     m_backgroundColour.blueF(),
+                     1);
+        m_backgroundColourChanged = false;
+    }
+
     glEnable(GL_MULTISAMPLE);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_DEPTH_TEST);

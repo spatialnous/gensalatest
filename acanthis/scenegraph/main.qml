@@ -123,7 +123,7 @@ ApplicationWindow {
                 graphDisplayModel.append({
                                              "graphDocumentFile": DocumentManager.lastDocument,
                                              "current": true,
-                                             "glViews": []
+                                             "glViews": "{}"
                                          })
             }
             graphListNameView.currentIndex = lastDocumentIndex
@@ -306,7 +306,7 @@ ApplicationWindow {
                             graphDisplayModel.append({
                                                          "graphDocumentFile": DocumentManager.lastDocument,
                                                          "current": true,
-                                                         "glViews": []
+                                                         "glViews": "{}"
                                                      })
                             graphListNameView.currentIndex = DocumentManager.lastDocumentIndex()
                         }
@@ -370,6 +370,45 @@ ApplicationWindow {
                             color: Theme.toolbarButtonTextColour
                         }
                         onClicked: drawer.open()
+
+                        Layout.fillHeight: true
+                        background: Rectangle {
+                            Layout.fillHeight: true
+                            implicitWidth: parent.height
+                            radius: Theme.tabButtonHoverRadius
+                            color: parent.hovered ? Theme.toolbarButtonHoverColour : Theme.toolbarButtonColour
+                        }
+                    }
+                    ToolButton {
+                        id: splitHorizontal
+                        contentItem: Text {
+                            text: "horizontal"
+                            horizontalAlignment: Text.AlignHCenter
+                            color: Theme.toolbarButtonTextColour
+                        }
+                        onClicked: {
+                            graphListGLView.currentItem.splitActiveView(Qt.Horizontal);
+                        }
+
+                        Layout.fillHeight: true
+                        background: Rectangle {
+                            Layout.fillHeight: true
+                            implicitWidth: parent.height
+                            radius: Theme.tabButtonHoverRadius
+                            color: parent.hovered ? Theme.toolbarButtonHoverColour : Theme.toolbarButtonColour
+                        }
+                    }
+                    ToolButton {
+                        id: splitVertical
+                        contentItem: Text {
+                            text: "vertical"
+                            horizontalAlignment: Text.AlignHCenter
+                            color: Theme.toolbarButtonTextColour
+                        }
+                        onClicked: {
+                            graphListGLView.currentItem.splitActiveView(Qt.Vertical);
+                        }
+
                         Layout.fillHeight: true
                         background: Rectangle {
                             Layout.fillHeight: true
@@ -403,10 +442,47 @@ ApplicationWindow {
                 }
                 visible: graphListNameView.currentIndex === index
 
+                function splitActiveView(orientation) {
+                    graphViews.splitActiveView(orientation);
+                }
+
                 SplitView {
                     id: graphViews
                     SplitView.fillWidth: true
                     focus: true
+
+                    property int nAGLViews: 0;
+                    property int activeMapViewID: -1;
+                    property var mapViews: ({});
+
+                    function nextAGLViewID() {
+                        let newAGLViewID = nAGLViews;
+                        nAGLViews = nAGLViews + 1;
+                        return newAGLViewID;
+                    }
+
+                    function splitActiveView(orientation) {
+                        if (activeMapViewID < 0) {
+                            console.log("No active view selected")
+                            return;
+                        }
+
+                        let activeMapView = mapViews[activeMapViewID];
+                        let aglSplitView = activeMapView.parent.parent;
+                        let activeMapViewIdx = Array.prototype.indexOf.call(aglSplitView.contentChildren, activeMapView)
+                        let newAGLViewID = nextAGLViewID();
+                        let newAGLView = aglSplitView.splitView(orientation, newAGLViewID, activeMapViewIdx);
+                        mapViews[newAGLViewID] = newAGLView;
+                    }
+
+                    function makeActive(viewID) {
+                        if (viewID < 0) return;
+                        if (activeMapViewID != -1) {
+                            mapViews[activeMapViewID].active = false;
+                        }
+                        mapViews[viewID].active = true;
+                        activeMapViewID = viewID;
+                    }
 
                     function redraw() {
                         let currentItemViews = graphDisplayModel.get(index).glViews;
@@ -415,12 +491,16 @@ ApplicationWindow {
                         }
                     }
 
-                    function addAGLSplitView(parent, orientation) {
+                    function addAGLSplitView(parent, orientation, preferredWidth,
+                                             preferredHeight) {
                         let aglSplitViewComponent = Qt.createComponent(
                                 "AGLSplitView.qml")
+
                         let aglSplitView = aglSplitViewComponent.createObject(
                                 parent, {
-                                    "orientation": orientation
+                                    "orientation": orientation,
+                                    "width": parent.width,
+                                    "height": parent.height
                                 });
 
                         if (aglSplitView === null) {
@@ -429,9 +509,14 @@ ApplicationWindow {
                         return aglSplitView
                     }
                     Component.onCompleted: {
-                        graphDisplayModel.get(index).glViews.append({
-                            "view": addAGLSplitView(this, Qt.Horizontal)
-                        })
+                        let aglSplitView = addAGLSplitView(this, Qt.Horizontal);
+
+                        let newAGLViewID = nextAGLViewID();
+                        let newAGLView = aglSplitView.addAGLMapViewHorizontal(newAGLViewID);
+                        mapViews[newAGLViewID] = newAGLView;
+                        newAGLViewID = nextAGLViewID();
+                        newAGLView = aglSplitView.addAGLMapViewHorizontal(newAGLViewID);
+                        mapViews[newAGLViewID] = newAGLView;
                     }
                 }
 

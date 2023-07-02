@@ -49,6 +49,7 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
     ~AGLMapViewRenderer();
 
     void render() override;
+    void update();
 
   private:
     QSize m_viewportSize;
@@ -79,6 +80,7 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
 
     QColor m_foregroundColour;
     QColor m_backgroundColour;
+    bool m_backgroundColourChanged = false;
 
     AGLDynamicRect m_selectionRect;
     AGLDynamicLine m_dragLine;

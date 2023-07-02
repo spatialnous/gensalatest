@@ -11,5 +11,6 @@
         <file>scenegraph/Theme.qml</file>
         <file>scenegraph/mainMobile.qml</file>
         <file>scenegraph/AGLSplitView.qml</file>
+        <file>scenegraph/AGLMapViewWrapper.qml</file>
     </qresource>
 </RCC>

@@ -20,46 +20,162 @@ import acanthis 1.0
 SplitView {
     SplitView.fillHeight: true
     SplitView.fillWidth: true
-    handle: Item {
+    handle: Rectangle {
         implicitWidth: 4
+        implicitHeight: 4
+        color: Theme.panelColour
     }
+    property int minimumItemWidth: 20
+    property int minimumItemHeight: 20
 
     function update() {
-        first.update();
-        last.update();
+        for (let i = 0; i < this.count; ++i)
+            this.itemAt(i).update();
     }
 
-    AGLMapView {
-        id: first
-        SplitView.preferredWidth: parent.width / 2
-        SplitView.preferredHeight: parent.height / 2
-        graphDocument: graphDocumentFile
-        foregroundColour: settings.glViewForegroundColour
-        backgroundColour: settings.glViewBackgroundColour
-        antialiasingSamples: 0
-        highlightOnHover: true
+    function splitView(orientation, newViewID, index) {
+        let currentView = this.itemAt(index)
+        if (currentView instanceof AGLSplitView) {
+            currentView.splitView(orientation);
+            return;
+        }
 
-        // it is necessary to "flip" the FBO here because the default assumes
-        // that y is already flipped. Instead this will be handled internally
-        // to be in line with depthmapX
-        mirrorVertically: true
-
-        focus: true
+        if(this.orientation !== orientation) {
+            return this.addAGLSplitView(newViewID, index);
+        } else if (this.orientation === Qt.Horizontal) {
+            return this.addAGLMapViewHorizontal(newViewID, index + 1);
+        } else if (this.orientation === Qt.Vertical) {
+            return this.addAGLMapViewVertical(newViewID, index + 1);
+        }
     }
 
-    AGLMapView {
-        id: last
-        SplitView.preferredWidth: parent.width / 2
-        SplitView.preferredHeight: parent.height / 2
-        graphDocument: graphDocumentFile
-        foregroundColour: settings.glViewForegroundColour
-        backgroundColour: settings.glViewBackgroundColour
-        antialiasingSamples: 0
-        highlightOnHover: true
+    function addAGLSplitView(viewID, index) {
+        let currentView = this.itemAt(index)
 
-        // it is necessary to "flip" the FBO here because the default assumes
-        // that y is already flipped. Instead this will be handled internally
-        // to be in line with depthmapX
-        mirrorVertically: true
+        let aglSplitViewComponent = Qt.createComponent(
+                "AGLSplitView.qml")
+        let newSplitView = {
+            "orientation": Qt.Horizontal,
+            "SplitView.preferredWidth": currentView.width,
+            "SplitView.preferredHeight": currentView.height,
+        };
+        if (this.orientation === Qt.Horizontal) {
+            newSplitView.orientation = Qt.Vertical;
+            newSplitView["SplitView.preferredWidth"] = currentView.width;
+            newSplitView["SplitView.preferredHeight"] = currentView.height;
+        }
+
+        let aglSplitView = aglSplitViewComponent.createObject(
+                null, newSplitView);
+        if (aglSplitView === null) {
+            console.log("Error creating AGLSplitView")
+        }
+
+        this.takeItem(index);
+        this.insertItem(index, aglSplitView);
+
+        aglSplitView.addItem(currentView);
+        if (this.orientation === Qt.Vertical) {
+            return aglSplitView.addAGLMapViewHorizontal(viewID, 1)
+        } else {
+            return aglSplitView.addAGLMapViewVertical(viewID, 1)
+        }
+    }
+
+    function getNewWidths() {
+        if ( minimumItemWidth * (this.count + 1) > parent.width ) {
+            console.err("Insufficient space to create new Map View");
+            return [];
+        }
+
+        let newItemWidth = parent.width / (this.count + 1);
+        let prevItemsWidth = parent.width - newItemWidth;
+        let prevItemsNewWidth = new Array(this.count + 1);
+        for (let i = 0; i < this.count; ++i) {
+            let prevWidthPrc = this.itemAt(i).width / parent.width;
+            prevItemsNewWidth[i] = prevItemsWidth * prevWidthPrc;
+        }
+        prevItemsNewWidth[this.count] = newItemWidth;
+
+        return prevItemsNewWidth;
+    }
+
+    function addAGLMapViewHorizontal(viewID, index) {
+        let aglMapViewComponent = Qt.createComponent(
+                "AGLMapViewWrapper.qml")
+
+        let newWidths = getNewWidths()
+        for (let j = 0; j < this.count; ++j) {
+            this.itemAt(j).SplitView.preferredWidth = newWidths[j];
+        }
+        let newItemWidth = newWidths[newWidths.length - 1];
+
+        let newMapView = aglMapViewComponent.createObject(
+            null, {
+                "viewID": viewID,
+                // preferred widths are used as those also change from the handle
+                "SplitView.preferredWidth": newItemWidth,
+                "SplitView.preferredHeight": parent.height,
+
+                // an initial width is required for the first element to have a width
+                "width": newItemWidth,
+                "height": parent.height,
+
+                "SplitView.minimumWidth": minimumItemWidth,
+                "SplitView.minimumHeight": minimumItemHeight,
+                "AGLMapView.graphDocument": graphDocumentFile,
+            }
+        );
+        this.insertItem(index, newMapView)
+        return newMapView;
+    }
+
+    function getNewHeights() {
+        if ( minimumItemHeight * (this.count + 1) > parent.height ) {
+            console.err("Insufficient space to create new Map View");
+            return [];
+        }
+
+        let newItemHeight = parent.height / (this.count + 1);
+        let prevItemsHeight = parent.height - newItemHeight;
+        let prevItemsNewHeight = new Array(this.count + 1);
+        for (let i = 0; i < this.count; ++i) {
+            let prevHeightPrc = this.itemAt(i).height / parent.height;
+            prevItemsNewHeight[i] = prevItemsHeight * prevHeightPrc;
+        }
+        prevItemsNewHeight[this.count] = newItemHeight;
+
+        return prevItemsNewHeight;
+    }
+
+    function addAGLMapViewVertical(viewID, index) {
+        let aglMapViewComponent = Qt.createComponent(
+                "AGLMapViewWrapper.qml")
+
+        let newHeights = getNewHeights()
+        for (let j = 0; j < this.count; ++j) {
+            this.itemAt(j).SplitView.preferredHeight = newHeights[j];
+        }
+        let newItemHeight = newHeights[newHeights.length - 1];
+
+        let newMapView = aglMapViewComponent.createObject(
+            null, {
+                "viewID": viewID,
+                // preferred heights are used as those also change from the handle
+                "SplitView.preferredWidth": parent.width,
+                 "SplitView.preferredHeight": newItemHeight,
+
+                // an initial height is required for the first element to have a height
+                "width": parent.width,
+                "height": newItemHeight,
+
+                "SplitView.minimumWidth": minimumItemWidth,
+                "SplitView.minimumHeight": minimumItemHeight,
+                "AGLMapView.graphDocument": graphDocumentFile
+
+            }
+        );
+        this.insertItem(index, newMapView)
+        return newMapView;
     }
 }

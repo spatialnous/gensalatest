@@ -36,7 +36,7 @@ void AGLMapView::handleWindowSync() {
     }
 }
 
-void AGLMapView::forceUpdate() { update(); }
+void AGLMapView::forceUpdate() { update(); setDirtyRenderer(); }
 
 void AGLMapView::mouseReleaseEvent(QMouseEvent *event) {
     if (m_wasPanning) {
@@ -290,6 +290,7 @@ void AGLMapView::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void AGLMapView::mousePressEvent(QMouseEvent *event) {
+    emit mousePressed();
     std::cout << "click" << std::endl;
     m_mouseLastPos = event->pos();
 }

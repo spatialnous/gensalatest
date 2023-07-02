@@ -20,9 +20,9 @@
 #include "graphdocument.h"
 
 class AGLModel : public AGLObjects {
-protected:
-    const GraphDocument& m_graphDoc;
-public:
-    AGLModel(const GraphDocument& graphDoc) :
-        m_graphDoc(graphDoc){}
+  protected:
+    const GraphDocument &m_graphDoc;
+
+  public:
+    AGLModel(const GraphDocument &graphDoc) : m_graphDoc(graphDoc) {}
 };

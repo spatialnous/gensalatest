@@ -44,6 +44,8 @@ class AGLMapView : public QQuickFramebufferObject {
                 Qt::DirectConnection);
         connect(this, &QQuickItem::heightChanged, this, &AGLMapView::forceUpdate,
                 Qt::DirectConnection);
+        connect(this, &QQuickItem::heightChanged, this, &AGLMapView::forceUpdate,
+                Qt::DirectConnection);
 
         return new AGLMapViewRenderer(this, m_graphDocument, m_foregroundColour, m_backgroundColour,
                                       m_antialiasingSamples, m_highlightOnHover);
@@ -77,6 +79,8 @@ class AGLMapView : public QQuickFramebufferObject {
     float getEyePosY() { return m_eyePosY; }
     float getZoomFactor() { return m_zoomFactor; }
     QRectF getMouseDragRect() { return m_mouseDragRect; }
+    QColor getForegroundColour() { return m_foregroundColour; }
+    QColor getBackgroundColour() { return m_backgroundColour; }
 
     void setModeJoin();
     void setModeUnjoin();
@@ -106,14 +110,15 @@ class AGLMapView : public QQuickFramebufferObject {
 
     void postLoadFile();
 
-    void setDirtyRenderer() { m_dirtyRenderer = true; }
+    Q_INVOKABLE void setDirtyRenderer() { m_dirtyRenderer = true; }
 
   signals:
     void foregroundColourChanged(const QColor &colour);
-    void backgroundColourChanged();
+    void backgroundColourChanged(const QColor &colour);
     void antialiasingSamplesChanged();
     void highlightOnHoverChanged();
     void graphDocumentChanged();
+    void mousePressed();
 
   protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
