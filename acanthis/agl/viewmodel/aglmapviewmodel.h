@@ -15,19 +15,19 @@
 
 #pragma once
 
-#include "aglmodel.h"
+#include "aglviewmodel.h"
 
 #include "../composite/aglmap.h"
 
 #include "maplayer.h"
 
 
-class AGLMapsModel : public AGLModel {
+class AGLMapViewModel : public AGLViewModel {
     AGLMap &getGLMap(MapLayer *mapLayer);
     std::map<MapLayer *, std::unique_ptr<AGLMap>> m_glMaps;
 
 public:
-    using AGLModel::AGLModel;
+    using AGLViewModel::AGLViewModel;
     const QList<QSharedPointer<MapLayer> > &getMaps() const;
     void cleanup() override;
     void loadGLObjects() override;

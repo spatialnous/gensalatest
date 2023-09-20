@@ -15,8 +15,8 @@
 
 #include "coreapplication.h"
 
-#include "agl/view/aglmapview.h"
-#include "mapmodel.h"
+#include "agl/view/aglmapviewport.h"
+#include "aqmapviewmodel.h"
 #include "settingsimpl.h"
 
 #include <QQmlApplicationEngine>
@@ -47,22 +47,32 @@ int CoreApplication::exec() {
     setOrganizationDomain("acanth.is");
     setApplicationName("acanthis");
 
-    qmlRegisterType<AGLMapView>("acanthis", 1, 0, "AGLMapView");
-    qmlRegisterType<MapModel>("acanthis", 1, 0, "MapModel");
-    qmlRegisterSingletonType<DocumentManager>("acanthis", 1, 0, "DocumentManager",
-                                              [&](QQmlEngine *, QJSEngine *) -> QObject * {
-                                                  return new DocumentManager;
-                                                  // the QML engine takes ownership of the singleton
-                                              });
+    int versionMajor = 1;
+    int versionMinor = 0;
 
-    qmlRegisterUncreatableType<GraphDocument>(
-        "acanthis", 1, 0, "GraphDocument",
-        QLatin1String("Cannot create objects of type GraphDocument"));
+    qmlRegisterType<AGLMapViewport>("acanthis", versionMajor, versionMinor, "AGLMapViewport");
+//    qmlRegisterType<GraphViewModel>("acanthis", versionMajor, versionMinor, "GraphViewModel");
+    qmlRegisterType<AQMapViewModel>("acanthis", versionMajor, versionMinor, "AQMapViewModel");
+    qmlRegisterSingletonType<DocumentManager>(
+                "acanthis", versionMajor, versionMinor, "DocumentManager",
+                [&](QQmlEngine *, QJSEngine *) -> QObject * {
+        return new DocumentManager;
+        // the QML engine takes ownership of the singleton
+    });
 
-    qmlRegisterSingletonType(QUrl("qrc:///scenegraph/Theme.qml"), "acanthis", 1, 0, "Theme");
+    qmlRegisterUncreatableType<GraphModel>(
+        "acanthis", versionMajor, versionMinor, "GraphModel",
+        QLatin1String("Cannot create objects of type GraphModel"));
+
+    qmlRegisterSingletonType(QUrl("qrc:///scenegraph/Theme.qml"), "acanthis",
+                             versionMajor, versionMinor, "Theme");
 
     QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/scenegraph/main.qml")));
+
+    QJSValue jsMetaObject = engine.newQMetaObject(&GraphViewModel::staticMetaObject);
+    engine.globalObject().setProperty(GraphViewModel::staticMetaObject.className(), jsMetaObject);
+
+    engine.load(QUrl(QStringLiteral("qrc:/scenegraph/MainWindow.qml")));
     //    mMainWindow->setResizeMode(QQuickView::SizeRootObjectToView);
     //    engine->show();
 
@@ -70,6 +80,7 @@ int CoreApplication::exec() {
     //    mMainWindow->setResizeMode(QQuickView::SizeRootObjectToView);
     //    mMainWindow->setSource(QUrl("qrc:///scenegraph/main.qml"));
     //    mMainWindow->show();
+
 
     QGuiApplication::setWindowIcon(QIcon(":/images/acanthis.svg"));
 

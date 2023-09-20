@@ -21,13 +21,16 @@
 
 #include <QObject>
 
-class GraphDocument : public QObject {
+// This is a representation of the MetaGraph (the file itself) meant
+// to be displayed over multiple views (viewports, lists etc.)
+class GraphViewModel;
+class GraphModel : public QObject {
     Q_OBJECT
 
     std::string m_filename;
 
   public:
-    GraphDocument(std::string filename);
+    GraphModel(std::string filename);
 
     MetaGraph &getMetaGraph() const { return *m_metaGraph; }
     bool hasMetaGraph() const { return m_metaGraph.get() != nullptr; }
@@ -42,6 +45,7 @@ class GraphDocument : public QObject {
     std::size_t layerCount() { return m_mapLayers.size(); }
     std::string getFilenameStr() { return m_filename; }
     Q_INVOKABLE QString getFilename() { return QString::fromStdString(m_filename); }
+//    Q_INVOKABLE GraphViewModel* createViewModel();
 
   private:
     std::unique_ptr<MetaGraph> m_metaGraph = nullptr;

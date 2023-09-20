@@ -28,6 +28,7 @@ class TreeItem {
   protected:
     QString m_name;
     bool m_visible = true;
+    bool m_editable = false;
 
   public:
     TreeItem(QString name) : m_name(name) {}
@@ -42,9 +43,11 @@ class TreeItem {
     const int nChildren() const { return m_children.size(); }
     const QString getName() const { return m_name; }
     const bool isVisible() const { return m_visible; }
+    const bool isEditable() const { return m_visible; }
     const QSharedPointer<TreeItem> getChild(size_t idx) { return m_children.at(idx); }
 
     void setParentItem(QWeakPointer<TreeItem> parent) { m_parentItem = parent; }
     void setRow(int row) { m_row = row; }
     void setVisible(bool visible) { m_visible = visible; }
+    void setEditable(bool editable) { m_editable = editable; }
 };

@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include "graphdocument.h"
+#include "graphmodel.h"
 
 #include <QObject>
 
@@ -23,8 +23,8 @@ class DocumentManager : public QObject {
     Q_OBJECT
 
     // Note: All this jumping around with the last document is requried to stop the QML
-    // Engine from stealing ownership (and destoying) the GraphDocuments. A saner
-    // solution would for example be to return a new or openeed GraphDocument directly
+    // Engine from stealing ownership (and destoying) the GraphModels. A saner
+    // solution would for example be to return a new or openeed GraphModel directly
     // from the creating/opening functions, however doing that transfers the ownership
     // to QML which then destroys the objects. This is stated in the qt.io: "When data
     // is transferred from C++ to QML, the ownership of the data always remains with
@@ -33,16 +33,16 @@ class DocumentManager : public QObject {
     // For more discussion and the solution see:
     // https://embeddeduse.com/2020/01/19/address-sanitizers-qml-engine-deletes-c-objects-still-in-use/
 
-    Q_PROPERTY(GraphDocument *lastDocument READ lastDocument)
+    Q_PROPERTY(GraphModel *lastDocument READ lastDocument)
 
     struct NameDocumentComparator {
         NameDocumentComparator(std::string const &s) : _s(s) {}
-        bool operator()(std::pair<std::string, std::unique_ptr<GraphDocument>> const &p) {
+        bool operator()(std::pair<std::string, std::unique_ptr<GraphModel>> const &p) {
             return (p.first == _s);
         }
         std::string _s;
     };
-    std::vector<std::pair<std::string, std::unique_ptr<GraphDocument>>> m_openedDocuments;
+    std::vector<std::pair<std::string, std::unique_ptr<GraphModel>>> m_openedDocuments;
 
     size_t m_lastDocumentIndex = 0;
 
@@ -55,5 +55,5 @@ class DocumentManager : public QObject {
     Q_INVOKABLE unsigned int lastDocumentIndex() { return m_lastDocumentIndex; }
     Q_INVOKABLE unsigned int numOpenedDocuments() { return m_openedDocuments.size(); }
 
-    GraphDocument *lastDocument() { return m_openedDocuments[m_lastDocumentIndex].second.get(); }
+    GraphModel *lastDocument() { return m_openedDocuments[m_lastDocumentIndex].second.get(); }
 };

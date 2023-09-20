@@ -18,9 +18,9 @@
 #include "../base/agldynamicline.h"
 #include "../base/agldynamicrect.h"
 #include "../base/agllines.h"
-#include "../model/aglmodel.h"
+#include "../viewmodel/aglviewmodel.h"
 
-#include "graphdocument.h"
+#include "graphviewmodel.h"
 
 #include <QMatrix4x4>
 #include <QOpenGLFramebufferObjectFormat>
@@ -29,7 +29,7 @@
 #include <QtQuick/QQuickFramebufferObject>
 #include <QtQuick/QQuickWindow>
 
-class AGLMapView;
+class AGLMapViewport;
 class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
 
     QOpenGLFramebufferObject *createFramebufferObject(const QSize &size) override {
@@ -43,7 +43,8 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
     void synchronize(QQuickFramebufferObject *item) override;
 
   public:
-    AGLMapViewRenderer(const QQuickFramebufferObject *item, const GraphDocument *pDoc,
+    AGLMapViewRenderer(const QQuickFramebufferObject *item,
+                       const GraphViewModel *graphDocViewModel,
                        const QColor &foregrounColour, const QColor &backgroundColour,
                        int antialiasingSamples, bool highlightOnHover);
     ~AGLMapViewRenderer();
@@ -54,7 +55,7 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
   private:
     QSize m_viewportSize;
     QOpenGLShaderProgram *m_program = nullptr;
-    const AGLMapView *m_item;
+    const AGLMapViewport *m_item;
 
     void recalcView();
 
@@ -86,7 +87,7 @@ class AGLMapViewRenderer : public QQuickFramebufferObject::Renderer {
     AGLDynamicLine m_dragLine;
     AGLLines m_axes;
 
-    std::unique_ptr<AGLModel> m_model;
+    std::unique_ptr<AGLViewModel> m_model;
 
     bool m_highlightOnHover = true;
 

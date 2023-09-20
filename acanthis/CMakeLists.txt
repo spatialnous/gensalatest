@@ -16,14 +16,15 @@ set(acanthis_HDRS
     settingsimpl.h
     settings.h
     documentmanager.h
-    graphdocument.h
+    graphmodel.h
+    graphviewmodel.h
     interfaceversion.h
     treeitem.h
     maplayer.h
     shapemaplayer.h
     shapegraphlayer.h
     pixelmaplayer.h
-    mapmodel.h
+    aqmapviewmodel.h
     attributeitem.h
 )
 
@@ -32,11 +33,11 @@ set(acanthis_SRCS
     coreapplication.cpp
     settingsimpl.cpp
     documentmanager.cpp
-    graphdocument.cpp
+    graphmodel.cpp
     shapemaplayer.cpp
     shapegraphlayer.cpp
     pixelmaplayer.cpp
-    mapmodel.cpp
+    aqmapviewmodel.cpp
 )
 
 qt6_add_resources(acanthis_RSRC resource.qrc dialogs/settings/settingsdialog.qrc)
@@ -60,7 +61,7 @@ if (WIN32)
 endif(WIN32)
 if(UNIX AND NOT APPLE)
     # qml6-module-qt-labs-settings qml6-module-qtquick-dialogs qml6-module-qtquick-templates
-    # qml6-module-qtquick-window qml6-module-qtqml
+    # qml6-module-qtquick-window qml6-module-qtqml qt6-base-dev qt6-declarative-dev
     add_executable(${projectName} ${projectFiles})
     if (Qt6_POSITION_INDEPENDENT_CODE)
         SET(CMAKE_POSITION_INDEPENDENT_CODE ON)

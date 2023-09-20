@@ -30,7 +30,7 @@ ApplicationWindow {
 
     visible: true
 
-    property GraphDocument graphDocument: documentManager.createEmptyDocument()
+    property GraphModel graphModel: documentManager.createEmptyDocument()
 
     Settings {
         id: settings
@@ -49,18 +49,18 @@ ApplicationWindow {
         id: graphDisplayModel
 
         ListElement {
-            graphDocumentFile: "Untitled"
+            graphModelFile: "Untitled"
             current: true
         }
         ListElement {
-            graphDocumentFile: "/qwdqwdqwd/qwdqwdqwd/sdaslrgelrg/aergaerghetyhjtyj/tyjytjtyjuyuj/Untitled 2"
+            graphModelFile: "/qwdqwdqwd/qwdqwdqwd/sdaslrgelrg/aergaerghetyhjtyj/tyjytjtyjuyuj/Untitled 2"
             current: false
         }
     }
 
     FileDialog {
         id: openDialog
-        onAccepted: window.graphDocument = documentManager.openDocument(
+        onAccepted: window.graphModel = documentManager.openDocument(
                         openDialog.fileUrl)
     }
 
@@ -138,7 +138,7 @@ ApplicationWindow {
                     checkable: true
                     width: graphListNameView.width / graphDisplayModel.count
                     onClicked: {
-                        console.log("Activate file " + graphDocumentFile)
+                        console.log("Activate file " + graphModelFile)
                     }
 
                     background: Rectangle {
@@ -155,7 +155,7 @@ ApplicationWindow {
                         Text {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
-                            text: graphDocumentFile
+                            text: graphModelFile
                             elide: Text.ElideLeft
                             horizontalAlignment: Qt.AlignHCenter
                             verticalAlignment: Qt.AlignVCenter
@@ -172,7 +172,7 @@ ApplicationWindow {
                                 color: parent.hovered ? Theme.tabCloseButtonHoverColour : parent.parent.parent.background.color
                             }
                             onClicked: {
-                                console.log("Close file " + graphDocumentFile)
+                                console.log("Close file " + graphModelFile)
                             }
                         }
                     }
@@ -209,7 +209,7 @@ ApplicationWindow {
 
             GLMapView {
                 id: gl_map_view
-                graphDocument: window.graphDocument
+                graphModel: window.graphModel
                 foregroundColour: Qt.rgba(0, 0, 0, 255)
                 backgroundColour: Qt.rgba(255, 255, 255, 255)
                 antialiasingSamples: 0
@@ -249,7 +249,7 @@ ApplicationWindow {
             ////                    sourceComponent: Ui.TilesetSwatchPanel {
             ////                        id: tilesetSwatch
             ////                        tileCanvas: window.canvas
-            ////                        project: window.graphDocument
+            ////                        project: window.graphModel
             ////                        // Don't let e.g. the pencil icon go under us.
             ////                        z: canvasContainer.z - 1
             ////                    }
@@ -265,7 +265,7 @@ ApplicationWindow {
                 visible: active
                 sourceComponent: Ui.MapPanel {
                     //                        layeredImageCanvas: window.canvas
-                    graphDocument: window.graphDocument
+                    graphModel: window.graphModel
                     //z: canvasContainer.z - 1
                 }
 
@@ -289,7 +289,7 @@ ApplicationWindow {
 
             delegate: ItemDelegate {
                 width: parent.width
-                text: model.graphDocumentFile
+                text: model.graphModelFile
                 highlighted: ListView.isCurrentItem
                 onClicked: {
                     if (listView.currentIndex != index) {

@@ -17,10 +17,10 @@ target_sources(acanthis
         composite/aglshapegraph.h
         composite/aglpixelmap.h
         composite/aglgraph.h
-        model/aglmodel.h
-        model/aglmapsmodel.h
+        viewmodel/aglviewmodel.h
+        viewmodel/aglmapviewmodel.h
         view/aglmapviewrenderer.h
-        view/aglmapview.h
+        view/aglmapviewport.h
     PRIVATE
         base/agldynamicline.cpp
         base/agldynamicrect.cpp
@@ -36,9 +36,9 @@ target_sources(acanthis
         composite/aglshapegraph.cpp
         composite/aglpixelmap.cpp
         composite/aglgraph.cpp
-        model/aglmapsmodel.cpp
+        viewmodel/aglmapviewmodel.cpp
         view/aglmapviewrenderer.cpp
-        view/aglmapview.cpp
+        view/aglmapviewport.cpp
 )
 
 

@@ -17,12 +17,13 @@
 
 #include "../derived/aglobjects.h"
 
-#include "graphdocument.h"
+#include "graphviewmodel.h"
 
-class AGLModel : public AGLObjects {
+class AGLViewModel : public AGLObjects {
   protected:
-    const GraphDocument &m_graphDoc;
+    const GraphViewModel *m_graphViewModel = nullptr;
 
   public:
-    AGLModel(const GraphDocument &graphDoc) : m_graphDoc(graphDoc) {}
+    AGLViewModel(const GraphViewModel *graphViewModel) : m_graphViewModel(graphViewModel) {}
+    bool hasGraphViewModel() const { return m_graphViewModel != nullptr; }
 };

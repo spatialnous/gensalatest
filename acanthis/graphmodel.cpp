@@ -13,13 +13,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "graphdocument.h"
+#include "graphmodel.h"
 
+#include "graphviewmodel.h"
 #include "pixelmaplayer.h"
 #include "shapegraphlayer.h"
 #include "shapemaplayer.h"
 
-GraphDocument::GraphDocument(std::string filename) : m_filename(filename) {
+#include <QVariant>
+
+GraphModel::GraphModel(std::string filename) : m_filename(filename) {
     m_metaGraph = std::unique_ptr<MetaGraph>(new MetaGraph(filename));
     m_metaGraph->readFromFile(filename);
     for (ShapeMap &shapeMap : m_metaGraph->getDataMaps()) {
@@ -37,3 +40,9 @@ GraphDocument::GraphDocument(std::string filename) : m_filename(filename) {
         m_mapLayers.append(QSharedPointer<PixelMapLayer>(new PixelMapLayer(pointMap)));
     }
 }
+
+//GraphViewModel* GraphModel::createViewModel() {
+//    auto gvm = new GraphViewModel();
+//    gvm->setProperty("graphModel", QVariant::fromValue(this));
+//    return gvm;
+//};

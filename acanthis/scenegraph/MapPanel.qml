@@ -27,7 +27,8 @@ Panel {
     background: Rectangle {
         color: Theme.panelColour
     }
-    property GraphDocument graphDocument
+    property GraphModel graphModel
+    property ListModel graphViewModels
 
     header: RowLayout {
         objectName: parent.objectName + "Header"
@@ -96,10 +97,28 @@ Panel {
         Layout.fillHeight: true
         Layout.fillWidth: true
 
-        MapTreeView {
-            anchors.fill: parent
-            anchors.margins: 10
-            visible: true
+        ListView {
+            model: graphViewModels
+
+            delegate: Item {
+//                property GraphViewModel graphViewModel: graphViewModels.get(index)
+//                property GraphViewModel graphViewModel: {
+//                    for (let a in model)
+//                        console.log(a + " " + model[a]);
+//                    console.log(model);
+//                    return model
+//                }
+                property var graphViewModel: model
+                MapTreeView {
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    visible: true
+                    graphViewModel: parent.graphViewModel
+                }
+            }
+            Component.onCompleted: {
+                console.log("aaaa " + graphViewModels)
+            }
         }
     }
 
@@ -114,7 +133,7 @@ Panel {
             ToolTip.text: qsTr("Add a new layer")
 
             onClicked: {
-                root.graphDocument.addNewLayer()
+                root.graphModel.addNewLayer()
                 layerListView.positionViewAtIndex(layerListView.currentIndex,
                                                   ListView.Contain)
             }
@@ -124,35 +143,35 @@ Panel {
             objectName: "moveLayerDownButton"
             text: "\uf107"
             font.family: "FontAwesome"
-            enabled: graphDocument
-                     && graphDocument.currentLayerIndex < graphDocument.layerCount - 1
+            enabled: graphModel
+                     && graphModel.currentLayerIndex < graphModel.layerCount - 1
 
             ToolTip.text: qsTr("Move the current layer down")
 
-            onClicked: graphDocument.moveCurrentLayerDown()
+            onClicked: graphModel.moveCurrentLayerDown()
         }
 
         RowActionButton {
             objectName: "moveLayerUpButton"
             text: "\uf106"
             font.family: "FontAwesome"
-            enabled: graphDocument && graphDocument.currentLayerIndex > 0
+            enabled: graphModel && graphModel.currentLayerIndex > 0
 
             ToolTip.text: qsTr("Move the current layer up")
 
-            onClicked: graphDocument.moveCurrentLayerUp()
+            onClicked: graphModel.moveCurrentLayerUp()
         }
 
         RowActionButton {
             objectName: "duplicateLayerButton"
             text: "\uf24d"
             font.family: "FontAwesome"
-            enabled: graphDocument && graphDocument.currentLayerIndex >= 0
-                     && graphDocument.currentLayerIndex < graphDocument.layerCount
+            enabled: graphModel && graphModel.currentLayerIndex >= 0
+                     && graphModel.currentLayerIndex < graphModel.layerCount
 
             ToolTip.text: qsTr("Duplicate the current layer")
 
-            onClicked: graphDocument.duplicateCurrentLayer()
+            onClicked: graphModel.duplicateCurrentLayer()
         }
 
         Item {
@@ -168,7 +187,7 @@ Panel {
 
             ToolTip.text: qsTr("Delete the current layer")
 
-            onClicked: graphDocument.deleteCurrentLayer()
+            onClicked: graphModel.deleteCurrentLayer()
         }
     }
 }

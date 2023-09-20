@@ -21,6 +21,7 @@ Page {
     padding: 5
     property int viewID: -1
     property bool active: false
+    property var graphViewModel
     background: Rectangle {
         //color: settings.glViewBackgroundColour
         border {
@@ -28,12 +29,15 @@ Page {
             width: 5
         }
     }
+    function update() {
+        contentItem.children[0].update();
+    }
 
-    AGLMapView {
+    AGLMapViewport {
         anchors.fill: parent
         visible: true
 
-        graphDocument: graphDocumentFile
+        graphViewModel: parent.parent.graphViewModel
         foregroundColour: settings.glViewForegroundColour
         backgroundColour: settings.glViewBackgroundColour
         antialiasingSamples: settings.glViewAntialiasingSamples

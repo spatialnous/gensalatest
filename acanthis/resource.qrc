@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>images/acanthis.png</file>
         <file>images/acanthis.svg</file>
-        <file>scenegraph/main.qml</file>
+        <file>scenegraph/MainWindow.qml</file>
         <file>scenegraph/MapPanel.qml</file>
         <file>scenegraph/Panel.qml</file>
         <file>scenegraph/RowActionButton.qml</file>
@@ -11,6 +11,9 @@
         <file>scenegraph/Theme.qml</file>
         <file>scenegraph/mainMobile.qml</file>
         <file>scenegraph/AGLSplitView.qml</file>
-        <file>scenegraph/AGLMapViewWrapper.qml</file>
+        <file>scenegraph/AGLMapViewportWrapper.qml</file>
+        <file>scenegraph/TopBar.qml</file>
+        <file>scenegraph/MainToolBar.qml</file>
+        <file>scenegraph/GraphDisplay.qml</file>
     </qresource>
 </RCC>

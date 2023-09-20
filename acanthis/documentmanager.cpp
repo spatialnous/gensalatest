@@ -29,7 +29,7 @@ void DocumentManager::createEmptyDocument() {
         ++counter;
     }
     m_openedDocuments.push_back(
-        std::make_pair(newDocName, std::unique_ptr<GraphDocument>(new GraphDocument(newDocName))));
+        std::make_pair(newDocName, std::unique_ptr<GraphModel>(new GraphModel(newDocName))));
     m_lastDocumentIndex = m_openedDocuments.size() - 1;
 }
 
@@ -54,6 +54,6 @@ void DocumentManager::openDocument(QString urlString) {
     }
 
     m_openedDocuments.push_back(
-        std::make_pair(fileName, std::unique_ptr<GraphDocument>(new GraphDocument(fileName))));
+        std::make_pair(fileName, std::unique_ptr<GraphModel>(new GraphModel(fileName))));
     m_lastDocumentIndex = m_openedDocuments.size() - 1;
 }

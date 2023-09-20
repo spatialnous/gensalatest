@@ -13,16 +13,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "mapmodel.h"
+#include "aqmapviewmodel.h"
 
 #include "attributeitem.h"
 
 #include <QString>
 
-MapModel::MapModel(QObject *parent)
+AQMapViewModel::AQMapViewModel(QObject *parent)
     : QAbstractItemModel(parent), m_rootItem(new TreeItem("Root")) {}
 
-QModelIndex MapModel::index(int row, int column, const QModelIndex &parent) const {
+QModelIndex AQMapViewModel::index(int row, int column, const QModelIndex &parent) const {
     if (!hasIndex(row, column, parent))
         return QModelIndex();
     TreeItem *parentItem = getItem(parent);
@@ -34,7 +34,7 @@ QModelIndex MapModel::index(int row, int column, const QModelIndex &parent) cons
     }
 }
 
-QModelIndex MapModel::parent(const QModelIndex &index) const {
+QModelIndex AQMapViewModel::parent(const QModelIndex &index) const {
     if (!index.isValid()) {
         return QModelIndex();
     }
@@ -46,61 +46,76 @@ QModelIndex MapModel::parent(const QModelIndex &index) const {
     return createIndex(parentPtr.get()->getRow(), 0, parentPtr.get());
 }
 
-int MapModel::rowCount(const QModelIndex &parent) const {
+int AQMapViewModel::rowCount(const QModelIndex &parent) const {
     TreeItem *parentItem = getItem(parent);
     return parentItem->nChildren();
 }
 
-int MapModel::columnCount(const QModelIndex &parent) const {
+int AQMapViewModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
-    return 2;
+    return 4;
 }
 
-QVariant MapModel::data(const QModelIndex &index, int role) const {
+AQMapViewModel::LayerModelRole AQMapViewModel::getRole(int columnIndex) const {
+    switch(columnIndex) {
+    case 0:
+    default:
+        return VisibleRole;
+        break;
+    case 1:
+        return EditableRole;
+    case 2:
+        return NameRole;
+    }
+}
+
+QVariant AQMapViewModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid()) {
         return QVariant();
     }
     TreeItem *item = getItem(index);
-    role = VisibilityRole;
+    role = getRole(index.column());
 
-    if (index.column() == 0) {
-        role = VisibilityRole;
-    } else if (index.column() == 1) {
-        role = NameRole;
-    }
     switch (role) {
+    case VisibleRole:
+        return item->isVisible();
+    case EditableRole:
+        return item->isEditable();
     case NameRole:
         return item->getName();
-    case VisibilityRole:
-        return item->isVisible();
     default:
         break;
     }
     return QVariant();
 }
 
-QHash<int, QByteArray> MapModel::roleNames() const {
+QHash<int, QByteArray> AQMapViewModel::roleNames() const {
     QHash<int, QByteArray> names = QAbstractItemModel::roleNames();
-    names.insert(QHash<int, QByteArray>{{VisibilityRole, "visibility"}, {NameRole, "name"}});
+    names.insert(QHash<int, QByteArray>{
+                     {VisibleRole, "visibility"},
+                     {EditableRole, "editability"},
+                     {NameRole, "name"}
+                 });
     return names;
 }
 
-QSharedPointer<TreeItem> MapModel::addChildItem(QSharedPointer<TreeItem> parent,
+QSharedPointer<TreeItem> AQMapViewModel::addChildItem(QSharedPointer<TreeItem> parent,
                                                 QSharedPointer<TreeItem> newChild, int row) {
     auto mapItem = parent->addChildItem(newChild, row);
     mapItem->setParentItem(parent);
     return mapItem;
 }
 
-QSharedPointer<TreeItem> MapModel::addChildItem(QSharedPointer<TreeItem> parent, QString newChild,
+QSharedPointer<TreeItem> AQMapViewModel::addChildItem(QSharedPointer<TreeItem> parent, QString newChild,
                                                 int row) {
     return addChildItem(parent, QSharedPointer<TreeItem>(new TreeItem(newChild)), row);
 }
 
-void MapModel::resetItems() {
+void AQMapViewModel::resetItems() {
+    if (!m_graphViewModel) return;
     beginResetModel();
     int row = 0;
-    for (QSharedPointer<MapLayer> &mapLayer : m_graphDocument->getMapLayers()) {
+    for (QSharedPointer<MapLayer> &mapLayer : m_graphViewModel->getMapLayers()) {
 
         auto mapItem = addChildItem(m_rootItem, mapLayer, row);
         mapItem->setVisible(true);
@@ -123,12 +138,17 @@ void MapModel::resetItems() {
     endResetModel();
 }
 
-void MapModel::setItemVisibility(const QModelIndex &idx, bool visibility) {
+void AQMapViewModel::setItemVisible(const QModelIndex &idx, bool visibility) {
     getItem(idx)->setVisible(visibility);
-    emit dataChanged(idx, idx, QVector<int>() << VisibilityRole);
+    emit dataChanged(idx, idx, QVector<int>() << VisibleRole);
 }
 
-TreeItem *MapModel::getItem(const QModelIndex &idx) const {
+void AQMapViewModel::setItemEditable(const QModelIndex &idx, bool visibility) {
+    getItem(idx)->setEditable(visibility);
+    emit dataChanged(idx, idx, QVector<int>() << EditableRole);
+}
+
+TreeItem *AQMapViewModel::getItem(const QModelIndex &idx) const {
     if (idx.isValid()) {
         TreeItem *item = static_cast<TreeItem *>(idx.internalPointer());
         if (item) {

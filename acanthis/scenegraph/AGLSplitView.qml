@@ -82,6 +82,33 @@ SplitView {
         }
     }
 
+    function createMapView(width, height, viewID, graphViewModel) {
+        let aglMapViewComponent = Qt.createComponent(
+                "AGLMapViewportWrapper.qml")
+
+        let newMapView = aglMapViewComponent.createObject(
+            null, {
+                "viewID": viewID,
+
+                // preferred widths/height are used as those also change from the handle
+                "SplitView.preferredWidth": width,
+                "SplitView.preferredHeight": height,
+
+                // an initial width/height is required for the first element to have it
+                "width": width,
+                "height": height,
+
+                "SplitView.minimumWidth": minimumItemWidth,
+                "SplitView.minimumHeight": minimumItemHeight,
+                "graphViewModel": graphViewModel,
+            }
+        );
+        if (aglMapViewComponent.status === Component.Error)
+            console.debug("Error: " + aglMapViewComponent.errorString() );
+
+        return newMapView;
+    }
+
     function getNewWidths() {
         if ( minimumItemWidth * (this.count + 1) > parent.width ) {
             console.err("Insufficient space to create new Map View");
@@ -100,33 +127,15 @@ SplitView {
         return prevItemsNewWidth;
     }
 
-    function addAGLMapViewHorizontal(viewID, index) {
-        let aglMapViewComponent = Qt.createComponent(
-                "AGLMapViewWrapper.qml")
-
+    function addAGLMapViewHorizontal(viewID, graphViewModel, index) {
         let newWidths = getNewWidths()
         for (let j = 0; j < this.count; ++j) {
             this.itemAt(j).SplitView.preferredWidth = newWidths[j];
         }
         let newItemWidth = newWidths[newWidths.length - 1];
 
-        let newMapView = aglMapViewComponent.createObject(
-            null, {
-                "viewID": viewID,
-                // preferred widths are used as those also change from the handle
-                "SplitView.preferredWidth": newItemWidth,
-                "SplitView.preferredHeight": parent.height,
-
-                // an initial width is required for the first element to have a width
-                "width": newItemWidth,
-                "height": parent.height,
-
-                "SplitView.minimumWidth": minimumItemWidth,
-                "SplitView.minimumHeight": minimumItemHeight,
-                "AGLMapView.graphDocument": graphDocumentFile,
-            }
-        );
-        this.insertItem(index, newMapView)
+        let newMapView = createMapView(newItemWidth, parent.height, viewID, graphViewModel);
+        this.insertItem(index, newMapView);
         return newMapView;
     }
 
@@ -148,34 +157,15 @@ SplitView {
         return prevItemsNewHeight;
     }
 
-    function addAGLMapViewVertical(viewID, index) {
-        let aglMapViewComponent = Qt.createComponent(
-                "AGLMapViewWrapper.qml")
-
+    function addAGLMapViewVertical(viewID, graphViewModel, index) {
         let newHeights = getNewHeights()
         for (let j = 0; j < this.count; ++j) {
             this.itemAt(j).SplitView.preferredHeight = newHeights[j];
         }
         let newItemHeight = newHeights[newHeights.length - 1];
 
-        let newMapView = aglMapViewComponent.createObject(
-            null, {
-                "viewID": viewID,
-                // preferred heights are used as those also change from the handle
-                "SplitView.preferredWidth": parent.width,
-                 "SplitView.preferredHeight": newItemHeight,
-
-                // an initial height is required for the first element to have a height
-                "width": parent.width,
-                "height": newItemHeight,
-
-                "SplitView.minimumWidth": minimumItemWidth,
-                "SplitView.minimumHeight": minimumItemHeight,
-                "AGLMapView.graphDocument": graphDocumentFile
-
-            }
-        );
-        this.insertItem(index, newMapView)
+        let newMapView = createMapView(parent.width, newItemHeight, viewID, graphViewModel);
+        this.insertItem(index, newMapView);
         return newMapView;
     }
 }

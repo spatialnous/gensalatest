@@ -15,21 +15,23 @@
 
 #pragma once
 
-#include <graphdocument.h>
+#include "graphviewmodel.h"
 
 #include <QAbstractListModel>
 #include <qqml.h>
 
-class MapModel : public QAbstractItemModel {
+class AQMapViewModel : public QAbstractItemModel {
     Q_OBJECT
     QML_ELEMENT
-    Q_PROPERTY(GraphDocument *graphDocument MEMBER m_graphDocument NOTIFY graphDocumentChanged)
+    Q_PROPERTY(GraphViewModel *graphViewModel
+               MEMBER m_graphViewModel
+               NOTIFY graphViewModelChanged)
 
-    GraphDocument *m_graphDocument;
+    GraphViewModel *m_graphViewModel;
     QSharedPointer<TreeItem> m_rootItem;
     TreeItem *getItem(const QModelIndex &idx) const;
 
-    enum LayerModelRoles { NameRole = Qt::UserRole, VisibilityRole };
+    enum LayerModelRole { NameRole = Qt::UserRole, VisibleRole, EditableRole };
 
     QSharedPointer<TreeItem> addChildItem(QSharedPointer<TreeItem> parent,
                                           QSharedPointer<TreeItem> newChild, int row);
@@ -37,21 +39,23 @@ class MapModel : public QAbstractItemModel {
                                           int row);
 
   public:
-    explicit MapModel(QObject *parent = nullptr);
+    explicit AQMapViewModel(QObject *parent = nullptr);
 
-    void updateAfterGraphDocumentChange();
+    void updateAfterGraphViewModelChange();
 
     QModelIndex index(int row, int column,
                       const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    AQMapViewModel::LayerModelRole getRole(int columnIndex) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void resetItems();
-    Q_INVOKABLE void setItemVisibility(const QModelIndex &idx, bool visibility);
+    Q_INVOKABLE void setItemVisible(const QModelIndex &idx, bool visibility);
+    Q_INVOKABLE void setItemEditable(const QModelIndex &idx, bool visibility);
 
   signals:
-    void graphDocumentChanged();
+    void graphViewModelChanged();
 };

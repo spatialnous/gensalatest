@@ -13,13 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "aglmapview.h"
+#include "aglmapviewport.h"
 
 #include <QOpenGLContext>
 #include <QOpenGLShaderProgram>
 #include <QtCore/QRunnable>
 
-AGLMapView::AGLMapView() : m_eyePosX(0), m_eyePosY(0) {
+AGLMapViewport::AGLMapViewport() : m_eyePosX(0), m_eyePosY(0) {
     setAcceptHoverEvents(true);
     setAcceptedMouseButtons(Qt::AllButtons);
     setFlag(ItemAcceptsInputMethod, true);
@@ -29,16 +29,16 @@ AGLMapView::AGLMapView() : m_eyePosX(0), m_eyePosY(0) {
     m_dirtyRenderer = true;
 }
 
-void AGLMapView::handleWindowSync() {
+void AGLMapViewport::handleWindowSync() {
     if (m_dirtyRenderer) {
         m_dirtyRenderer = false;
         update();
     }
 }
 
-void AGLMapView::forceUpdate() { update(); setDirtyRenderer(); }
+void AGLMapViewport::forceUpdate() { update(); setDirtyRenderer(); }
 
-void AGLMapView::mouseReleaseEvent(QMouseEvent *event) {
+void AGLMapViewport::mouseReleaseEvent(QMouseEvent *event) {
     if (m_wasPanning) {
         m_wasPanning = false;
         return;
@@ -289,13 +289,13 @@ void AGLMapView::mouseReleaseEvent(QMouseEvent *event) {
     update();
 }
 
-void AGLMapView::mousePressEvent(QMouseEvent *event) {
+void AGLMapViewport::mousePressEvent(QMouseEvent *event) {
     emit mousePressed();
     std::cout << "click" << std::endl;
     m_mouseLastPos = event->pos();
 }
 
-void AGLMapView::mouseMoveEvent(QMouseEvent *event) {
+void AGLMapViewport::mouseMoveEvent(QMouseEvent *event) {
     int dx = event->position().x() - m_mouseLastPos.x();
     int dy = event->position().y() - m_mouseLastPos.y();
 
@@ -362,7 +362,7 @@ void AGLMapView::mouseMoveEvent(QMouseEvent *event) {
     //    m_pDoc.UpdateMainframestatus();
 }
 
-void AGLMapView::wheelEvent(QWheelEvent *event) {
+void AGLMapViewport::wheelEvent(QWheelEvent *event) {
     QPoint numDegrees = event->angleDelta() / 8;
 
     int x = event->position().x();
@@ -375,7 +375,7 @@ void AGLMapView::wheelEvent(QWheelEvent *event) {
     event->accept();
 }
 
-bool AGLMapView::eventFilter(QObject *object, QEvent *e) {
+bool AGLMapViewport::eventFilter(QObject *object, QEvent *e) {
     if (e->type() == QEvent::ToolTip) {
 
         //    if (!m_pDoc.m_communicator) {
@@ -414,7 +414,7 @@ bool AGLMapView::eventFilter(QObject *object, QEvent *e) {
     return QObject::eventFilter(object, e);
 }
 
-void AGLMapView::zoomBy(float dzf, int mouseX, int mouseY) {
+void AGLMapViewport::zoomBy(float dzf, int mouseX, int mouseY) {
     GLfloat screenRatio = GLfloat(width()) / height();
     float pzf = m_zoomFactor;
     m_zoomFactor = m_zoomFactor * dzf;
@@ -428,31 +428,31 @@ void AGLMapView::zoomBy(float dzf, int mouseX, int mouseY) {
     update();
 }
 
-void AGLMapView::panBy(int dx, int dy) {
+void AGLMapViewport::panBy(int dx, int dy) {
     m_eyePosX += m_zoomFactor * GLfloat(dx) / height();
     m_eyePosY -= m_zoomFactor * GLfloat(dy) / height();
 
     update();
 }
 
-Point2f AGLMapView::getWorldPoint(const QPoint &screenPoint) {
+Point2f AGLMapViewport::getWorldPoint(const QPoint &screenPoint) {
     return Point2f(+m_zoomFactor * float(screenPoint.x() - width() * 0.5) / height() - m_eyePosX,
                    -m_zoomFactor * float(screenPoint.y() - height() * 0.5) / height() - m_eyePosY);
 }
 
-QPoint AGLMapView::getScreenPoint(const Point2f &worldPoint) {
+QPoint AGLMapViewport::getScreenPoint(const Point2f &worldPoint) {
     return QPoint((worldPoint.x + m_eyePosX) * height() / m_zoomFactor + width() * 0.5,
                   -(worldPoint.y + m_eyePosY) * height() / m_zoomFactor + height() * 0.5);
 }
 
-void AGLMapView::resetView() {
+void AGLMapViewport::resetView() {
     //    m_visiblePointMap.showLinks(false);
     //    m_visibleShapeGraph.showLinks(false);
     //    m_pDoc.getMetaGraph().clearSel();
     update();
 }
 
-void AGLMapView::setModeJoin() {
+void AGLMapViewport::setModeJoin() {
     //    if (m_pDoc.getMetaGraph().getViewClass() & (MetaGraph::VIEWVGA |
     //    MetaGraph::VIEWAXIAL)) {
     //        resetView();
@@ -464,7 +464,7 @@ void AGLMapView::setModeJoin() {
     //    }
 }
 
-void AGLMapView::setModeUnjoin() {
+void AGLMapViewport::setModeUnjoin() {
     //    if (m_pDoc.getMetaGraph().getState() & (MetaGraph::VIEWVGA |
     //    MetaGraph::VIEWAXIAL)) {
     //        resetView();
@@ -476,79 +476,79 @@ void AGLMapView::setModeUnjoin() {
     //    }
 }
 
-void AGLMapView::setModeFill() {
+void AGLMapViewport::setModeFill() {
     resetView();
     m_interactionMode = InteractionMode::FILL_FULL;
 }
 
-void AGLMapView::setModeSemiFill() {
+void AGLMapViewport::setModeSemiFill() {
     resetView();
     m_interactionMode = InteractionMode::FILL_SEMI;
 }
 
-void AGLMapView::setModeAugmentFill() {
+void AGLMapViewport::setModeAugmentFill() {
     resetView();
     m_interactionMode = InteractionMode::FILL_AUGMENT;
 }
 
-void AGLMapView::setModeSingleFill() {
+void AGLMapViewport::setModeSingleFill() {
     resetView();
     m_interactionMode = InteractionMode::FILL_SINGLE;
 }
 
-void AGLMapView::setModeIsovist() {
+void AGLMapViewport::setModeIsovist() {
     resetView();
     m_interactionMode = InteractionMode::SEED_ISOVIST;
 }
 
-void AGLMapView::setModeTargetedIsovist() {
+void AGLMapViewport::setModeTargetedIsovist() {
     resetView();
     m_interactionMode = InteractionMode::SEED_TARGETED_ISOVIST;
 }
 
-void AGLMapView::setModeSeedAxial() {
+void AGLMapViewport::setModeSeedAxial() {
     resetView();
     m_interactionMode = InteractionMode::SEED_AXIAL;
 }
 
-void AGLMapView::setModeStepDepth() {
+void AGLMapViewport::setModeStepDepth() {
     resetView();
     m_interactionMode = InteractionMode::POINT_STEP_DEPTH;
 }
 
-void AGLMapView::setModeDrawLine() {
+void AGLMapViewport::setModeDrawLine() {
     resetView();
     m_interactionMode = InteractionMode::DRAW_LINE;
 }
 
-void AGLMapView::setModeDrawPolygon() {
+void AGLMapViewport::setModeDrawPolygon() {
     resetView();
     m_interactionMode = InteractionMode::DRAW_POLYGON;
 }
 
-void AGLMapView::setModeSelect() {
+void AGLMapViewport::setModeSelect() {
     resetView();
     m_interactionMode = InteractionMode::SELECT;
 }
 
-void AGLMapView::postLoadFile() {
+void AGLMapViewport::postLoadFile() {
     matchViewToCurrentMetaGraph();
     //    setWindowTitle(m_pDoc.m_base_title);
 }
 
-void AGLMapView::zoomToSelection() {
+void AGLMapViewport::zoomToSelection() {
     //    if (m_pDoc.m_meta_graph && m_pDoc.getMetaGraph().isSelected()) {
     //        OnViewZoomToRegion(m_pDoc.getMetaGraph().getSelBounds());
     //    }
 }
 
-void AGLMapView::matchViewToCurrentMetaGraph() {
-    const QtRegion &region = m_graphDocument->getMetaGraph().getBoundingBox();
+void AGLMapViewport::matchViewToCurrentMetaGraph() {
+    const QtRegion &region = m_graphViewModel->getBoundingBox();
     zoomToRegion(region);
     update();
 }
 
-void AGLMapView::zoomToRegion(const QtRegion region) {
+void AGLMapViewport::zoomToRegion(const QtRegion region) {
     if ((region.top_right.x == 0 && region.bottom_left.x == 0) ||
         (region.top_right.y == 0 && region.bottom_left.y == 0))
         // region is unset, don't try to change the view to it

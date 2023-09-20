@@ -17,53 +17,62 @@
 
 #include "aglmapviewrenderer.h"
 
+#include "graphviewmodel.h"
+
 #include <QOpenGLFunctions>
 #include <QSettings>
 #include <QtQuick/QQuickFramebufferObject>
 #include <QtQuick/QQuickWindow>
 
-class AGLMapView : public QQuickFramebufferObject {
+class AGLMapViewport : public QQuickFramebufferObject {
     Q_OBJECT
     QML_ELEMENT
-    Q_PROPERTY(GraphDocument *graphDocument //
-                   MEMBER m_graphDocument WRITE setGraphDocument NOTIFY graphDocumentChanged)
+    Q_PROPERTY(GraphViewModel *graphViewModel //
+               MEMBER m_graphViewModel
+               WRITE setGraphViewModel
+               NOTIFY graphViewModelChanged)
     Q_PROPERTY(QColor foregroundColour //
-                   MEMBER m_foregroundColour NOTIFY foregroundColourChanged)
+               MEMBER m_foregroundColour
+               NOTIFY foregroundColourChanged)
     Q_PROPERTY(QColor backgroundColour //
-                   MEMBER m_backgroundColour NOTIFY backgroundColourChanged)
+               MEMBER m_backgroundColour
+               NOTIFY backgroundColourChanged)
     Q_PROPERTY(int antialiasingSamples //
-                   MEMBER m_antialiasingSamples NOTIFY antialiasingSamplesChanged)
+               MEMBER m_antialiasingSamples
+               NOTIFY antialiasingSamplesChanged)
     Q_PROPERTY(bool highlightOnHover //
-                   MEMBER m_highlightOnHover NOTIFY highlightOnHoverChanged)
+               MEMBER m_highlightOnHover
+               NOTIFY highlightOnHoverChanged)
 
-    GraphDocument *m_graphDocument;
+    GraphViewModel *m_graphViewModel = nullptr;
     QQuickFramebufferObject::Renderer *createRenderer() const override {
-        connect(window(), &QQuickWindow::afterRendering, this, &AGLMapView::handleWindowSync,
+        connect(window(), &QQuickWindow::afterRendering, this, &AGLMapViewport::handleWindowSync,
                 Qt::QueuedConnection);
-        connect(this, &QQuickItem::widthChanged, this, &AGLMapView::forceUpdate,
+        connect(this, &QQuickItem::widthChanged, this, &AGLMapViewport::forceUpdate,
                 Qt::DirectConnection);
-        connect(this, &QQuickItem::heightChanged, this, &AGLMapView::forceUpdate,
+        connect(this, &QQuickItem::heightChanged, this, &AGLMapViewport::forceUpdate,
                 Qt::DirectConnection);
-        connect(this, &QQuickItem::heightChanged, this, &AGLMapView::forceUpdate,
+        connect(this, &QQuickItem::heightChanged, this, &AGLMapViewport::forceUpdate,
                 Qt::DirectConnection);
 
-        return new AGLMapViewRenderer(this, m_graphDocument, m_foregroundColour, m_backgroundColour,
+        return new AGLMapViewRenderer(this, m_graphViewModel,
+                                      m_foregroundColour, m_backgroundColour,
                                       m_antialiasingSamples, m_highlightOnHover);
     }
 
   public:
-    AGLMapView();
-    void setGraphDocument(GraphDocument *graphDocument) {
-        if (graphDocument == nullptr)
+    AGLMapViewport();
+    void setGraphViewModel(GraphViewModel *graphViewModel) {
+        if (graphViewModel == nullptr)
             return;
-        m_graphDocument = graphDocument;
+        m_graphViewModel = graphViewModel;
         matchViewToCurrentMetaGraph();
 
-        emit graphDocumentChanged();
+        emit graphViewModelChanged();
         setDirtyRenderer();
         //        update();
     }
-    GraphDocument &getGraphDocument() const { return *m_graphDocument; }
+    GraphViewModel &getGraphViewModel() const { return *m_graphViewModel; }
 
     void panBy(int dx, int dy);
     void zoomBy(float dzf, int mouseX, int mouseY);
@@ -117,7 +126,7 @@ class AGLMapView : public QQuickFramebufferObject {
     void backgroundColourChanged(const QColor &colour);
     void antialiasingSamplesChanged();
     void highlightOnHoverChanged();
-    void graphDocumentChanged();
+    void graphViewModelChanged();
     void mousePressed();
 
   protected:

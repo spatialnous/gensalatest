@@ -14,13 +14,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "aglmapviewrenderer.h"
-#include "aglmapview.h"
-#include "agl/model/aglmapsmodel.h"
+#include "aglmapviewport.h"
+#include "agl/viewmodel/aglmapviewmodel.h"
 
 #include <QQuickOpenGLUtils>
 
 void AGLMapViewRenderer::synchronize(QQuickFramebufferObject *item) {
-    AGLMapView *glView = static_cast<AGLMapView *>(item);
+    AGLMapViewport *glView = static_cast<AGLMapViewport *>(item);
     m_eyePosX = glView->getEyePosX();
     m_eyePosY = glView->getEyePosY();
     m_zoomFactor = glView->getZoomFactor();
@@ -33,13 +33,16 @@ void AGLMapViewRenderer::synchronize(QQuickFramebufferObject *item) {
 
 
 AGLMapViewRenderer::AGLMapViewRenderer(const QQuickFramebufferObject *item,
-                                       const GraphDocument *pDoc, const QColor &foregrounColour,
-                                       const QColor &backgroundColour, int antialiasingSamples,
-                                       bool highlightOnHover)
-    : m_item(static_cast<const AGLMapView *>(item)), m_model(new AGLMapsModel(*pDoc)),
+                                       const GraphViewModel *graphViewModel,
+                                       const QColor &foregrounColour, const QColor &backgroundColour,
+                                       int antialiasingSamples, bool highlightOnHover)
+    : m_item(static_cast<const AGLMapViewport *>(item)), m_model(new AGLMapViewModel(graphViewModel)),
       m_foregroundColour(foregrounColour),
       m_backgroundColour(backgroundColour), m_antialiasingSamples(antialiasingSamples),
       m_highlightOnHover(highlightOnHover) {
+
+    if (!m_model->hasGraphViewModel()) return;
+
     m_core = QCoreApplication::arguments().contains(QStringLiteral("--coreprofile"));
     if (m_antialiasingSamples) {
         QSurfaceFormat format;
@@ -79,7 +82,10 @@ AGLMapViewRenderer::~AGLMapViewRenderer() {
 }
 
 void AGLMapViewRenderer::render() {
-    if (!m_item->getGraphDocument().hasMetaGraph())
+    if (!m_item->getGraphViewModel().hasMetaGraph())
+        return;
+
+    if (!m_model->hasGraphViewModel())
         return;
 
     if (m_backgroundColourChanged) {

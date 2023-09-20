@@ -20,13 +20,14 @@ import QtQuick.Window
 import acanthis 1.0
 
 TreeView {
-    id: control
+    id: mapLayersTree
+    property var graphViewModel
 
     ScrollBar.vertical: ScrollBar {}
 
-    model: MapModel {
+    model: AQMapViewModel {
         id: memodl
-        graphDocument: mappnl.graphDocument
+        graphViewModel: mapLayersTree.graphViewModel
         Component.onCompleted: {
             memodl.resetItems()
         }
@@ -35,8 +36,22 @@ TreeView {
     delegate: Item {
         id: root
 
-        implicitWidth: model.column === 0 ? padding + visibilityCheckBox.implicitWidth : label.implicitWidth + padding
-        implicitHeight: visibilityCheckBox.implicitHeight * 1.5
+        function getImplicitWidth() {
+            switch (model.column) {
+            case 0: // visible
+                // first column, also contains the tree arrows
+                return padding + visibilityCheckbox.implicitWidth;
+            case 1: // editable
+            default:
+                return padding + visibilityCheckbox.implicitWidth;
+            case nbuttons.length:
+                // label
+                return label.implicitWidth + padding;
+            }
+        }
+
+        implicitWidth: getImplicitWidth()
+        implicitHeight: visibilityCheckbox.implicitHeight * 1.5
 
         readonly property real indent: 10
         readonly property real padding: 5
@@ -47,43 +62,55 @@ TreeView {
         required property int hasChildren
         required property int depth
 
+        readonly property int nbuttons: 2
+
         Text {
-            id: visibilityCheckBox
+            id: visibilityCheckbox
             visible: model.column === 0
             text: model.visibility ? "\uf06e" : "\uf070"
             color: Theme.toolbarButtonTextColour
             TapHandler {
                 onTapped: {
-                    memodl.setItemVisibility(memodl.index(model.row,
-                                                          model.column),
-                                             !model.visibility)
+                    memodl.setItemVisible(memodl.index(model.row, model.column),
+                                          !model.visibility)
                     graphViews.redraw();
                 }
             }
         }
-        Rectangle {
-            id: label
-            x: visibilityCheckBox.width + padding + (root.depth * root.indent)
-            Layout.alignment: Qt.AlignLeft
-            Text {
-                visible: root.isTreeNode && root.hasChildren
-                         && model.column === 0
-                text: root.expanded ? "▼" : "▶"
-                color: Theme.toolbarButtonTextColour
-                TapHandler {
-                    onTapped: {
-                        treeView.toggleExpanded(row)
-                    }
+        Text {
+            visible: model.column === 1
+            text: model.editability ? "\uf040" : "\uf023"
+            color: Theme.toolbarButtonTextColour
+            TapHandler {
+                onTapped: {
+                    memodl.setItemEditable(memodl.index(model.row, model.column),
+                                           !model.editability)
+                    graphViews.redraw();
                 }
             }
-            Text {
-                Layout.fillWidth: true
-                visible: model.column === 1
-                clip: true
-                text: model.name
-                color: Theme.toolbarButtonTextColour
-                horizontalAlignment: Text.AlignLeft
+        }
+        Text {
+            x: (root.depth * root.indent)
+            visible: root.hasChildren && model.column === nbuttons
+            text: root.expanded ? "▼" : "▶"
+            color: Theme.toolbarButtonTextColour
+            TapHandler {
+                onTapped: {
+                    treeView.toggleExpanded(row)
+                }
             }
+        }
+        Text {
+            id: label
+            Layout.fillWidth: true
+            // The actual text is properly placed at the end of all icons (except the arrow).
+            // Only push out the width of the arrow
+            x: (visibilityCheckbox.width + padding) + (root.depth * root.indent)
+            visible: model.column === nbuttons
+            clip: true
+            text: model.name
+            color: Theme.toolbarButtonTextColour
+            horizontalAlignment: Text.AlignLeft
         }
     }
 }
