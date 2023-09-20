@@ -1,0 +1,3 @@
+[submodule "salalib"]
+	path = salalib
+	url = git@github.com:acanth-is/salalib.git
