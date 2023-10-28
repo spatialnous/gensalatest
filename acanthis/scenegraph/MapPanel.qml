@@ -101,14 +101,7 @@ Panel {
             model: graphViewModels
 
             delegate: Item {
-//                property GraphViewModel graphViewModel: graphViewModels.get(index)
-//                property GraphViewModel graphViewModel: {
-//                    for (let a in model)
-//                        console.log(a + " " + model[a]);
-//                    console.log(model);
-//                    return model
-//                }
-                property var graphViewModel: model
+                property var graphViewModel: model.graphViewModel
                 MapTreeView {
                     anchors.fill: parent
                     anchors.margins: 10
