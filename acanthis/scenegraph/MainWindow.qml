@@ -121,28 +121,15 @@ ApplicationWindow {
     }
 
     function appendDocumentToDisplayModel(document) {
-        var newListModel = Qt.createQmlObject('import QtQuick 2.2; \
-                ListModel {}', graphDisplayModel);
+        var newListModel =
+                Qt.createComponent("ViewListModel.qml")
+                  .createObject(graphDisplayModel);
+        newListModel.document = document;
+
         graphDisplayModel.append({
             "graphModelFile": document,
             "current": true,
-            "viewModels": {
-                "models": newListModel,
-                "createViewModel": function() {
-                    let newGraphViewModel = new GraphViewModel()
-                    newGraphViewModel.graphModel = document;
-                    // it doesn't seem like we can put the new
-                    // GraphViewModel directly into the qml model
-                    // (it gets converted to something qt?) so we
-                    // have to have this intermediate json that
-                    // will end up creating a ListElement with a
-                    // single 'graphViewModel' parameter in it
-                    this.models.append({
-                       'graphViewModel': newGraphViewModel
-                    });
-                    return newGraphViewModel;
-                }
-            }
+            "views": newListModel,
         })
     }
 
@@ -206,6 +193,8 @@ ApplicationWindow {
         }
 
         GraphDisplay {
+            id: graphListGLView
+            model: graphDisplayModel
             anchors.fill: parent
             Component.onCompleted: {
                 registerDisplayModelView(this.getModelView())

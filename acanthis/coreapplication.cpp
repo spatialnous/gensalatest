@@ -71,6 +71,7 @@ int CoreApplication::exec() {
 
     QJSValue jsMetaObject = engine.newQMetaObject(&GraphViewModel::staticMetaObject);
     engine.globalObject().setProperty(GraphViewModel::staticMetaObject.className(), jsMetaObject);
+    engine.rootContext()->setContextProperty("qtversion", QString(qVersion()));
 
     engine.load(QUrl(QStringLiteral("qrc:/scenegraph/MainWindow.qml")));
     //    mMainWindow->setResizeMode(QQuickView::SizeRootObjectToView);

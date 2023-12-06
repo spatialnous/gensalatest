@@ -35,19 +35,9 @@ class GraphModel : public QObject {
     MetaGraph &getMetaGraph() const { return *m_metaGraph; }
     bool hasMetaGraph() const { return m_metaGraph.get() != nullptr; }
 
-    // These are stored as QSharedPointers so that they can be used by the map view tree
-    // which stores everything in QSharedPointers
-    QList<QSharedPointer<MapLayer>> &getMapLayers() { return m_mapLayers; }
-    const QList<QSharedPointer<MapLayer>> &getMapLayers() const { return m_mapLayers; }
-
-    MapLayer *layerAt(std::size_t index) { return m_mapLayers[index].get(); }
-
-    std::size_t layerCount() { return m_mapLayers.size(); }
     std::string getFilenameStr() { return m_filename; }
     Q_INVOKABLE QString getFilename() { return QString::fromStdString(m_filename); }
-//    Q_INVOKABLE GraphViewModel* createViewModel();
 
   private:
     std::unique_ptr<MetaGraph> m_metaGraph = nullptr;
-    QList<QSharedPointer<MapLayer>> m_mapLayers;
 };

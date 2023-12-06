@@ -34,7 +34,7 @@ class TreeItem {
     TreeItem(QString name) : m_name(name) {}
     const QSharedPointer<TreeItem> addChildItem(QSharedPointer<TreeItem> treeItem, int row) {
         m_children.push_back(treeItem);
-        m_row = row;
+        m_children.back()->setRow(row);
         return m_children.back();
     }
 
@@ -43,7 +43,7 @@ class TreeItem {
     const int nChildren() const { return m_children.size(); }
     const QString getName() const { return m_name; }
     const bool isVisible() const { return m_visible; }
-    const bool isEditable() const { return m_visible; }
+    const bool isEditable() const { return m_editable; }
     const QSharedPointer<TreeItem> getChild(size_t idx) { return m_children.at(idx); }
 
     void setParentItem(QWeakPointer<TreeItem> parent) { m_parentItem = parent; }

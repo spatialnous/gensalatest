@@ -31,11 +31,23 @@ class AQMapViewModel : public QAbstractItemModel {
     QSharedPointer<TreeItem> m_rootItem;
     TreeItem *getItem(const QModelIndex &idx) const;
 
-    enum LayerModelRole { NameRole = Qt::UserRole, VisibleRole, EditableRole };
+    // Add roles that are not visible at the bottom only.
+    // If new column roles are added, then the number
+    // underneath must also be incremented
+    enum LayerModelRole {
+        // Roles visible as columns
+        NameRole = Qt::UserRole,
+        VisibleRole,
+        EditableRole
+    };
+
+    short numRolesAsColumns = 3;
 
     QSharedPointer<TreeItem> addChildItem(QSharedPointer<TreeItem> parent,
-                                          QSharedPointer<TreeItem> newChild, int row);
-    QSharedPointer<TreeItem> addChildItem(QSharedPointer<TreeItem> parent, QString newChild,
+                                          QSharedPointer<TreeItem> newChild,
+                                          int row);
+    QSharedPointer<TreeItem> addChildItem(QSharedPointer<TreeItem> parent,
+                                          QString newChild,
                                           int row);
 
   public:
@@ -54,7 +66,7 @@ class AQMapViewModel : public QAbstractItemModel {
 
     Q_INVOKABLE void resetItems();
     Q_INVOKABLE void setItemVisible(const QModelIndex &idx, bool visibility);
-    Q_INVOKABLE void setItemEditable(const QModelIndex &idx, bool visibility);
+    Q_INVOKABLE void setItemEditable(const QModelIndex &idx, bool editability);
 
   signals:
     void graphViewModelChanged();

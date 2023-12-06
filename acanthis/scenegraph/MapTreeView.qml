@@ -44,10 +44,32 @@ TreeView {
             case 1: // editable
             default:
                 return padding + visibilityCheckbox.implicitWidth;
-            case nbuttons.length:
+            case nbuttons:
                 // label
                 return label.implicitWidth + padding;
             }
+        }
+        function getModelIndex() {
+            // TreeView inherits from TableView, but employs various
+            // hacks to actually display the table as a tree. In order
+            // to achieve this, there is an intermediary model that
+            // translates the visible rows (collapsed or expanded) into
+            // the rows of the tree and vice versa. The model we provide
+            // for the TreeView works with the translated indices that
+            // are tree like, while the view (and what we get from calling
+            // model.row and model.row) has indices that relate to what's
+            // visible at the time. The modelIndex function allows us to
+            // do the translation as well and get the proper index to query
+            // or modify a treeitem from our model.
+            let midx = modelIndex(model.row, model.column)
+            if (qtversion === "6.4.2") {
+                // Because of an API incompatible change between Qt 6.4.0
+                // and Qt 6.4.2, the order of row and column was specified
+                // in the opposite order
+                // https://doc.qt.io/qt-6.5/qml-qtquick-tableview-obsolete.html#modelIndex-method
+                midx = modelIndex(model.column, model.row);
+            }
+            return midx;
         }
 
         implicitWidth: getImplicitWidth()
@@ -64,14 +86,15 @@ TreeView {
 
         readonly property int nbuttons: 2
 
+
         Text {
             id: visibilityCheckbox
             visible: model.column === 0
-            text: model.visibility ? "\uf06e" : "\uf070"
+            text: model.visibility ? "👁" : "H"
             color: Theme.toolbarButtonTextColour
             TapHandler {
                 onTapped: {
-                    memodl.setItemVisible(memodl.index(model.row, model.column),
+                    memodl.setItemVisible(getModelIndex(),
                                           !model.visibility)
                     graphViews.redraw();
                 }
@@ -79,11 +102,11 @@ TreeView {
         }
         Text {
             visible: model.column === 1
-            text: model.editability ? "\uf040" : "\uf023"
+            text: model.editability ? "E" : "L"
             color: Theme.toolbarButtonTextColour
             TapHandler {
                 onTapped: {
-                    memodl.setItemEditable(memodl.index(model.row, model.column),
+                    memodl.setItemEditable(getModelIndex(),
                                            !model.editability)
                     graphViews.redraw();
                 }
@@ -102,7 +125,6 @@ TreeView {
         }
         Text {
             id: label
-            Layout.fillWidth: true
             // The actual text is properly placed at the end of all icons (except the arrow).
             // Only push out the width of the arrow
             x: (visibilityCheckbox.width + padding) + (root.depth * root.indent)

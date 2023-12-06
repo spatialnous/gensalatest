@@ -15,5 +15,6 @@
         <file>scenegraph/TopBar.qml</file>
         <file>scenegraph/MainToolBar.qml</file>
         <file>scenegraph/GraphDisplay.qml</file>
+        <file>scenegraph/ViewListModel.qml</file>
     </qresource>
 </RCC>

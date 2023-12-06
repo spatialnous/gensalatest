@@ -28,7 +28,7 @@ Panel {
         color: Theme.panelColour
     }
     property GraphModel graphModel
-    property ListModel graphViewModels
+    property ViewListModel viewsModel
 
     header: RowLayout {
         objectName: parent.objectName + "Header"
@@ -91,26 +91,40 @@ Panel {
             }
         }
     }
-    contentItem: Item {
-        visible: true
+    contentItem: ListView {
+        id: fileTreeViews
+        model: viewsModel
+        interactive: false
+        snapMode: ListView.SnapOneItem
+        cacheBuffer: 0
+        highlightRangeMode: ListView.StrictlyEnforceRange
         clip: true
-        Layout.fillHeight: true
-        Layout.fillWidth: true
 
-        ListView {
-            model: graphViewModels
+        function setCurrentIndex(newCurrentIndex) {
+            positionViewAtIndex(newCurrentIndex, ListView.Beginning)
+            currentIndex = newCurrentIndex;
+        }
 
-            delegate: Item {
-                property var graphViewModel: model.graphViewModel
-                MapTreeView {
-                    anchors.fill: parent
-                    anchors.margins: 10
-                    visible: true
-                    graphViewModel: parent.graphViewModel
+        delegate: Item {
+            width: parent == null ? 0 : parent.width
+            height: parent == null ? 0 : fileTreeViews.height
+            property var graphViewModel: model.graphViewModel
+            property var graphViewId: model.graphViewModel.id
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 10
+                Text {
+                    text: {
+                        return "View: " + index
+                    }
+                    color: Theme.toolbarButtonTextColour
                 }
-            }
-            Component.onCompleted: {
-                console.log("aaaa " + graphViewModels)
+
+                MapTreeView {
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    graphViewModel: parent.parent.graphViewModel
+                }
             }
         }
     }

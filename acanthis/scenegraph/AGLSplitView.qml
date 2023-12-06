@@ -27,13 +27,14 @@ SplitView {
     }
     property int minimumItemWidth: 20
     property int minimumItemHeight: 20
+    property var viewModels;
 
     function update() {
         for (let i = 0; i < this.count; ++i)
             this.itemAt(i).update();
     }
 
-    function splitView(orientation, newViewID, index) {
+    function splitView(orientation, index) {
         let currentView = this.itemAt(index)
         if (currentView instanceof AGLSplitView) {
             currentView.splitView(orientation);
@@ -41,15 +42,17 @@ SplitView {
         }
 
         if(this.orientation !== orientation) {
-            return this.addAGLSplitView(newViewID, index);
+            return this.addAGLSplitView(index);
         } else if (this.orientation === Qt.Horizontal) {
-            return this.addAGLMapViewHorizontal(newViewID, index + 1);
+            let graphViewModel = viewModels.createViewModel();
+            return this.addAGLMapViewHorizontal(graphViewModel, index + 1);
         } else if (this.orientation === Qt.Vertical) {
-            return this.addAGLMapViewVertical(newViewID, index + 1);
+            let graphViewModel = viewModels.createViewModel();
+            return this.addAGLMapViewVertical(graphViewModel, index + 1);
         }
     }
 
-    function addAGLSplitView(viewID, index) {
+    function addAGLSplitView(index) {
         let currentView = this.itemAt(index)
 
         let aglSplitViewComponent = Qt.createComponent(
@@ -58,6 +61,7 @@ SplitView {
             "orientation": Qt.Horizontal,
             "SplitView.preferredWidth": currentView.width,
             "SplitView.preferredHeight": currentView.height,
+            "viewModels": viewModels,
         };
         if (this.orientation === Qt.Horizontal) {
             newSplitView.orientation = Qt.Vertical;
@@ -76,19 +80,21 @@ SplitView {
 
         aglSplitView.addItem(currentView);
         if (this.orientation === Qt.Vertical) {
-            return aglSplitView.addAGLMapViewHorizontal(viewID, 1)
+            let graphViewModel = viewModels.createViewModel();
+            return aglSplitView.addAGLMapViewHorizontal(graphViewModel, 1)
         } else {
-            return aglSplitView.addAGLMapViewVertical(viewID, 1)
+            let graphViewModel = viewModels.createViewModel();
+            return aglSplitView.addAGLMapViewVertical(graphViewModel, 1)
         }
     }
 
-    function createMapView(width, height, viewID, graphViewModel) {
+    function createMapView(width, height, graphViewModel) {
         let aglMapViewComponent = Qt.createComponent(
                 "AGLMapViewportWrapper.qml")
 
         let newMapView = aglMapViewComponent.createObject(
             null, {
-                "viewID": viewID,
+                "viewID": graphViewModel.id,
 
                 // preferred widths/height are used as those also change from the handle
                 "SplitView.preferredWidth": width,
@@ -127,16 +133,19 @@ SplitView {
         return prevItemsNewWidth;
     }
 
-    function addAGLMapViewHorizontal(viewID, graphViewModel, index) {
+    function addAGLMapViewHorizontal(graphViewModel, index) {
         let newWidths = getNewWidths()
         for (let j = 0; j < this.count; ++j) {
             this.itemAt(j).SplitView.preferredWidth = newWidths[j];
         }
         let newItemWidth = newWidths[newWidths.length - 1];
 
-        let newMapView = createMapView(newItemWidth, parent.height, viewID, graphViewModel);
+        let newMapView = createMapView(newItemWidth, parent.height, graphViewModel);
         this.insertItem(index, newMapView);
-        return newMapView;
+        return {
+            "view": newMapView,
+            "model": graphViewModel
+        };
     }
 
     function getNewHeights() {
@@ -157,15 +166,18 @@ SplitView {
         return prevItemsNewHeight;
     }
 
-    function addAGLMapViewVertical(viewID, graphViewModel, index) {
+    function addAGLMapViewVertical(graphViewModel, index) {
         let newHeights = getNewHeights()
         for (let j = 0; j < this.count; ++j) {
             this.itemAt(j).SplitView.preferredHeight = newHeights[j];
         }
         let newItemHeight = newHeights[newHeights.length - 1];
 
-        let newMapView = createMapView(parent.width, newItemHeight, viewID, graphViewModel);
+        let newMapView = createMapView(parent.width, newItemHeight, graphViewModel);
         this.insertItem(index, newMapView);
-        return newMapView;
+        return {
+            "view": newMapView,
+            "model": graphViewModel
+        };
     }
 }

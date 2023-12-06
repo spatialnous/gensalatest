@@ -53,19 +53,19 @@ int AQMapViewModel::rowCount(const QModelIndex &parent) const {
 
 int AQMapViewModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent)
-    return 4;
+    return numRolesAsColumns;
 }
 
 AQMapViewModel::LayerModelRole AQMapViewModel::getRole(int columnIndex) const {
     switch(columnIndex) {
     case 0:
-    default:
         return VisibleRole;
-        break;
     case 1:
         return EditableRole;
     case 2:
+    default:
         return NameRole;
+    // further roles are not shown as columns
     }
 }
 
@@ -74,7 +74,6 @@ QVariant AQMapViewModel::data(const QModelIndex &index, int role) const {
         return QVariant();
     }
     TreeItem *item = getItem(index);
-    role = getRole(index.column());
 
     switch (role) {
     case VisibleRole:
@@ -114,26 +113,23 @@ QSharedPointer<TreeItem> AQMapViewModel::addChildItem(QSharedPointer<TreeItem> p
 void AQMapViewModel::resetItems() {
     if (!m_graphViewModel) return;
     beginResetModel();
-    int row = 0;
-    for (QSharedPointer<MapLayer> &mapLayer : m_graphViewModel->getMapLayers()) {
-
-        auto mapItem = addChildItem(m_rootItem, mapLayer, row);
+    int rowL1 = 0;
+    for (QSharedPointer<MapLayer> mapLayer : m_graphViewModel->getMapLayers()) {
+        QSharedPointer<TreeItem> mapItem = addChildItem(m_rootItem, mapLayer, rowL1);
         mapItem->setVisible(true);
-        ++row;
-        if (mapLayer->hasGraph())
-            auto graphItem = addChildItem(mapItem, "Graph", row);
-        ++row;
-        auto attrItem = addChildItem(mapItem, "Attributes", row);
-        ++row;
+        int rowL2 = 0;
+        if (mapLayer->hasGraph()) {
+            auto graphItem = addChildItem(mapItem, "Graph", rowL2);
+            rowL2++;
+        }
+        auto allAttrItem = addChildItem(mapItem, "Attributes", rowL2);
         for (int col = 0; col < mapLayer->getAttributes().getNumColumns(); ++col) {
-            addChildItem(attrItem,
+            auto attrItem = addChildItem(allAttrItem,
                          QSharedPointer<AttributeItem>(
                              new AttributeItem(mapLayer->getAttributes().getColumn(col))),
-                         row);
-            ++row;
+                         col);
         }
-
-        ++row;
+        rowL1++;
     }
     endResetModel();
 }

@@ -19,7 +19,7 @@ import acanthis 1.0
 
 Page {
     padding: 5
-    property int viewID: -1
+    property string viewID: "-1"
     property bool active: false
     property var graphViewModel
     background: Rectangle {
@@ -52,10 +52,6 @@ Page {
 
         onMousePressed: {
             graphViews.makeActive(parent.parent.viewID);
-        }
-
-        function split() {
-            console.log("zomfg! " + parent.parent.parent);
         }
     }
 }

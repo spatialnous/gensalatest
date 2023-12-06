@@ -7,7 +7,9 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 COMPONENTS Core Qml Quick Gui OpenGL Widgets REQUIRED)
+# Qt 6.4.3 required for sane TreeView handling, but sticking
+# with 6.4.2 for the moment as this is what debian stable supports
+find_package(Qt6 6.4.2 COMPONENTS Core Qml Quick Gui OpenGL Widgets REQUIRED)
 
 add_compile_definitions(_ACANTHIS)
 

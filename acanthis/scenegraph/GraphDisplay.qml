@@ -5,8 +5,6 @@ ListView {
     // Instead of displaying one item at a time we load every
     // file's View (GL, Layers etc.) and only display the one
     // that is the current index.
-    id: graphListGLView
-    model: graphDisplayModel
     interactive: false
     snapMode: ListView.SnapOneItem
 
@@ -34,41 +32,46 @@ ListView {
             SplitView.fillWidth: true
             focus: true
 
-            property int nAGLViews: 0;
-            property int activeMapViewID: -1;
             property var mapViews: ({});
 
-            function nextAGLViewID() {
-                let newAGLViewID = nAGLViews;
-                nAGLViews = nAGLViews + 1;
-                return newAGLViewID;
-            }
-
             function splitActiveView(orientation) {
-                if (activeMapViewID < 0) {
+                if (views.activeMapViewID < 0) {
                     console.log("No active view selected")
                     return;
                 }
 
-                let activeMapView = mapViews[activeMapViewID];
+                let activeMapView = mapViews[views.activeMapViewID];
                 let aglSplitView = activeMapView.parent.parent;
-                let activeMapViewIdx = Array.prototype.indexOf.call(aglSplitView.contentChildren, activeMapView)
-                let newAGLViewID = nextAGLViewID();
-                let newAGLView = aglSplitView.splitView(orientation, newAGLViewID, activeMapViewIdx);
-                mapViews[newAGLViewID] = newAGLView;
+                let activeMapViewIdx = Array.prototype.indexOf.call(
+                        aglSplitView.contentChildren, activeMapView)
+                let newAGLView = aglSplitView.splitView(
+                        orientation, activeMapViewIdx);
+
+                mapViews[newAGLView.model.id] = newAGLView.view;
             }
 
             function makeActive(viewID) {
                 if (viewID < 0) return;
-                if (activeMapViewID != -1) {
-                    mapViews[activeMapViewID].active = false;
+                if (views.activeMapViewID !== -1) {
+                    mapViews[views.activeMapViewID].active = false;
                 }
                 mapViews[viewID].active = true;
-                activeMapViewID = viewID;
+                views.activeMapViewID = viewID;
+
+                // iterate to find the index of the view with this viewID
+                let idx = 0;
+                for (let i = 0; i < views.count; i++) {
+                    if (views.get(i).graphViewModel.id === viewID) {
+                        idx = i;
+                        break;
+                    }
+                }
+
+                mapsPanel.item.contentItem.setCurrentIndex(idx);
             }
 
             function redraw() {
-                for (let i = 0; i < nAGLViews; i++) {
+                for (let i = 0; i < views.nAGLViews; i++) {
                     mapViews[i].update();
                 }
             }
@@ -80,6 +83,7 @@ ListView {
 
                 let aglSplitView = aglSplitViewComponent.createObject(
                         parent, {
+                            "viewModels": model.views,
                             "orientation": orientation,
                             "width": parent.width,
                             "height": parent.height
@@ -91,31 +95,24 @@ ListView {
                 return aglSplitView
             }
             Component.onCompleted: {
-                let out = ""
-                for (var p in model['viewModels']) {
-                    out += p + ': ' + model['viewModels'][p] + '\n';
-                  }
-
                 let aglSplitView = addAGLSplitView(this, Qt.Horizontal);
-
-                let newAGLViewID = nextAGLViewID();
-                let graphViewModel = viewModels.createViewModel()
-                let newAGLView = aglSplitView.addAGLMapViewHorizontal(newAGLViewID, graphViewModel, 0);
-                mapViews[newAGLViewID] = newAGLView;
-                newAGLViewID = nextAGLViewID();
-                graphViewModel = viewModels.createViewModel()
-                newAGLView = aglSplitView.addAGLMapViewHorizontal(newAGLViewID, graphViewModel, 0);
-                mapViews[newAGLViewID] = newAGLView;
+                let graphViewModel = views.createViewModel()
+                let newAGLView = aglSplitView.addAGLMapViewHorizontal(graphViewModel, 0);
+                mapViews[graphViewModel.id] = newAGLView.view;
+                graphViewModel = views.createViewModel()
+                newAGLView = aglSplitView.addAGLMapViewHorizontal(graphViewModel, 0);
+                mapViews[graphViewModel.id] = newAGLView.view;
             }
         }
 
         Loader {
             objectName: "mapsLoader"
+            id: mapsPanel
             active: true
             visible: active
             sourceComponent: MapPanel {
                 graphModel: graphModelFile
-                graphViewModels: viewModels.models
+                viewsModel: views
             }
         }
     }
