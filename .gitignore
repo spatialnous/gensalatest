@@ -5,7 +5,7 @@ build
 build-*
 RegressionTest/rundir
 __pycache__
-CMakeLists.txt.user
+CMakeLists.txt.u*
 *_BACKUP_*
 *_BASE_*
 *_LOCAL_*
