@@ -77,16 +77,19 @@ ListView {
                 }
             }
 
-            function addAGLSplitView(parent, orientation, preferredWidth, preferredHeight) {
+            function addAGLSplitView(parent, orientation, preferredWidth, ///
+                                     preferredHeight) {
                 let aglSplitViewComponent = Qt.createComponent(
                         "AGLSplitView.qml")
 
-                let aglSplitView = aglSplitViewComponent.createObject(parent, {
-                                                                          "viewModels": model.views,
-                                                                          "orientation": orientation,
-                                                                          "width": parent.width,
-                                                                          "height": parent.height
-                                                                      })
+                let aglSplitViewProperties = {
+                    "viewModels": model.views,
+                    "orientation": orientation,
+                    "width": parent.width,
+                    "height": parent.height
+                }
+                let aglSplitView = aglSplitViewComponent.createObject(
+                        parent, aglSplitViewProperties)
 
                 if (aglSplitView === null) {
                     console.log("Error creating AGLSplitView")

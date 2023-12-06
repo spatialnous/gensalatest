@@ -148,7 +148,8 @@ ApplicationWindow {
         DocumentManager.createEmptyDocument()
         appendDocumentToDisplayModel(DocumentManager.lastDocument)
         for (var i = 0; i < graphDisplayModelViews.length; i++) {
-            graphDisplayModelViews[i].currentIndex = DocumentManager.lastDocumentIndex()
+            graphDisplayModelViews[i].currentIndex = ///
+                    DocumentManager.lastDocumentIndex()
         }
     }
 
@@ -183,9 +184,6 @@ ApplicationWindow {
                     Layout.topMargin: 0
                     Layout.rightMargin: toolbar.spacing
                     Layout.bottomMargin: toolbar.spacing
-                    //                    Component.onCompleted: {
-                    //                        registerDisplayModelView(this)
-                    //                    }
                 }
             }
         }
