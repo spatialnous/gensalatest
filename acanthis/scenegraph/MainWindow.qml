@@ -139,7 +139,7 @@ ApplicationWindow {
             appendDocumentToDisplayModel(DocumentManager.lastDocument)
         }
         for (var i = 0; i < graphDisplayModelViews.length; i++) {
-            console.log(graphDisplayModelViews[i])
+            console.log(i, graphDisplayModelViews[i])
             graphDisplayModelViews[i].currentIndex = lastDocumentIndex
         }
     }
