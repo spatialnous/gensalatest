@@ -121,24 +121,22 @@ ApplicationWindow {
     }
 
     function appendDocumentToDisplayModel(document) {
-        var newListModel =
-                Qt.createComponent("ViewListModel.qml")
-                  .createObject(graphDisplayModel);
-        newListModel.document = document;
+        var newListModel = Qt.createComponent("ViewListModel.qml").createObject(
+                    graphDisplayModel)
+        newListModel.document = document
 
         graphDisplayModel.append({
-            "graphModelFile": document,
-            "current": true,
-            "views": newListModel,
-        })
+                                     "graphModelFile": document,
+                                     "current": true,
+                                     "views": newListModel
+                                 })
     }
 
     function openDocument(document) {
         DocumentManager.openDocument(document)
         let lastDocumentIndex = DocumentManager.lastDocumentIndex()
         if (lastDocumentIndex === (DocumentManager.numOpenedDocuments() - 1)) {
-            appendDocumentToDisplayModel(DocumentManager.lastDocument);
-
+            appendDocumentToDisplayModel(DocumentManager.lastDocument)
         }
         for (var i = 0; i < graphDisplayModelViews.length; i++) {
             console.log(graphDisplayModelViews[i])
@@ -148,7 +146,7 @@ ApplicationWindow {
 
     function newDocument() {
         DocumentManager.createEmptyDocument()
-        appendDocumentToDisplayModel(DocumentManager.lastDocument);
+        appendDocumentToDisplayModel(DocumentManager.lastDocument)
         for (var i = 0; i < graphDisplayModelViews.length; i++) {
             graphDisplayModelViews[i].currentIndex = DocumentManager.lastDocumentIndex()
         }
@@ -185,9 +183,9 @@ ApplicationWindow {
                     Layout.topMargin: 0
                     Layout.rightMargin: toolbar.spacing
                     Layout.bottomMargin: toolbar.spacing
-//                    Component.onCompleted: {
-//                        registerDisplayModelView(this)
-//                    }
+                    //                    Component.onCompleted: {
+                    //                        registerDisplayModelView(this)
+                    //                    }
                 }
             }
         }
