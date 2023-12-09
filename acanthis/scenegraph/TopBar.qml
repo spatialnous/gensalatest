@@ -16,6 +16,8 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 
+import acanthis 1.0
+
 RowLayout {
     spacing: toolbar.spacing
     id: titlebarRow
@@ -32,6 +34,7 @@ RowLayout {
         Layout.fillHeight: true
         RowLayout {
             anchors.fill: parent
+
             ListView {
                 id: graphListNameView
                 model: graphDisplayModel
@@ -56,12 +59,16 @@ RowLayout {
                     padding: 0
                     onClicked: {
                         graphListNameView.currentIndex = index
+                        graphFileView.currentIndex = index
                     }
                     ToolTip.visible: hovered
                     ToolTip.delay: Theme.tooltipDelay
                     ToolTip.text: graphModelFile.getFilename()
                     property int listIndex: index
-
+                    property var fileView: graphFileView
+                    function getFileView() {
+                        return graphFileView
+                    }
                     background: Rectangle {
                         color: {
                             if (hovered) {

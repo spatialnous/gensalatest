@@ -49,8 +49,8 @@ class DocumentManager : public QObject {
   public:
     DocumentManager();
     Q_INVOKABLE void createEmptyDocument();
-    Q_INVOKABLE void openDocument(QString urlString);
     Q_INVOKABLE void removeDocument(unsigned int index);
+    Q_INVOKABLE void openDocument(QString urlString);
     Q_INVOKABLE bool hasDocument() { return !m_openedDocuments.empty(); }
     Q_INVOKABLE unsigned int lastDocumentIndex() { return m_lastDocumentIndex; }
     Q_INVOKABLE unsigned int numOpenedDocuments() { return m_openedDocuments.size(); }

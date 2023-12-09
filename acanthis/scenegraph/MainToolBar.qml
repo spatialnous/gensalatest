@@ -25,7 +25,7 @@ RowLayout {
 
     FileDialog {
         id: openDialog
-        onAccepted: window.openDocument(openDialog.selectedFile);
+        onAccepted: window.openDocument(openDialog.selectedFile)
     }
 
     ToolButton {
@@ -108,8 +108,8 @@ RowLayout {
             color: Theme.toolbarButtonTextColour
         }
         onClicked: {
-            graphListGLView.currentItem.splitActiveView(Qt.Horizontal);
-        }
+            graphFileView.currentItem.splitActiveView(Qt.Horizontal);
+       }
 
         Layout.fillHeight: true
         background: Rectangle {
@@ -127,8 +127,8 @@ RowLayout {
             color: Theme.toolbarButtonTextColour
         }
         onClicked: {
-            graphListGLView.currentItem.splitActiveView(Qt.Vertical);
-        }
+            graphFileView.currentItem.splitActiveView(Qt.Vertical);
+       }
 
         Layout.fillHeight: true
         background: Rectangle {

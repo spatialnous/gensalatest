@@ -130,16 +130,17 @@ ApplicationWindow {
                                      "current": true,
                                      "views": newListModel
                                  })
+        graphFileView.currentIndex = graphDisplayModel.count - 1
     }
 
     function openDocument(document) {
+        const prevOpenDocuments = DocumentManager.numOpenedDocuments()
         DocumentManager.openDocument(document)
-        let lastDocumentIndex = DocumentManager.lastDocumentIndex()
-        if (lastDocumentIndex === (DocumentManager.numOpenedDocuments() - 1)) {
+        if (prevOpenDocuments !== DocumentManager.numOpenedDocuments()) {
             appendDocumentToDisplayModel(DocumentManager.lastDocument)
         }
+        let lastDocumentIndex = DocumentManager.lastDocumentIndex()
         for (var i = 0; i < graphDisplayModelViews.length; i++) {
-            console.log(i, graphDisplayModelViews[i])
             graphDisplayModelViews[i].currentIndex = lastDocumentIndex
         }
     }
@@ -189,7 +190,7 @@ ApplicationWindow {
         }
 
         GraphDisplay {
-            id: graphListGLView
+            id: graphFileView
             model: graphDisplayModel
             anchors.fill: parent
             Component.onCompleted: {

@@ -12,16 +12,36 @@ ListView {
         return this
     }
 
+    onCountChanged: function (index) {
+        for (var i = 0; i < model.count; i++) {
+            if (i !== currentIndex)
+                itemAtIndex(i).visible = false
+            else
+                itemAtIndex(i).visible = true
+        }
+    }
+
+    onCurrentIndexChanged: {
+        // ideally this should not be necessary, but doing this
+        // in the delegate (visible: currentIndex === index)
+        // does not work
+        for (var i = 0; i < model.count; i++) {
+            if (i !== currentIndex)
+                itemAtIndex(i).visible = false
+            else
+                itemAtIndex(i).visible = true
+        }
+    }
+
     delegate: SplitView {
         id: mainSplitView
         objectName: "mainSplitView"
         anchors.top: parent == null ? window.top : parent.top
-        width: parent == null ? 0 : parent.width / 2
-        height: parent == null ? 0 : parent.parent.height / 2
+        width: parent == null ? 0 : parent.width
+        height: parent == null ? 0 : parent.parent.height
         handle: Item {
             implicitWidth: 4
         }
-        visible: currentIndex === index
 
         function splitActiveView(orientation) {
             graphViews.splitActiveView(orientation)
