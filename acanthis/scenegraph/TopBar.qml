@@ -39,6 +39,7 @@ RowLayout {
                 id: graphListNameView
                 model: graphDisplayModel
                 spacing: toolbar.spacing
+                interactive: false
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.minimumWidth: parent.height * 2 * graphDisplayModel.count
