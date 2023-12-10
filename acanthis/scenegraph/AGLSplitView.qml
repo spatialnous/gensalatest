@@ -20,10 +20,8 @@ import acanthis 1.0
 SplitView {
     SplitView.fillHeight: true
     SplitView.fillWidth: true
-    handle: Rectangle {
-        implicitWidth: 4
-        implicitHeight: 4
-        color: Theme.panelColour
+    handle: PanelHandle {
+        orientation: parent.orientation === Qt.Horizontal ? Qt.Vertical : Qt.Horizontal
     }
     property int minimumItemWidth: 20
     property int minimumItemHeight: 20

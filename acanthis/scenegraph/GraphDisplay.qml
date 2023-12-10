@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 ListView {
@@ -39,8 +40,8 @@ ListView {
         anchors.top: parent == null ? window.top : parent.top
         width: parent == null ? 0 : parent.width
         height: parent == null ? 0 : parent.parent.height
-        handle: Item {
-            implicitWidth: 4
+        handle: PanelHandle {
+            orientation: Qt.Vertical
         }
 
         function splitActiveView(orientation) {
