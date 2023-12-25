@@ -51,8 +51,6 @@ add_subdirectory(genlib)
 add_subdirectory(genlibTest)
 add_subdirectory(salalib)
 add_subdirectory(modules) # only the core modules are loaded here
-add_subdirectory(mgraph440)
-add_subdirectory(mgraph440Test)
 add_subdirectory(salaTest)
 add_subdirectory(depthmapXcli)
 add_subdirectory(cliTest)

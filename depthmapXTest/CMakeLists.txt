@@ -30,7 +30,7 @@ set(depthmapXTest_SRCS
 
 include_directories("../ThirdParty/Catch")
 
-set(LINK_LIBS salalib genlib mgraph440)
+set(LINK_LIBS salalib genlib)
 
 if(APPLE)
         add_definitions(-DGL_SILENCE_DEPRECATION)

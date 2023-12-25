@@ -14,4 +14,4 @@ set(MODULES_CORE_TEST TRUE)
 add_subdirectory(../modules modules)
 
 add_executable(${moduleTest} ${moduleTest_SRCS})
-target_link_libraries(${moduleTest} salalib genlib mgraph440 ${modules_coreTest} ${modules_core})
+target_link_libraries(${moduleTest} salalib genlib ${modules_coreTest} ${modules_core})

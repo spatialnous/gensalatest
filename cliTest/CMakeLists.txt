@@ -40,7 +40,7 @@ set(cliTest_SRCS
 
 include_directories(SYSTEM "../ThirdParty/Catch" "../ThirdParty/FakeIt")
 
-set(LINK_LIBS salalib genlib mgraph440)
+set(LINK_LIBS salalib genlib)
 
 set(modules_cliTest "" CACHE INTERNAL "modules_cliTest" FORCE)
 set(MODULES_GUI FALSE)

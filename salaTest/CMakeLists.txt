@@ -30,7 +30,7 @@ set(salaTest_SRCS
 
 include_directories(SYSTEM "../ThirdParty/Catch" "../ThirdParty/FakeIt")
 
-set(LINK_LIBS salalib genlib mgraph440)
+set(LINK_LIBS salalib genlib)
 
 add_executable(${salaTest} ${salaTest_SRCS})
 target_link_libraries(${salaTest} ${LINK_LIBS})

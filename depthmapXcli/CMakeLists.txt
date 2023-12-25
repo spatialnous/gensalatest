@@ -22,7 +22,7 @@ set(depthmapXcli_SRCS
     segmentparser.cpp
     mapconvertparser.cpp)
 
-set(LINK_LIBS salalib genlib mgraph440)
+set(LINK_LIBS salalib genlib)
 
 set(modules_cli "" CACHE INTERNAL "modules_cli" FORCE)
 set(MODULES_GUI FALSE)

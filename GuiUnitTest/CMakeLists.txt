@@ -15,7 +15,7 @@ set(guiUnitTest_SRCS
 
 include_directories("../ThirdParty/Catch" "../ThirdParty/FakeIt" "../depthmapX")
 
-set(LINK_LIBS salalib genlib mgraph440 Qt5::Core)
+set(LINK_LIBS salalib genlib Qt5::Core)
 
 add_executable(${GuiUnitTest} ${guiUnitTest_SRCS})
 target_link_libraries(${GuiUnitTest} ${LINK_LIBS})
