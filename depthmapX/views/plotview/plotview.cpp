@@ -177,7 +177,7 @@ void QPlotView::closeEvent(QCloseEvent *event) {
 
 bool QPlotView::Output(QPainter *pDC, QGraphDoc *pDoc, bool screendraw) {
     // this is going to need a timer at somepoint, but for now, it's all very easy to start off:
-    auto lock = pDoc->m_meta_graph->getLockDeferred();
+    auto lock = pDoc->getLockDeferred();
     if (!lock.try_lock()) {
         return false;
     }

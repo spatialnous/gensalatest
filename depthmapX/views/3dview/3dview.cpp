@@ -349,7 +349,7 @@ void Q3DView::ReloadLineData() {
 
     if (pDoc->m_meta_graph && pDoc->m_meta_graph->getState() & MetaGraph::LINEDATA) {
         // should really check communicator is not open...
-        auto mgraphLock = pDoc->m_meta_graph->getLock();
+        auto mgraphLock = pDoc->getLock();
         std::unique_lock<std::mutex> drawLock(m_draw_mutex);
 
         std::vector<Line> lines;

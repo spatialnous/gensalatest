@@ -199,7 +199,7 @@ void GLView::loadAxes() {
 }
 
 void GLView::loadDrawingGLObjects() {
-    auto lock = m_pDoc.m_meta_graph->getLock();
+    auto lock = m_pDoc.getLock();
     m_visibleDrawingLines.loadLineData(m_pDoc.m_meta_graph->getVisibleDrawingLines(), m_foreground);
 }
 

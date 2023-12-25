@@ -1737,7 +1737,7 @@ void MainWindow::MakeAttributeList()
     if (graph == NULL) {
         return;
     }
-    auto lock = graph->getLockDeferred();
+    auto lock = m_treeDoc->getLockDeferred();
     if (lock.try_lock()) {
 
         // just doing this the simple way to start off with
@@ -2216,7 +2216,7 @@ void MainWindow::RedoPlotViewMenu(QGraphDoc* pDoc)
    int curr_j = 0;
 
    {
-       auto lock = pDoc->m_meta_graph->getLockDeferred();
+       auto lock = pDoc->getLockDeferred();
        if (lock.try_lock()) {
           m_view_map_entries.clear();
           if (view_class == MetaGraph::VIEWVGA) {

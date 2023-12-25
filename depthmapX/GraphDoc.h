@@ -190,6 +190,9 @@ class QGraphDoc : public QWidget
 private:
     void exceptionThrownInRenderThread(int type, std::string message);
     void messageFromRenderThread(QString title, QString message);
+
+    std::recursive_mutex mLock;
+
 public:
    QGraphDoc(const QString &author, const QString &organisation);
    CMSCommunicator *m_communicator;
@@ -266,6 +269,14 @@ public:
    QTime m_timer;
    void ProcPostMessage(int m, int x);
    void UpdateMainframestatus();
+
+   std::unique_lock<std::recursive_mutex> getLock() {
+       return std::unique_lock<std::recursive_mutex>(mLock);
+   }
+
+   std::unique_lock<std::recursive_mutex> getLockDeferred() {
+       return std::unique_lock<std::recursive_mutex>(mLock, std::defer_lock_t());
+   }
 
 public slots:
    void cancel_wait();
