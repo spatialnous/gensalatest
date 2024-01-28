@@ -14,7 +14,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "depthmapX/coreapplication.h"
-#include <QDesktopWidget>
 
 int CoreApplication::exec() {
     SettingsImpl settings(new DefaultSettingsFactory);

@@ -21,8 +21,8 @@
 #include <time.h>
 
 TEST_CASE("Calculating the new center", "[calculateCenter]") {
-    auto point = QPoint(100, 100);
-    auto oldCenter = QPoint(200, 200);
+    const auto point = QPointF(100, 100);
+    const auto oldCenter = QPointF(200, 200);
     auto newCenter = Point2f(150, 150);
 
     REQUIRE(ViewHelpers::calculateCenter(point, oldCenter, 0.5) == newCenter);

@@ -179,7 +179,7 @@ class Q3DView : public QOpenGLWidget, protected QOpenGLFunctions {
     void OnKeyUp(unsigned int nChar, unsigned int nRepCnt, unsigned int nFlags);
     void OnPlayLoop();
     void On3dFilled();
-    bool OnMouseWheel(unsigned int nFlags, short zDelta, QPoint pt);
+    bool OnMouseWheel(unsigned int nFlags, short zDelta, QPointF pt);
     void OnRButtonDown(unsigned int nFlags, QPoint point);
     void OnRButtonUp(unsigned int nFlags, QPoint point);
     void OnToolsImportTraces();

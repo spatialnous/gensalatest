@@ -59,6 +59,7 @@
 #endif
 #include "compatibilitydefines.h"
 #include "salalib/importutils.h"
+#include "salalib/salaprogram.h"
 
 QT_BEGIN_NAMESPACE
 Q_DECLARE_METATYPE(std::string)
@@ -364,7 +365,7 @@ void QGraphDoc::OnVGALinksFileImport()
     template_string += "Text files (*.txt *.csv)\n";
     template_string += "All files (*.*)";
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QString infile = QFileDialog::getOpenFileName(
                                 0, tr("Import Links File"),
@@ -430,7 +431,7 @@ void QGraphDoc::OnGenerateIsovistsFromFile() {
     template_string += "Text files (*.txt *.csv)\n";
     template_string += "All files (*.*)";
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QString infile =
         QFileDialog::getOpenFileName(0, tr("Import Isovists File"), "", template_string, &selectedFilter, options);
@@ -471,7 +472,7 @@ void QGraphDoc::OnFileImport()
    
    template_string += "All files (*.*)";
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QStringList infiles = QFileDialog::getOpenFileNames(
                                 0, tr("Import Files"),
@@ -642,7 +643,7 @@ void QGraphDoc::OnFileExport()
    }
    template_string += tr("All files (*.*)");
 
-   QFileDialog::Options options = 0;
+   QFileDialog::Options options;
    QString selectedFilter;
    QString outfile = QFileDialog::getSaveFileName(
                                0, tr("Save Output As"),
@@ -789,7 +790,7 @@ void QGraphDoc::OnFileExportMapGeometry() {
 
     QString template_string = tr("Chiron and Alasdair Transfer Format file (*.cat)\n");
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QString outfile =
         QFileDialog::getSaveFileName(0, tr("Save Output As"), defaultname, template_string, &selectedFilter, options);
@@ -868,7 +869,7 @@ void QGraphDoc::OnFileExportLinks()
     template_string += tr("Comma separated values file (*.csv)\n");
     template_string += tr("All files (*.*)");
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QString outfile = QFileDialog::getSaveFileName(
                 0, tr("Save Output As"),
@@ -943,7 +944,7 @@ void QGraphDoc::OnAxialConnectionsExportAsDot()
 
     QString template_string = tr("Dot graph file (*.dot)");
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QString outfile = QFileDialog::getSaveFileName(
                                 0, tr("Save Output As"),
@@ -990,7 +991,7 @@ void QGraphDoc::OnAxialConnectionsExportAsPairCSV()
 
     QString template_string = tr("CSV graph file (*.csv)");
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QString outfile = QFileDialog::getSaveFileName(
                                 0, tr("Save Output As"),
@@ -1037,7 +1038,7 @@ void QGraphDoc::OnSegmentConnectionsExportAsPairCSV()
 
     QString template_string = tr("CSV graph file (*.csv)");
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QString outfile = QFileDialog::getSaveFileName(
                                 0, tr("Save Output As"),
@@ -1094,7 +1095,7 @@ void QGraphDoc::OnPointmapExportConnectionsAsCSV()
 
     QString template_string = tr("CSV graph file (*.csv)");
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QString outfile = QFileDialog::getSaveFileName(
                                 0, tr("Save Output As"),
@@ -1910,7 +1911,7 @@ bool QGraphDoc::OnFileSave()
 	QString newName = m_opened_name;
 	if (newName.isEmpty()) {
         newName = m_base_title + tr(".graph");
-		QFileDialog::Options options = 0;
+        QFileDialog::Options options;
 		QString outfile = QFileDialog::getSaveFileName(
 								   0, tr("Save As"),
 								   newName,
@@ -1946,7 +1947,7 @@ bool QGraphDoc::OnFileSaveAs()
        newName = m_base_title + tr(".graph");
 	}
 
-	QFileDialog::Options options = 0;
+    QFileDialog::Options options;
 	QString outfile = QFileDialog::getSaveFileName(
                                0, tr("Save As"),
                                newName,
@@ -2460,7 +2461,7 @@ void QGraphDoc::OnFileProperties()
 	   dlg.m_organization = QString(m_meta_graph->getOrganization().c_str());
       if (m_meta_graph && m_meta_graph->getVersion() != -1) {
          QString info;
-         info.sprintf("%d", m_meta_graph->getVersion());
+         info.asprintf("%d", m_meta_graph->getVersion());
          dlg.m_file_version = info;
       }
       else {
@@ -2531,7 +2532,7 @@ void QGraphDoc::OnToolsAxialConvShapeMap()
 void QGraphDoc::OnToolsLineLoadUnlinks() 
 {
    // Get file from user 
-   QFileDialog::Options options = 0;
+   QFileDialog::Options options;
    QString outfile = QFileDialog::getOpenFileName(
                                0, tr("Import Unlink IDs"),
                                "",

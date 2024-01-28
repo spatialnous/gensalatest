@@ -83,14 +83,14 @@ void CColourScaleDlg::OnChangeRedValue() {
 void CColourScaleDlg::OnReleasedRedSlider(int val) {
     double value = double(c_red_slider_ctrl->value()) / 100.0;
     QString text;
-    text.sprintf("%.2f", GetActualValue(value));
+    text.asprintf("%.2f", GetActualValue(value));
     c_red_value_window->setText(text);
 }
 
 void CColourScaleDlg::OnReleasedBlueSlider(int val) {
     double value = double(c_blue_slider_ctrl->value()) / 100.0;
     QString text;
-    text.sprintf("%.2f", GetActualValue(value));
+    text.asprintf("%.2f", GetActualValue(value));
     c_blue_value_window->setText(text);
 }
 
@@ -230,9 +230,9 @@ void CColourScaleDlg::Fill() {
     }
 
     QString text;
-    text.sprintf("%.2f", GetActualValue(m_displayparams.blue));
+    text.asprintf("%.2f", GetActualValue(m_displayparams.blue));
     c_blue_value_window->setText(text);
-    text.sprintf("%.2f", GetActualValue(m_displayparams.red));
+    text.asprintf("%.2f", GetActualValue(m_displayparams.red));
     c_red_value_window->setText(text);
 
     c_blue_slider_ctrl->setValue(int(m_displayparams.blue * 100));

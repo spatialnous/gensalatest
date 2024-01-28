@@ -25,6 +25,7 @@
 
 #include <qevent.h>
 #include <qpainter.h>
+#include <QTransform>
 
 #ifdef _WIN32
 #define finite _finite
@@ -50,7 +51,7 @@ QPlotView::QPlotView() {
     m_drawdragrect = false;
     m_selecting = false;
 
-    setAttribute(Qt::WA_NoBackground, 1);
+    setAttribute(Qt::WA_NoSystemBackground, 1);
     setMouseTracking(true);
     setWindowIcon(QIcon(tr(":/images/cur/icon-1-2.png")));
 
@@ -421,10 +422,10 @@ bool QPlotView::Output(QPainter *pDC, QGraphDoc *pDoc, bool screendraw) {
 
     QString ylabel(table.getColumnName(m_y_axis).c_str());
     // this is last to avoid switch between hfont and vfont
-    QMatrix matrix;
+    QTransform matrix;
     matrix.translate(sizey.width(), rect.height() / 2 + ylabel.length() * 7 / 2);
     matrix.rotate(270);
-    pDC->setMatrix(matrix);
+    pDC->setWorldTransform(matrix);
 
     pDC->drawText(QPointF(sizey.width() / 2, height + miny_pos), ylabel);
 

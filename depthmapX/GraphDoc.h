@@ -19,7 +19,7 @@
 
 #include <QMutex>
 #include <QSize>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QThread>
 #include <QApplication>
 #include <QWaitCondition>
@@ -34,7 +34,6 @@
 #include <genlib/exceptions.h>
 // Sala
 #include <salalib/mgraph.h>
-#include "salalib/salaprogram.h"
 #include <salalib/entityparsing.h>
 #include <salalib/linkutils.h>
 #include "salalib/ianalysis.h"
@@ -266,7 +265,7 @@ public:
    int m_record;
    int m_step;
    int m_num_records;
-   QTime m_timer;
+   QElapsedTimer m_timer;
    void ProcPostMessage(int m, int x);
    void UpdateMainframestatus();
 

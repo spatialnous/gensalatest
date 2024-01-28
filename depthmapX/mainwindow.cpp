@@ -116,7 +116,7 @@ QWidget * MainWindow::setupAttributesListWidget()
     QWidget *widget = new QWidget(this);
 
     QLayout *vlayout = new QVBoxLayout(widget);
-    vlayout->setMargin(1);
+    //    vlayout->setMargin(1); // not available in qt5
 
     QLayout *hlayout = new QHBoxLayout();
     vlayout->addWidget(m_attrWindow = new AttribWindow(this, false));
@@ -193,7 +193,7 @@ void MainWindow::OnFileOpen()
    QString template_string;
    template_string += "Graph Files (*.graph)\nAll files (*.*)";
 
-   QFileDialog::Options options = 0;
+   QFileDialog::Options options;
    QString selectedFilter;
      QString fileName = QFileDialog::getOpenFileName(
        0, tr("Open"),

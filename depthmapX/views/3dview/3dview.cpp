@@ -24,6 +24,7 @@
 #include <QtGui>
 #include <QtOpenGL>
 #include <QtWidgets/QFileDialog>
+#include <QMessageBox>
 
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
@@ -467,7 +468,7 @@ void Q3DView::OnToolsAgentLoadProgram() {
     QString template_string;
     template_string += "Text files (*.txt)\nAll files (*.*)";
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QStringList infiles =
         QFileDialog::getOpenFileNames(0, tr("Import"), "", template_string, &selectedFilter, options);
@@ -1022,7 +1023,7 @@ void Q3DView::OnKeyDown(unsigned int nChar, unsigned int nRepCnt, unsigned int n
 
 void Q3DView::OnKeyUp(unsigned int nChar, unsigned int nRepCnt, unsigned int nFlags) { m_key_mode_on = 0; }
 
-bool Q3DView::OnMouseWheel(unsigned int nFlags, short zDelta, QPoint pt) {
+bool Q3DView::OnMouseWheel(unsigned int nFlags, short zDelta, QPointF pt) {
     QSize diff(0, -zDelta / 5);
     Zoom(diff);
     SetModelMat();
@@ -1036,7 +1037,7 @@ void Q3DView::OnToolsImportTraces() {
     QString template_string;
     template_string += "XML files (*.xml)\nText files (*.txt)\nAll files (*.*)";
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QStringList infiles =
         QFileDialog::getOpenFileNames(0, tr("Import Traces"), "", template_string, &selectedFilter, options);
@@ -1175,6 +1176,6 @@ void Q3DView::keyPressEvent(QKeyEvent *event) { OnKeyDown(event->key(), event->c
 
 void Q3DView::keyReleaseEvent(QKeyEvent *event) { OnKeyUp(event->key(), event->count(), 0); }
 
-void Q3DView::wheelEvent(QWheelEvent *event) { OnMouseWheel(0, event->delta(), event->pos()); }
+void Q3DView::wheelEvent(QWheelEvent *event) { OnMouseWheel(0, event->angleDelta().y(), event->position()); }
 
 void Q3DView::timerSlot() { timerEvent(NULL); }

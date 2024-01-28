@@ -11,7 +11,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_COMPILE_WARNING_AS_ERROR OFF)
 
 # Find the QtWidgets library
-find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets Gui OpenGLWidgets OpenGL REQUIRED)
 
 add_compile_definitions(_DEPTHMAP)
 
@@ -42,7 +42,7 @@ set(depthmapX_SRCS
         interfaceversion.h
 )
 
-qt5_wrap_ui(UI_HDRS
+qt_wrap_ui(UI_HDRS
     UI/TopoMetDlg.ui
     UI/SegmentAnalysisDlg.ui
     UI/RenameObjectDlg.ui
@@ -73,7 +73,7 @@ qt5_wrap_ui(UI_HDRS
     UI/AboutDlg.ui
     UI/licenseagreement.ui)
 
-qt5_add_resources(DM_RSRC resource.qrc dialogs/settings/settingsdialog.qrc)
+qt_add_resources(DM_RSRC resource.qrc dialogs/settings/settingsdialog.qrc)
 
 if (WIN32)
         add_executable(${depthmapX} WIN32 ${depthmapX_SRCS} ${UI_HDRS} ${DM_RSRC} icons.rc)
@@ -124,8 +124,9 @@ set(MODULES_CORE FALSE)
 set(MODULES_CORE_TEST FALSE)
 add_subdirectory(../modules modules)
 
-target_link_libraries(${depthmapX} salalib genlib Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL
-    OpenGL::GL OpenGL::GLU ${modules_gui} ${modules_core})
+target_link_libraries(${depthmapX} salalib genlib Qt6::Core
+    Qt6::Gui Qt6::Widgets Qt6::OpenGLWidgets Qt6::OpenGL
+    OpenGL::GL  OpenGL::GLU ${modules_gui} ${modules_core})
 
 add_subdirectory(dialogs)
 add_subdirectory(views)

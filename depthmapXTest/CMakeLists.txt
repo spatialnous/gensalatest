@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 # set(CMAKE_AUTORCC ON)
 
 # Find the QtWidgets library
-find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
 
 include_directories(${QT})
 
@@ -40,5 +40,5 @@ add_executable(${depthmapXTest} ${depthmapXTest_SRCS})
 
 find_package(OpenGL REQUIRED)
 
-target_link_libraries(${depthmapXTest} Qt5::OpenGL salalib genlib OpenGL::GL OpenGL::GLU)
+target_link_libraries(${depthmapXTest} Qt6::OpenGL salalib genlib OpenGL::GL)
 

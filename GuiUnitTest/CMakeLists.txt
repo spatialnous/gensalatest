@@ -2,7 +2,7 @@ set(GuiUnitTest GuiUnitTest)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Find the QtWidgets library
-find_package(Qt5 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets Gui OpenGL REQUIRED)
 # Instruct CMake to run moc automatically when needed
 set(CMAKE_AUTOMOC ON)
 
@@ -15,7 +15,7 @@ set(guiUnitTest_SRCS
 
 include_directories("../ThirdParty/Catch" "../ThirdParty/FakeIt" "../depthmapX")
 
-set(LINK_LIBS salalib genlib Qt5::Core)
+set(LINK_LIBS salalib genlib Qt6::Core)
 
 add_executable(${GuiUnitTest} ${guiUnitTest_SRCS})
 target_link_libraries(${GuiUnitTest} ${LINK_LIBS})

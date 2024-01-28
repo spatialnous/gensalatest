@@ -23,7 +23,6 @@
 #include <qapplication.h>
 #include <qclipboard.h>
 #include <qdebug.h>
-#include <qdesktopwidget.h>
 #include <qevent.h>
 #include <qfiledialog.h>
 #include <qmenu.h>
@@ -121,7 +120,7 @@ QDepthmapView::QDepthmapView(QGraphDoc &pDoc, Settings &settings, QWidget *paren
 
     installEventFilter(this);
 
-    setAttribute(Qt::WA_NoBackground, 1);
+    setAttribute(Qt::WA_NoSystemBackground, 1);
     setMouseTracking(1);
     setWindowIcon(QIcon(tr(":/images/cur/icon-1-4.png")));
 }
@@ -1067,8 +1066,8 @@ void QDepthmapView::mouseReleaseEvent(QMouseEvent *e) {
 }
 
 void QDepthmapView::wheelEvent(QWheelEvent *e) {
-    short zDelta = e->delta();
-    QPoint position = e->pos();
+    short zDelta = e->angleDelta().y();
+    QPointF position = e->position();
     QPoint centre(m_physical_centre.width(), m_physical_centre.height());
     auto zoomFactor = 1.0 + std::abs(double(zDelta)) / 120.0;
     if (zDelta > 0) {
@@ -2224,7 +2223,7 @@ void QDepthmapView::OnEditSave() {
 
     QString template_string = tr("Encapsulated Postscript (*.eps)\nScalable Vector Graphics (*.svg)\nAll files (*.*)");
 
-    QFileDialog::Options options = 0;
+    QFileDialog::Options options;
     QString selectedFilter;
     QString outfile =
         QFileDialog::getSaveFileName(0, tr("Save Screen As"), saveas, template_string, &selectedFilter, options);

@@ -10,6 +10,7 @@ set(CMAKE_AUTORCC ON)
 # Qt 6.4.3 required for sane TreeView handling, but sticking
 # with 6.4.2 for the moment as this is what debian stable supports
 find_package(Qt6 6.4.2 COMPONENTS Core Qml Quick Gui OpenGL Widgets REQUIRED)
+find_package(OpenGL REQUIRED)
 
 add_compile_definitions(_ACANTHIS)
 
@@ -64,6 +65,7 @@ endif(WIN32)
 if(UNIX AND NOT APPLE)
     # qml6-module-qt-labs-settings qml6-module-qtquick-dialogs qml6-module-qtquick-templates
     # qml6-module-qtquick-window qml6-module-qtqml qt6-base-dev qt6-declarative-dev
+    # libglu1-mesa-dev
     add_executable(${projectName} ${projectFiles})
     if (Qt6_POSITION_INDEPENDENT_CODE)
         SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -104,7 +106,8 @@ set(MODULES_CORE FALSE)
 set(MODULES_CORE_TEST FALSE)
 add_subdirectory(../modules modules)
 
-target_link_libraries(${projectName} salalib genlib Qt6::Core Qt6::Gui Qt6::Qml Qt6::Quick Qt6::OpenGL Qt6::Widgets
+target_link_libraries(${projectName} salalib genlib Qt6::Core Qt6::Gui
+    Qt6::Qml Qt6::Quick Qt6::OpenGL Qt6::Widgets
     OpenGL::GL OpenGL::GLU ${modules_gui} ${modules_core})
 
 add_subdirectory(dialogs)

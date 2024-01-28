@@ -17,8 +17,6 @@
 #include "glview.h"
 #include "depthmapX/views/depthmapview/depthmapview.h"
 #include "mainwindow.h"
-#include "salalib/geometrygenerators.h"
-#include "salalib/linkutils.h"
 #include <QCoreApplication>
 #include <QMouseEvent>
 
@@ -495,8 +493,8 @@ void GLView::mouseMoveEvent(QMouseEvent *event) {
 void GLView::wheelEvent(QWheelEvent *event) {
     QPoint numDegrees = event->angleDelta() / 8;
 
-    int x = event->x();
-    int y = event->y();
+    int x = event->position().x();
+    int y = event->position().y();
 
     zoomBy(1 - 0.25f * numDegrees.y() / 15.0f, x, y);
 

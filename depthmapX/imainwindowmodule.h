@@ -15,7 +15,7 @@
 
 #pragma once
 
-#include <QAction>
+#include <QObject>
 #include <QMenuBar>
 #include <iostream>
 
