@@ -2285,7 +2285,7 @@ void MainWindow::RedoPlotViewMenu(QGraphDoc* pDoc)
    in_FocusGraph = false;
 }
 
-void MainWindow::OnSelchangeViewSelector_X(const QString &string)
+void MainWindow::OnSelchangeViewSelector_X(int)
 {
    if(in_FocusGraph) return;
 
@@ -2300,7 +2300,7 @@ void MainWindow::OnSelchangeViewSelector_X(const QString &string)
    gd->SetRedrawFlag(QGraphDoc::VIEW_SCATTER, QGraphDoc::REDRAW_GRAPH, QGraphDoc::NEW_COLUMN );
 }
 
-void MainWindow::OnSelchangeViewSelector_Y(const QString &string)
+void MainWindow::OnSelchangeViewSelector_Y(int)
 {
    if(in_FocusGraph) return;
    int i = y_coord->currentIndex();
@@ -3711,10 +3711,10 @@ void MainWindow::createToolBars()
     y_coord = new QComboBox(this);
     y_coord->setMinimumContentsLength(20);
 
-    connect(x_coord, SIGNAL(currentIndexChanged(const QString &)),
-            this, SLOT(OnSelchangeViewSelector_X(const QString &)));
-    connect(y_coord, SIGNAL(currentIndexChanged(const QString &)),
-            this, SLOT(OnSelchangeViewSelector_Y(const QString &)));
+    connect(x_coord, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(OnSelchangeViewSelector_X(int)));
+    connect(y_coord, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(OnSelchangeViewSelector_Y(int)));
 
 
     QAction* xx = new QAction(tr("X = "), this);

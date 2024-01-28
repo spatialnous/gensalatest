@@ -198,8 +198,8 @@ private slots:
     void SelectPenTriggered();
     void DragButtonTriggered();
     void SelectButtonTriggered();
-    void OnSelchangeViewSelector_X(const QString &string);
-    void OnSelchangeViewSelector_Y(const QString &string);
+    void OnSelchangeViewSelector_X(int);
+    void OnSelchangeViewSelector_Y(int);
     void OninvertColor();
     void OnzoomTo();
 // PlotView message
