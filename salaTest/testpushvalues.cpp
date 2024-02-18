@@ -71,6 +71,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
     mgraph->addNewPointMap("VGA Map");
     PointMap &vgaMap = mgraph->getPointMaps().back();
     vgaMap.setGrid(1.0);
+    std::vector<Line> lines = mgraph->getShownDrawingFilesAsLines();
+    vgaMap.blockLines(lines);
     vgaMap.makePoints(
         Point2f((vgaMinX + vgaMaxX) * 0.5 + minorOffset, (vgaMinY + vgaMaxY) * 0.5 + minorOffset),
         0);

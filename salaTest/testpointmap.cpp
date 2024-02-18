@@ -94,7 +94,7 @@ TEST_CASE("Test MetaGraph construction", "") {
     }
 
     // construct a sample pointMap
-    PointMap pointMap(metaGraph->getRegion(), metaGraph->m_drawingFiles, "Test PointMap");
+    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
 }
 
 TEST_CASE("Test grid filling", "") {
@@ -123,7 +123,7 @@ TEST_CASE("Test grid filling", "") {
     }
 
     // construct a sample pointMap
-    PointMap pointMap(metaGraph->getRegion(), metaGraph->m_drawingFiles, "Test PointMap");
+    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
 
     // set the grid
 
@@ -152,6 +152,8 @@ TEST_CASE("Test grid filling", "") {
         // at the centre of a central cell
         Point2f midPoint(gridBottomLeft.x + spacing * (floor(pointMap.getCols() * 0.5) + 0.5),
                          gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5) + 0.5));
+        std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+        pointMap.blockLines(lines);
         bool pointsMade = pointMap.makePoints(midPoint, fill_type);
         REQUIRE(pointsMade);
     }
@@ -163,6 +165,8 @@ TEST_CASE("Test grid filling", "") {
         // at the edge of a central cell
         Point2f midPoint(gridBottomLeft.x + spacing * (floor(pointMap.getCols() * 0.5)),
                          gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5)));
+        std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+        pointMap.blockLines(lines);
         bool pointsMade = pointMap.makePoints(midPoint, fill_type);
         REQUIRE(pointsMade);
     }
@@ -267,7 +271,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
 
     std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
     metaGraph->setRegion(bottomLeft, topRight);
-    PointMap pointMap(metaGraph->getRegion(), metaGraph->m_drawingFiles, "Test PointMap");
+    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
     bool gridIsSet = pointMap.setGrid(spacing, offset);
 
     int bottomLeftPixelIndexX = int(floor(bottomLeft.x / spacing - 0.5)) + 1;
@@ -294,7 +298,8 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
                      gridBottomLeft.y + spacing * (floor(numCellsY * 0.5) + 0.5));
 
     int fill_type = 0; // = QDepthmapView::FULLFILL
-
+    std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+    pointMap.blockLines(lines);
     bool pointsMade = pointMap.makePoints(midPoint, fill_type);
 
     // check if the grid is filled
@@ -329,7 +334,7 @@ TEST_CASE("Test PointMap connections output", "") {
         metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion();
     metaGraph->setRegion(metaGraph->m_drawingFiles.back().m_region.bottom_left,
                          metaGraph->m_drawingFiles.back().m_region.top_right);
-    PointMap pointMap(metaGraph->getRegion(), metaGraph->m_drawingFiles, "Test PointMap");
+    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
 
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
 
@@ -339,6 +344,8 @@ TEST_CASE("Test PointMap connections output", "") {
     int fill_type = 0; // = QDepthmapView::FULLFILL
     bool gridIsSet = pointMap.setGrid(spacing, offset);
 
+    std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+    pointMap.blockLines(lines);
     bool pointsMade = pointMap.makePoints(midPoint, fill_type);
 
     bool boundaryGraph = false;
@@ -445,11 +452,13 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "") {
 
     std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
     metaGraph->setRegion(bottomLeft, topRight);
-    PointMap pointMap(metaGraph->getRegion(), metaGraph->m_drawingFiles, "Test PointMap");
+    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
     pointMap.setGrid(spacing, offset);
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
     Point2f midPoint(gridBottomLeft.x + spacing * (floor(pointMap.getCols() * 0.5) + 0.5),
                      gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5) + 0.5));
+    std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+    pointMap.blockLines(lines);
     pointMap.makePoints(midPoint, fill_type);
 
     std::vector<Line> mergeLines;
