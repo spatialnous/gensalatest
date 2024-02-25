@@ -18,17 +18,25 @@
 
 #include "segmtopologicalshortestpath.h"
 
-#include "genlib/stringutils.h"
+#include "salalib/segmmodules/segmhelpers.h"
 
-bool SegmentTopologicalShortestPath::run(Communicator *comm) {
+AnalysisResult SegmentTopologicalShortestPath::run(Communicator *comm) {
+
+    AnalysisResult result{false, std::set<std::string>()};
+    auto &selected = m_map.getSelSet();
+    if (selected.size() != 2) {
+        return result;
+    }
 
     AttributeTable &attributes = m_map.getAttributeTable();
     int shapeCount = m_map.getShapeCount();
 
-    bool retvar = true;
-
-    int depth_col = attributes.insertOrResetColumn("Topological Shortest Path Depth");
-    int path_col = attributes.insertOrResetColumn("Topological Shortest Path Order");
+    std::string colText = "Topological Shortest Path Depth";
+    int depth_col = attributes.insertOrResetColumn(colText);
+    result.newColumns.insert(colText);
+    colText = "Topological Shortest Path Order";
+    int path_col = attributes.insertOrResetColumn(colText);
+    result.newColumns.insert(colText);
 
     // record axial line refs for topological analysis
     std::vector<int> axialrefs;
@@ -51,10 +59,6 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm) {
     std::vector<int> list[512]; // 512 bins!
     int open = 0;
 
-    auto &selected = m_map.getSelSet();
-    if (selected.size() != 2) {
-        return false;
-    }
     int refFrom = *selected.begin();
     int refTo = *selected.rbegin();
 
@@ -163,5 +167,7 @@ bool SegmentTopologicalShortestPath::run(Communicator *comm) {
     m_map.overrideDisplayedAttribute(-2); // <- override if it's already showing
     m_map.setDisplayedAttribute(depth_col);
 
-    return retvar;
+    result.completed = true;
+
+    return result;
 }

@@ -18,9 +18,9 @@
 
 #pragma once
 
-#include "salalib/segmmodules/segmhelpers.h"
-
 #include "salalib/ianalysis.h"
+
+#include "salalib/shapegraph.h"
 
 class SegmentTopologicalShortestPath : public IAnalysis {
   private:
@@ -29,5 +29,5 @@ class SegmentTopologicalShortestPath : public IAnalysis {
   public:
     SegmentTopologicalShortestPath(ShapeGraph &map) : m_map(map) {}
     std::string getAnalysisName() const override { return "Topological Shortest Path"; }
-    bool run(Communicator *comm) override;
+    AnalysisResult run(Communicator *comm) override;
 };

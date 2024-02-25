@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 Item {
-    property var orientation: Qt.Vertical
+    property int orientation: Qt.Vertical
 
     implicitWidth: orientation === Qt.Vertical ? 5 : parent.width
     implicitHeight: orientation === Qt.Vertical ? parent.height : 5

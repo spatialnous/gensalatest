@@ -18,16 +18,25 @@
 
 #include "segmtulipshortestpath.h"
 
-#include "genlib/stringutils.h"
-
 // revised to use tulip bins for faster analysis of large spaces
 
-bool SegmentTulipShortestPath::run(Communicator *) {
+AnalysisResult SegmentTulipShortestPath::run(Communicator *) {
+
+    AnalysisResult result{false, std::set<std::string>()};
+
+    auto &selected = m_map.getSelSet();
+    if (selected.size() != 2) {
+        return result;
+    }
 
     AttributeTable &attributes = m_map.getAttributeTable();
 
-    int angle_col = attributes.insertOrResetColumn("Angular Shortest Path Angle");
-    int path_col = attributes.insertOrResetColumn("Angular Shortest Path Order");
+    std::string colText = "Angular Shortest Path Angle";
+    int angle_col = attributes.insertOrResetColumn(colText);
+    result.newColumns.insert(colText);
+    colText = "Angular Shortest Path Order";
+    int path_col = attributes.insertOrResetColumn(colText);
+    result.newColumns.insert(colText);
 
     // The original code set tulip_bins to 1024, divided by two and added one
     // in order to duplicate previous code (using a semicircle of tulip bins)
@@ -39,10 +48,6 @@ bool SegmentTulipShortestPath::run(Communicator *) {
     }
     std::vector<std::vector<SegmentData>> bins(tulip_bins);
 
-    auto &selected = m_map.getSelSet();
-    if (selected.size() != 2) {
-        return false;
-    }
     int refFrom = *selected.begin();
     int refTo = *selected.rbegin();
 
@@ -149,5 +154,7 @@ bool SegmentTulipShortestPath::run(Communicator *) {
     m_map.overrideDisplayedAttribute(-2); // <- override if it's already showing
     m_map.setDisplayedAttribute(angle_col);
 
-    return true;
+    result.completed = true;
+
+    return result;
 }

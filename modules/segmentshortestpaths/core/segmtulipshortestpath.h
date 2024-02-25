@@ -20,6 +20,8 @@
 
 #include "salalib/ianalysis.h"
 
+#include "salalib/shapegraph.h"
+
 class SegmentTulipShortestPath : public IAnalysis {
   private:
     ShapeGraph &m_map;
@@ -27,5 +29,5 @@ class SegmentTulipShortestPath : public IAnalysis {
   public:
     SegmentTulipShortestPath(ShapeGraph &map) : m_map(map) {}
     std::string getAnalysisName() const override { return "Tulip Shortest Path"; }
-    bool run(Communicator *) override;
+    AnalysisResult run(Communicator *) override;
 };

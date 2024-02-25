@@ -38,7 +38,7 @@ inline void CMSCommunicator::CommPostMessage(int m, int x) const
 }
 
 void CMSCommunicator::runAnalysis(QGraphDoc &graphDoc) {
-    bool success = m_analysis->run(this);
+    bool success = m_analysis->run(this).completed;
     if (success) {
         graphDoc.SetUpdateFlag(m_successUpdateFlagType, m_successUpdateFlagModified);
         graphDoc.SetRedrawFlag(m_successRedrawFlagViewType, m_successRedrawFlag, m_successRedrawReason);

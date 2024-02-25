@@ -18,17 +18,26 @@
 
 #include "segmmetricshortestpath.h"
 
-#include "genlib/stringutils.h"
+#include "salalib/segmmodules/segmhelpers.h"
 
-bool SegmentMetricShortestPath::run(Communicator *) {
+AnalysisResult SegmentMetricShortestPath::run(Communicator *) {
+
+    AnalysisResult result{false, std::set<std::string>()};
+    auto &selected = m_map.getSelSet();
+    if (selected.size() != 2) {
+        return result;
+    }
 
     AttributeTable &attributes = m_map.getAttributeTable();
     int shapeCount = m_map.getShapeCount();
 
-    bool retvar = true;
 
-    int dist_col = attributes.insertOrResetColumn("Metric Shortest Path Distance");
-    int path_col = attributes.insertOrResetColumn("Metric Shortest Path Order");
+    std::string colText = "Metric Shortest Path Distance";
+    int dist_col = attributes.insertOrResetColumn(colText);
+    result.newColumns.insert(colText);
+    colText = "Metric Shortest Path Order";
+    int path_col = attributes.insertOrResetColumn(colText);
+    result.newColumns.insert(colText);
 
     // record axial line refs for topological analysis
     std::vector<int> axialrefs;
@@ -51,10 +60,6 @@ bool SegmentMetricShortestPath::run(Communicator *) {
     std::vector<int> list[512]; // 512 bins!
     int open = 0;
 
-    auto &selected = m_map.getSelSet();
-    if (selected.size() != 2) {
-        return false;
-    }
     int refFrom = *selected.begin();
     int refTo = *selected.rbegin();
 
@@ -152,5 +157,7 @@ bool SegmentMetricShortestPath::run(Communicator *) {
     m_map.overrideDisplayedAttribute(-2);
     m_map.setDisplayedAttribute(path_col);
 
-    return retvar;
+    result.completed = true;
+
+    return result;
 }

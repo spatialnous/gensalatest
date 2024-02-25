@@ -292,7 +292,7 @@ ApplicationWindow {
                 text: model.graphModelFile
                 highlighted: ListView.isCurrentItem
                 onClicked: {
-                    if (listView.currentIndex != index) {
+                    if (listView.currentIndex !== index) {
                         listView.currentIndex = index
                         titleLabel.text = model.title
                         stackView.replace(model.source)
