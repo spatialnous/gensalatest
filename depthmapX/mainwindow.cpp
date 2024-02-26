@@ -1900,8 +1900,7 @@ void MainWindow::LineButtonTriggered()
 
 void MainWindow::isoButtonTriggered()
 {
-    int id = MakeIosAct->data().value<int>();
-    if(id == ID_MAPBAR_ITEM_ISOVIST)
+    if(m_currentIsovistModeType == ID_MAPBAR_ITEM_ISOVIST)
     {
         m_selected_mapbar_item = ID_MAPBAR_ITEM_ISOVIST;
         activeMapView()->OnModeIsovist();
@@ -1957,14 +1956,14 @@ void MainWindow::LineModeTriggered()
     LineButtonTriggered();
 }
 
-void MainWindow::isoModeTriggered()
+void MainWindow::isoModeTriggered(int isovistModeType)
 {
-    MakeIosAct = qobject_cast<QAction *>(sender());
-    if(MakeIosAct->data() == ID_MAPBAR_ITEM_ISOVIST)
+    if(isovistModeType == ID_MAPBAR_ITEM_ISOVIST)
         newisoToolButton->setIcon(QIcon(":/images/win/b-5-12.png"));
     else
         newisoToolButton->setIcon(QIcon(":/images/win/b-5-13.png"));
 
+    m_currentIsovistModeType = isovistModeType;
     newisoToolButton->setChecked(1);
     isoButtonTriggered();
 }
@@ -3377,12 +3376,14 @@ void MainWindow::createActions()
         MakeIosAct->setCheckable(1);
         MakeIosAct->setChecked(1);
         MakeIosAct->setData(ID_MAPBAR_ITEM_ISOVIST);
-        connect(MakeIosAct, SIGNAL(triggered()), this, SLOT(isoModeTriggered()));
+        connect(MakeIosAct, &QAction::triggered, this,
+                [this]{ isoModeTriggered(ID_MAPBAR_ITEM_ISOVIST); });
         PartialMakeIosAct = new QAction(tr("Partial isovisist"), this);
         PartialMakeIosAct->setStatusTip(tr("Make a new partial isovist\nPartial Isovist"));
         PartialMakeIosAct->setCheckable(1);
         PartialMakeIosAct->setData(ID_MAPBAR_ITEM_HALFISOVIST);
-        connect(PartialMakeIosAct, SIGNAL(triggered()), this, SLOT(isoModeTriggered()));
+        connect(PartialMakeIosAct, &QAction::triggered, this,
+                [this]{ isoModeTriggered(ID_MAPBAR_ITEM_HALFISOVIST); });
         isoToolMenu->addAction(MakeIosAct);
         isoToolMenu->addAction(PartialMakeIosAct);
         isoToolMenu->setDefaultAction(MakeIosAct);

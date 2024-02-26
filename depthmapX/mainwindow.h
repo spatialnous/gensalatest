@@ -185,7 +185,7 @@ private slots:
     void zoomModeTriggered();
     void FillModeTriggered();
     void LineModeTriggered();
-    void isoModeTriggered();
+    void isoModeTriggered(int isovistModeType);
     void joinTriggered();
     void zoomButtonTriggered();
     void FillButtonTriggered();
@@ -481,6 +481,8 @@ private:
        ID_MAPBAR_ITEM_UNJOIN = 17,
        ID_MAPBAR_ITEM_AUGMENT_FILL = 18 // AV test - TV
     };
+
+    int m_currentIsovistModeType = ID_MAPBAR_ITEM_ISOVIST;
 };
 
 #endif
