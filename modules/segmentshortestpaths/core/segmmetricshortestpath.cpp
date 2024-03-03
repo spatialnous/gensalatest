@@ -22,7 +22,7 @@
 
 AnalysisResult SegmentMetricShortestPath::run(Communicator *) {
 
-    AnalysisResult result{false, std::set<std::string>()};
+    AnalysisResult result;
     auto &selected = m_map.getSelSet();
     if (selected.size() != 2) {
         return result;
@@ -34,10 +34,10 @@ AnalysisResult SegmentMetricShortestPath::run(Communicator *) {
 
     std::string colText = "Metric Shortest Path Distance";
     int dist_col = attributes.insertOrResetColumn(colText);
-    result.newColumns.insert(colText);
+    result.addAttribute(colText);
     colText = "Metric Shortest Path Order";
     int path_col = attributes.insertOrResetColumn(colText);
-    result.newColumns.insert(colText);
+    result.addAttribute(colText);
 
     // record axial line refs for topological analysis
     std::vector<int> axialrefs;
