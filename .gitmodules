@@ -1,6 +1,6 @@
 [submodule "salalib"]
 	path = salalib
-	url = git@github.com:acanth-is/salalib.git
+	url = git@github.com:spatialnous/salalib.git
 [submodule "genlib"]
 	path = genlib
-	url = git@github.com:/acanth-is/genlib
+	url = git@github.com:spatialnous/genlib
