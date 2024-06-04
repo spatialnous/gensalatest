@@ -1,7 +1,7 @@
-## depthmapX - multi-platform spatial network analyses software
+## acanthis - multi-platform spatial network analyses software
 
 
-This is the home for the development of depthmapX.
+This is the home for the development of acanthis.
 
 
 Latest releases can be found at the [releases page](https://github.com/SpaceGroupUCL/depthmapX/releases)
