@@ -26,7 +26,7 @@ jobs:
 
     - uses: awalsh128/cache-apt-pkgs-action@latest
       with:
-        packages: qml6-module-qt-labs-settings qml6-module-qtquick-dialogs qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtqml qt6-base-dev qt6-declarative-dev libglu1-mesa-dev
+        packages: qt6-base-dev qml6-module-qt-labs-settings qml6-module-qtquick-dialogs qml6-module-qtquick-templates qml6-module-qtquick-window qml6-module-qtqml qt6-base-dev qt6-declarative-dev libglu1-mesa-dev
         version: 1.0
         execute_install_scripts: true
 
