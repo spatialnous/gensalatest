@@ -17,7 +17,7 @@ For more information please check the [documentation](./docs/index.md) and the [
 
 ##
 
-depthmapX is licensed under the [GPLv3](http://www.gnu.org/licenses/gpl-3.0.html) licence. 
+acanthis is licensed under the [GPLv3](http://www.gnu.org/licenses/gpl-3.0.html) licence. 
 
 depthmapX uses [Qt5](http://www.qt.io) as UI toolkit and build system, [Catch](https://github.com/philsquared/catch) as unit testing framework and [FakeIt](https://github.com/eranpeer/FakeIt) for test mocks.
 
