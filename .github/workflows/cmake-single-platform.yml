@@ -7,6 +7,7 @@ on:
     branches: [ "acanthis" ]
   pull_request:
     branches: [ "acanthis" ]
+  workflow_dispatch:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
