@@ -40,6 +40,9 @@ configure_file("${CMAKE_SOURCE_DIR}/version_defs.h.in" "${CMAKE_BINARY_DIR}/vers
 
 string(TIMESTAMP APP_DATE %Y-%m-%d)
 
+add_compile_options($<$<CONFIG:Debug>:-fsanitize=address>)
+add_link_options($<$<CONFIG:Debug>:-fsanitize=address>)
+
 set(modules_core "" CACHE INTERNAL "modules_core" FORCE)
 set(MODULES_GUI FALSE)
 set(MODULES_CLI FALSE)
