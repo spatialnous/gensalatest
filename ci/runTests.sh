@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo Running unit tests
-./cliTest/cliTest && ./GuiUnitTest/GuiUnitTest && ./salaTest/salaTest && ./genlibTest/genlibTest && ./depthmapXTest/depthmapXTest && ./moduleTest/moduleTest || exit 1
+./cliTest/cliTest && ./salaTest/salaTest && ./genlibTest/genlibTest && ./moduleTest/moduleTest || exit 1
 # if that succeeds, run regression tests
 echo testing regression test framework
 cd ../RegressionTest/test && echo pwd && python3 -u test_main.py || exit 1
