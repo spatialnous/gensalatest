@@ -54,7 +54,7 @@ TEST_CASE("BSPTree::pickMidpointLine") {
     }
 }
 
-void compareLines(Line l1, Line l2, float EPSILON) {
+void compareLines(const Line &l1, const Line &l2, float EPSILON) {
     REQUIRE(l1.start().x == Approx(l2.start().x).epsilon(EPSILON));
     REQUIRE(l1.start().y == Approx(l2.start().y).epsilon(EPSILON));
     REQUIRE(l1.end().x == Approx(l2.end().x).epsilon(EPSILON));

@@ -92,7 +92,7 @@ namespace dm_runmethods {
                 }
 
                 std::vector<std::string> fileNames = parser.getFilesToImport();
-                for (std::string fileName : fileNames) {
+                for (std::string &fileName : fileNames) {
                     std::string ext = fileName.substr(fileName.length() - 4, fileName.length() - 1);
                     std::ifstream file(fileName);
                     char delimiter = '\t';
@@ -156,7 +156,7 @@ namespace dm_runmethods {
                 if (parser.getLinkType() == LinkParser::LinkType::COORDS) {
                     std::vector<Line> mergeLines =
                         EntityParsing::parseLines(linksStream, delimiter);
-                    for (auto line : mergeLines) {
+                    for (const auto &line : mergeLines) {
                         QtRegion region(line.start(), line.start());
                         shapeGraph.setCurSel(region);
                         shapeGraph.linkShapes(line.end());
@@ -409,8 +409,6 @@ namespace dm_runmethods {
                             IPerformanceSink &perfWriter) {
         auto mGraph = loadGraph(clp.getFileName().c_str(), perfWriter);
 
-        auto state = mGraph->getState();
-
         std::cout << "Running segment analysis... " << std::flush;
         Options options;
         const std::vector<double> &radii = sp.getRadii();
@@ -549,7 +547,8 @@ namespace dm_runmethods {
             eng.agentSets.back().m_release_locations_seed = agentP.randomReleaseLocationSeed();
         } else {
             eng.agentSets.back().m_release_locations.clear();
-            for_each(agentP.getReleasePoints().begin(), agentP.getReleasePoints().end(),
+            const auto &releasePoints = agentP.getReleasePoints();
+            for_each(releasePoints.begin(), releasePoints.end(),
                      [&eng, &currentMap](const Point2f &point) -> void {
                          eng.agentSets.back().m_release_locations.push_back(
                              currentMap.pixelate(point, false));

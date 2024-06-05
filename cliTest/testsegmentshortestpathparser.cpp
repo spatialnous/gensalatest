@@ -15,7 +15,6 @@
 
 #include "depthmapXcli/segmentshortestpathparser.h"
 #include "cliTest/argumentholder.h"
-#include "cliTest/selfcleaningfile.h"
 #include <catch.hpp>
 
 TEST_CASE("SegmentShortestPathParser", "Error cases") {

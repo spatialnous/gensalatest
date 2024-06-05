@@ -274,6 +274,8 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
     PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
     bool gridIsSet = pointMap.setGrid(spacing, offset);
 
+    REQUIRE(gridIsSet);
+
     int bottomLeftPixelIndexX = int(floor(bottomLeft.x / spacing - 0.5)) + 1;
     int bottomLeftPixelIndexY = int(floor(bottomLeft.y / spacing - 0.5)) + 1;
 
@@ -344,9 +346,13 @@ TEST_CASE("Test PointMap connections output", "") {
     int fill_type = 0; // = QDepthmapView::FULLFILL
     bool gridIsSet = pointMap.setGrid(spacing, offset);
 
+    REQUIRE(gridIsSet);
+
     std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
     pointMap.blockLines(lines);
     bool pointsMade = pointMap.makePoints(midPoint, fill_type);
+
+    REQUIRE(pointsMade);
 
     bool boundaryGraph = false;
     double maxDist = -1;

@@ -38,7 +38,7 @@ TEST_CASE("Shortest paths working examples", "") {
     lines.push_back(Line(Point2f(1.28848772, 1.91061952), Point2f(1.75546653, 2.84134127)));
     lines.push_back(Line(Point2f(1.61521977, 2.72198377), Point2f(2.59540115, 3.02997701)));
     lines.push_back(Line(Point2f(1.23737734, 1.07071068), Point2f(0.45955989, 0.29289322)));
-    for (Line line : lines) {
+    for (const Line &line : lines) {
         axialMap.makeLineShape(line);
     }
     axialMap.makeConnections();
