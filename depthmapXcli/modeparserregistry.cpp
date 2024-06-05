@@ -21,7 +21,7 @@
 #include "isovistparser.h"
 #include "linkparser.h"
 #include "mapconvertparser.h"
-#include "modules/segmentshortestpaths/cli/segmentshortestpathparser.h"
+#include "segmentshortestpathparser.h"
 #include "segmentparser.h"
 #include "stepdepthparser.h"
 #include "vgaparser.h"

@@ -26,6 +26,7 @@ set(salaTest_SRCS
     testpointinpoly.cpp
     testpushvalues.cpp
     testisovist.cpp
+    testsegmentpathscore.cpp
 ) # salaTest_SRCS
 
 include_directories(SYSTEM "../ThirdParty/Catch" "../ThirdParty/FakeIt")

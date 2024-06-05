@@ -14,9 +14,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "catch.hpp"
-#include "modules/segmentshortestpaths/core/segmmetricshortestpath.h"
-#include "modules/segmentshortestpaths/core/segmtopologicalshortestpath.h"
-#include "modules/segmentshortestpaths/core/segmtulipshortestpath.h"
+#include "salalib/segmmodules/segmmetricshortestpath.h"
+#include "salalib/segmmodules/segmtopologicalshortestpath.h"
+#include "salalib/segmmodules/segmtulipshortestpath.h"
 #include "salalib/mapconverter.h"
 #include "salalib/shapegraph.h"
 

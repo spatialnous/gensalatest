@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "modules/segmentshortestpaths/cli/segmentshortestpathparser.h"
+#include "depthmapXcli/segmentshortestpathparser.h"
 #include "cliTest/argumentholder.h"
 #include "cliTest/selfcleaningfile.h"
 #include <catch.hpp>
