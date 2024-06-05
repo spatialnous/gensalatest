@@ -51,7 +51,7 @@ public:
                 "  -coc Copy attributes to output map (Only between DATA, AXIAL and SEGMENT)\n"\
                 "  -crsl <%> Percent of line length of axial stubs to remove (Only for AXIAL -> SEGMENT)\n\n";
     }
-    void parse(int argc, char **argv);
+    void parse(size_t argc, char **argv);
     void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
 
     int outputMapType() const { return m_outMapType; }

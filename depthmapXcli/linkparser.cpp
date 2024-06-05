@@ -24,7 +24,7 @@
 
 using namespace depthmapX;
 
-void LinkParser::parse(int argc, char *argv[]) {
+void LinkParser::parse(size_t argc, char *argv[]) {
     for (int i = 1; i < argc;) {
         if (std::strcmp("-lmt", argv[i]) == 0) {
             ENFORCE_ARGUMENT("-lmt", i)

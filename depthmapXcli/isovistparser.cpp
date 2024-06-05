@@ -38,7 +38,7 @@ std::string IsovistParser::getHelp() const {
            "  pointing to the right.\n\n";
 }
 
-void IsovistParser::parse(int argc, char **argv) {
+void IsovistParser::parse(size_t argc, char **argv) {
     std::string isovistFile;
 
     for (int i = 1; i < argc; ++i) {

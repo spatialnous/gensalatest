@@ -38,7 +38,7 @@ public:
 
 public:
     VgaParser();
-    virtual void parse(int argc, char *argv[]);
+    virtual void parse(size_t argc, char *argv[]);
     virtual void run(const CommandLineParser &clp, IPerformanceSink& perfWriter) const;
 
     enum VgaMode{

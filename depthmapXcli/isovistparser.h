@@ -28,7 +28,7 @@ public:
 public:
     std::string getModeName() const;
     std::string getHelp() const;
-    void parse(int argc, char **argv);
+    void parse(size_t argc, char **argv);
     void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
 
     const std::vector<IsovistDefinition> &getIsovists() const{ return m_isovists;}

@@ -23,7 +23,7 @@
 
 using namespace depthmapX;
 
-void VisPrepParser::parse(int argc, char **argv) {
+void VisPrepParser::parse(size_t argc, char **argv) {
 
     // All options:
     // Create grid (m_grid > 0)

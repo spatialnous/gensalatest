@@ -26,7 +26,7 @@ using namespace depthmapX;
 
 AgentParser::AgentParser() : m_agentMode(AgentMode::NONE) {}
 
-void AgentParser::parse(int argc, char *argv[]) {
+void AgentParser::parse(size_t argc, char *argv[]) {
     std::vector<std::string> points;
     std::string pointFile;
 

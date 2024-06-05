@@ -23,7 +23,7 @@
 
 using namespace depthmapX;
 
-void ImportParser::parse(int argc, char *argv[]) {
+void ImportParser::parse(size_t argc, char *argv[]) {
     for (int i = 1; i < argc; ++i) {
         if (strcmp("-if", argv[i]) == 0) {
             ENFORCE_ARGUMENT("-if", i)

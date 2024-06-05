@@ -23,7 +23,7 @@
 
 using namespace depthmapX;
 
-void StepDepthParser::parse(int argc, char **argv) {
+void StepDepthParser::parse(size_t argc, char **argv) {
 
     std::vector<std::string> points;
     std::string pointFile;

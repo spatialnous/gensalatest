@@ -35,7 +35,7 @@ class TestParser : public IModeParser {
 
     virtual std::string getHelp() const { return formatTestHelpString(_runCalled, _parseCalled); }
 
-    virtual void parse(int, char **) { _parseCalled = true; }
+    virtual void parse(size_t, char **) { _parseCalled = true; }
 
     virtual void run(const CommandLineParser &, IPerformanceSink &) const { _runCalled = true; }
 

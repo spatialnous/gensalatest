@@ -46,7 +46,7 @@ std::string AxialParser::getHelp() const {
            "\n";
 }
 
-void AxialParser::parse(int argc, char **argv) {
+void AxialParser::parse(size_t argc, char **argv) {
     for (int i = 1; i < argc; ++i) {
         if (std::strcmp(argv[i], "-xl") == 0) {
             ENFORCE_ARGUMENT("-xl", i)
