@@ -32,10 +32,10 @@ AnalysisResult SegmentTulipShortestPath::run(Communicator *) {
     AttributeTable &attributes = m_map.getAttributeTable();
 
     std::string colText = "Angular Shortest Path Angle";
-    int angle_col = attributes.insertOrResetColumn(colText);
+    size_t angle_col = attributes.insertOrResetColumn(colText);
     result.addAttribute(colText);
     colText = "Angular Shortest Path Order";
-    int path_col = attributes.insertOrResetColumn(colText);
+    size_t path_col = attributes.insertOrResetColumn(colText);
     result.addAttribute(colText);
 
     // The original code set tulip_bins to 1024, divided by two and added one

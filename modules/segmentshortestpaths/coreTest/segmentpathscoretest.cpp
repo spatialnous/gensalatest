@@ -21,7 +21,7 @@
 #include "salalib/shapegraph.h"
 
 TEST_CASE("Shortest paths working examples", "") {
-    const float EPSILON = 0.001;
+    const double EPSILON = 0.001;
 
     // construct an axial map which will result in three different paths for the three types
     ShapeGraph axialMap("Dummy drawing map", ShapeMap::AXIALMAP);
@@ -64,9 +64,9 @@ TEST_CASE("Shortest paths working examples", "") {
         SegmentTulipShortestPath(*segmentMap.get()).run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Angle"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Order"));
-        int angleColIdx =
+        size_t angleColIdx =
             segmentMap->getAttributeTable().getColumnIndex("Angular Shortest Path Angle");
-        int orderColIdx =
+        size_t orderColIdx =
             segmentMap->getAttributeTable().getColumnIndex("Angular Shortest Path Order");
         std::vector<double> expectedAngles = {-1, 0,  0.54297, 1.42969,  -1,
                                               -1, -1, 1.24219, 0.734375, 1.82422};
@@ -87,9 +87,9 @@ TEST_CASE("Shortest paths working examples", "") {
         SegmentMetricShortestPath(*segmentMap.get()).run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Distance"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Order"));
-        int distanceColIdx =
+        size_t distanceColIdx =
             segmentMap->getAttributeTable().getColumnIndex("Metric Shortest Path Distance");
-        int orderColIdx =
+        size_t orderColIdx =
             segmentMap->getAttributeTable().getColumnIndex("Metric Shortest Path Order");
         std::vector<double> expectedDistances = {-1,      0,       1,  3.57756, -1,
                                                  2.67689, 1.89156, -1, -1,      4.58446};
@@ -110,9 +110,9 @@ TEST_CASE("Shortest paths working examples", "") {
         SegmentTopologicalShortestPath(*segmentMap.get()).run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Depth"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Order"));
-        int depthColIdx =
+        size_t depthColIdx =
             segmentMap->getAttributeTable().getColumnIndex("Topological Shortest Path Depth");
-        int orderColIdx =
+        size_t orderColIdx =
             segmentMap->getAttributeTable().getColumnIndex("Topological Shortest Path Order");
         std::vector<double> expectedDepths = {2, 0, -1, -1, 1, -1, -1, -1, -1, 3};
         std::vector<int> expectedOrder = {2, 0, -1, -1, 1, -1, -1, -1, -1, 3};
