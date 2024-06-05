@@ -27,11 +27,11 @@
 
 using namespace depthmapX;
 
-void SegmentShortestPathParser::parse(int argc, char **argv) {
+void SegmentShortestPathParser::parse(size_t argc, char **argv) {
 
     std::string originPoint;
     std::string destinationPoint;
-    for (int i = 1; i < argc; ++i) {
+    for (size_t i = 1; i < argc; ++i) {
         if (std::strcmp("-sspo", argv[i]) == 0) {
             if (!originPoint.empty()) {
                 throw CommandLineException("-sspo can only be provided once");
