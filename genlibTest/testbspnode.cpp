@@ -161,17 +161,17 @@ TEST_CASE("BSPTree::make (all horizontal lines)", "all-left tree") {
     REQUIRE(node->m_left != nullptr);
     REQUIRE(node->m_right == nullptr);
 
-    compareLines(node->m_left->getLine(), lines[2].line, EPSILON);
+    compareLines(node->m_left->getLine(), lines[0].line, EPSILON);
 
     REQUIRE(node->m_left->m_left != nullptr);
     REQUIRE(node->m_left->m_right == nullptr);
 
-    compareLines(node->m_left->m_left->getLine(), lines[3].line, EPSILON);
+    compareLines(node->m_left->m_left->getLine(), lines[2].line, EPSILON);
 
     REQUIRE(node->m_left->m_left->m_left != nullptr);
     REQUIRE(node->m_left->m_left->m_right == nullptr);
 
-    compareLines(node->m_left->m_left->m_left->getLine(), lines[0].line, EPSILON);
+    compareLines(node->m_left->m_left->m_left->getLine(), lines[3].line, EPSILON);
 
     REQUIRE(node->m_left->m_left->m_left->m_left == nullptr);
     REQUIRE(node->m_left->m_left->m_left->m_right == nullptr);
@@ -196,16 +196,16 @@ TEST_CASE("BSPTree::make (all vertical lines)", "split tree") {
     REQUIRE(node->m_right != nullptr);
 
     compareLines(node->m_left->getLine(), lines[0].line, EPSILON);
-    compareLines(node->m_right->getLine(), lines[3].line, EPSILON);
+    compareLines(node->m_right->getLine(), lines[2].line, EPSILON);
 
     REQUIRE(node->m_left->m_left == nullptr);
     REQUIRE(node->m_left->m_right == nullptr);
 
-    REQUIRE(node->m_right->m_left != nullptr);
-    REQUIRE(node->m_right->m_right == nullptr);
+    REQUIRE(node->m_right->m_left == nullptr);
+    REQUIRE(node->m_right->m_right != nullptr);
 
-    compareLines(node->m_right->m_left->getLine(), lines[2].line, EPSILON);
+    compareLines(node->m_right->m_right->getLine(), lines[3].line, EPSILON);
 
-    REQUIRE(node->m_right->m_left->m_left == nullptr);
-    REQUIRE(node->m_right->m_left->m_right == nullptr);
+    REQUIRE(node->m_right->m_right->m_left == nullptr);
+    REQUIRE(node->m_right->m_right->m_right == nullptr);
 }
