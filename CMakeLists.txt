@@ -1,5 +1,5 @@
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "Minimum macOS deployment version")
-project(acanthis)
+project(gensalatest)
 cmake_minimum_required(VERSION 3.13.0)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -54,9 +54,5 @@ add_subdirectory(modules) # only the core modules are loaded here
 add_subdirectory(salaTest)
 add_subdirectory(depthmapXcli)
 add_subdirectory(cliTest)
-add_subdirectory(depthmapXTest)
-add_subdirectory(depthmapX)
-add_subdirectory(GuiUnitTest)
-add_subdirectory(acanthis)
 add_subdirectory(moduleTest)
 
