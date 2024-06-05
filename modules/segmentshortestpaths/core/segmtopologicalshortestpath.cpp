@@ -165,7 +165,7 @@ AnalysisResult SegmentTopologicalShortestPath::run(Communicator *comm) {
     }
 
     m_map.overrideDisplayedAttribute(-2); // <- override if it's already showing
-    m_map.setDisplayedAttribute(depth_col);
+    m_map.setDisplayedAttribute(static_cast<int>(depth_col));
 
     result.completed = true;
 

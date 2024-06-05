@@ -155,7 +155,7 @@ AnalysisResult SegmentMetricShortestPath::run(Communicator *) {
     }
 
     m_map.overrideDisplayedAttribute(-2);
-    m_map.setDisplayedAttribute(path_col);
+    m_map.setDisplayedAttribute(static_cast<int>(path_col));
 
     result.completed = true;
 
