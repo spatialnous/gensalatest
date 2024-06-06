@@ -14,7 +14,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "catch.hpp"
-#include <genlib/containerutils.h>
+
+#include "genlib/containerutils.h"
+
 #include <vector>
 
 TEST_CASE("Test binary search helper with container", "") {

@@ -15,8 +15,8 @@
 
 #include "catch.hpp"
 
-#include <Catch/fakeit.hpp>
-#include <salalib/attributetablehelpers.h>
+#include "Catch/fakeit.hpp"
+#include "salalib/attributetablehelpers.h"
 
 TEST_CASE("push to layer") {
     using namespace dXreimpl;

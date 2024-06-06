@@ -26,9 +26,11 @@
 #include "performancesink.h"
 #include "radiusconverter.h"
 #include "salalib/isovistdef.h"
+#include "salalib/mgraph.h"
 #include "segmentparser.h"
 #include "stepdepthparser.h"
 #include "vgaparser.h"
+
 #include <string>
 #include <vector>
 

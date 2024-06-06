@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "runmethods.h"
+
 #include "exceptions.h"
 #include "printcommunicator.h"
 #include "radiusconverter.h"
@@ -22,9 +23,11 @@
 #include "salalib/linkutils.h"
 #include "salalib/mgraph.h"
 #include "simpletimer.h"
+
+#include "salalib/gridproperties.h"
+#include "salalib/importutils.h"
+
 #include <memory>
-#include <salalib/gridproperties.h>
-#include <salalib/importutils.h>
 #include <sstream>
 #include <vector>
 

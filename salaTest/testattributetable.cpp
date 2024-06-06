@@ -1,4 +1,5 @@
 // Copyright (C) 2017 Christian Sailer
+// Copyright (C) 2024 Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,11 +18,12 @@
 
 #include "Catch/fakeit.hpp"
 
-#include <cliTest/selfcleaningfile.h>
+#include "cliTest/selfcleaningfile.h"
+
+#include "salalib/attributetable.h"
+#include "salalib/layermanagerimpl.h"
+
 #include <fstream>
-#include <salalib/attributetable.h>
-#include <salalib/layermanagerimpl.h>
-#include <salalib/mgraph_consts.h>
 
 TEST_CASE("test attribute column") {
     AttributeColumnImpl col("colName");
@@ -380,7 +382,7 @@ TEST_CASE("attibute table iterations") {
     REQUIRE(table.getRow(AttributeKey(1)).getValue(1) == Approx(3.2));
 }
 
-#include <salalib/attributetablehelpers.h>
+#include "salalib/attributetablehelpers.h"
 
 TEST_CASE("Attribute Table - serialisation") {
     LayerManagerImpl layerManager;

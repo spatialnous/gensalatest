@@ -17,7 +17,7 @@
 
 #include "commandlineparser.h"
 #include "imodeparser.h"
-#include "salalib/mgraph.h"
+
 #include <string>
 #include <vector>
 
