@@ -26,7 +26,7 @@ VgaParser::VgaParser()
     : m_vgaMode(VgaMode::NONE), m_localMeasures(false), m_globalMeasures(false) {}
 
 void VgaParser::parse(size_t argc, char *argv[]) {
-    for (int i = 1; i < argc;) {
+    for (size_t i = 1; i < argc;) {
 
         if (std::strcmp("-vm", argv[i]) == 0) {
             if (m_vgaMode != VgaMode::NONE) {

@@ -71,7 +71,7 @@ TEST_CASE("Shortest paths working examples", "") {
         std::vector<double> expectedAngles = {-1, 0,  0.54297, 1.42969,  -1,
                                               -1, -1, 1.24219, 0.734375, 1.82422};
         std::vector<int> expectedOrder = {-1, 0, 1, 4, -1, -1, -1, 3, 2, 5};
-        for (int i = 0; i < lines.size(); i++) {
+        for (size_t i = 0; i < lines.size(); i++) {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
                 segmentMap->getShapesInRegion(selRegion).begin()->first);
@@ -94,7 +94,7 @@ TEST_CASE("Shortest paths working examples", "") {
         std::vector<double> expectedDistances = {-1,      0,       1,  3.57756, -1,
                                                  2.67689, 1.89156, -1, -1,      4.58446};
         std::vector<int> expectedOrder = {-1, 0, 1, 4, -1, 3, 2, -1, -1, 5};
-        for (int i = 0; i < lines.size(); i++) {
+        for (size_t i = 0; i < lines.size(); i++) {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
                 segmentMap->getShapesInRegion(selRegion).begin()->first);
@@ -116,7 +116,7 @@ TEST_CASE("Shortest paths working examples", "") {
             segmentMap->getAttributeTable().getColumnIndex("Topological Shortest Path Order");
         std::vector<double> expectedDepths = {2, 0, -1, -1, 1, -1, -1, -1, -1, 3};
         std::vector<int> expectedOrder = {2, 0, -1, -1, 1, -1, -1, -1, -1, 3};
-        for (int i = 0; i < lines.size(); i++) {
+        for (size_t i = 0; i < lines.size(); i++) {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
                 segmentMap->getShapesInRegion(selRegion).begin()->first);

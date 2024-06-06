@@ -100,7 +100,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
 
     // check if the shape connectors have the expected internal sizes and are connected to the
     // expected other shapes
-    for (int i = 0; i < axialMap->getConnections().size(); i++) {
+    for (size_t i = 0; i < axialMap->getConnections().size(); i++) {
         Connector connector = axialMap->getConnections()[i];
         std::vector<int> expectedConnections =
             axialConnections[axialMap->getShapeRefFromIndex(i)->first];
@@ -290,7 +290,7 @@ TEST_CASE("Testing deleting shapes from segment maps") {
 
     // check if the shape connectors have the expected internal sizes and are connected to the
     // expected other shapes
-    for (int i = 0; i < segmentMap->getConnections().size(); i++) {
+    for (size_t i = 0; i < segmentMap->getConnections().size(); i++) {
         Connector connector = segmentMap->getConnections()[i];
         std::vector<int> expectedForConnections =
             segmentForConnections[segmentMap->getShapeRefFromIndex(i)->first];

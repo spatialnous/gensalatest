@@ -47,8 +47,8 @@ public:
     virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
 
     const std::vector<std::string> & getFilesToImport() const { return m_filesToImport; }
-    const bool toImportAsAttrbiutes() const { return m_importAsAttributes; }
-    const depthmapX::ImportType getImportMapType() const { return m_importMapType; }
+    bool toImportAsAttrbiutes() const { return m_importAsAttributes; }
+    depthmapX::ImportType getImportMapType() const { return m_importMapType; }
 
 private:
     depthmapX::ImportType m_importMapType = depthmapX::ImportType::DRAWINGMAP;

@@ -45,7 +45,7 @@ void VisPrepParser::parse(size_t argc, char **argv) {
 
     std::vector<std::string> points;
     std::string pointFile;
-    for (int i = 1; i < argc; ++i) {
+    for (size_t i = 1; i < argc; ++i) {
         if (std::strcmp("-pg", argv[i]) == 0) {
             if (m_grid >= 0) {
                 throw CommandLineException("-pg can only be used once");

@@ -47,7 +47,7 @@ std::string SegmentParser::getHelp() const {
 }
 
 void SegmentParser::parse(size_t argc, char **argv) {
-    for (int i = 1; i < argc; ++i) {
+    for (size_t i = 1; i < argc; ++i) {
         if (std::strcmp("-st", argv[i]) == 0) {
             if (m_analysisType != AnalysisType::NONE) {
                 throw CommandLineException(

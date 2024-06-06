@@ -17,7 +17,6 @@
 #include "exceptions.h"
 #include "parsingutils.h"
 #include "runmethods.h"
-#include "salalib/mgraph.h"
 #include <cstring>
 #include <memory>
 #include <sstream>
@@ -25,7 +24,7 @@
 using namespace depthmapX;
 
 void LinkParser::parse(size_t argc, char *argv[]) {
-    for (int i = 1; i < argc;) {
+    for (size_t i = 1; i < argc;) {
         if (std::strcmp("-lmt", argv[i]) == 0) {
             ENFORCE_ARGUMENT("-lmt", i)
             if (std::strcmp(argv[i], "pointmaps") == 0) {

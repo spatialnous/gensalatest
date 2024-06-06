@@ -137,7 +137,7 @@ TEST_CASE("Test data to segment conversion", "") {
     lines.push_back(Line(Point2f(0, 1), Point2f(1, 1)));
     lines.push_back(Line(Point2f(1, 1), Point2f(1, 0)));
 
-    for (int i = 0; i < lines.size(); i++) {
+    for (size_t i = 0; i < lines.size(); i++) {
         extraAttributes.push_back(std::map<int, float>());
         extraAttributes.back()[newAttributeID] = extraAttributes.size();
     }
@@ -172,7 +172,7 @@ TEST_CASE("Test data to segment conversion", "") {
         std::map<int, SalaShape> &shapes = segmentMap->getAllShapes();
         REQUIRE(shapes.size() == 3);
         auto shapeIter = shapes.begin();
-        for (int i = 0; i < lines.size(); i++) {
+        for (size_t i = 0; i < lines.size(); i++) {
             REQUIRE(shapeIter->first == i);
             AttributeRow &row = segmentMap->getAttributeRowFromShapeIndex(shapeIter->first);
             REQUIRE(row.getValue(segmentNewAttributeID) == extraAttributes[i][newAttributeID]);
@@ -198,7 +198,7 @@ TEST_CASE("Test data to segment conversion", "") {
         std::map<int, SalaShape> &shapes = segmentMap->getAllShapes();
         REQUIRE(shapes.size() == 3);
         auto shapeIter = shapes.begin();
-        for (int i = 0; i < lines.size(); i++) {
+        for (size_t i = 0; i < lines.size(); i++) {
             REQUIRE(shapeIter->first == i);
             AttributeRow &row = segmentMap->getAttributeRowFromShapeIndex(shapeIter->first);
             REQUIRE(row.getValue(segmentNewAttributeID) == extraAttributes[i][newAttributeID]);

@@ -27,7 +27,7 @@ void StepDepthParser::parse(size_t argc, char **argv) {
 
     std::vector<std::string> points;
     std::string pointFile;
-    for (int i = 1; i < argc; ++i) {
+    for (size_t i = 1; i < argc; ++i) {
         if (std::strcmp("-sdp", argv[i]) == 0) {
             if (!pointFile.empty()) {
                 throw CommandLineException("-sdp cannot be used together with -sdf");

@@ -22,7 +22,7 @@
 using namespace depthmapX;
 
 void MapConvertParser::parse(size_t argc, char **argv) {
-    for (int i = 1; i < argc; ++i) {
+    for (size_t i = 1; i < argc; ++i) {
         if (std::strcmp("-co", argv[i]) == 0) {
             if (m_outMapType != ShapeMap::EMPTYMAP) {
                 throw CommandLineException(

@@ -41,7 +41,7 @@ std::string IsovistParser::getHelp() const {
 void IsovistParser::parse(size_t argc, char **argv) {
     std::string isovistFile;
 
-    for (int i = 1; i < argc; ++i) {
+    for (size_t i = 1; i < argc; ++i) {
         if (std::strcmp(argv[i], "-ii") == 0) {
             if (!isovistFile.empty()) {
                 throw CommandLineException("-ii cannot be used together with -if");

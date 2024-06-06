@@ -64,8 +64,6 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             Point2f(vgaMaxX - cellSize * 0.5, vgaMinY + cellSize * 0.5)  //
         },
         false);
-    Point2f bl = drawingMap.getRegion().bottom_left;
-    Point2f tr = drawingMap.getRegion().top_right;
     mgraph->updateParentRegions(drawingMap);
 
     mgraph->addNewPointMap("VGA Map");

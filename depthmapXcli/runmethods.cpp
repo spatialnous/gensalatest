@@ -385,7 +385,7 @@ namespace dm_runmethods {
             if (!ap.getAttribute().empty()) {
                 const ShapeGraph &map = mGraph->getDisplayedShapeGraph();
                 const AttributeTable &table = map.getAttributeTable();
-                for (int i = 0; i < table.getNumColumns(); i++) {
+                for (size_t i = 0; i < table.getNumColumns(); i++) {
                     if (ap.getAttribute() == table.getColumnName(i).c_str()) {
                         options.weighted_measure_col = i;
                     }
@@ -420,7 +420,7 @@ namespace dm_runmethods {
         if (!sp.getAttribute().empty()) {
             const ShapeGraph &map = mGraph->getDisplayedShapeGraph();
             const AttributeTable &table = map.getAttributeTable();
-            for (int i = 0; i < table.getNumColumns(); i++) {
+            for (size_t i = 0; i < table.getNumColumns(); i++) {
                 if (sp.getAttribute() == table.getColumnName(i).c_str()) {
                     options.weighted_measure_col = i;
                 }

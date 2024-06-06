@@ -30,7 +30,7 @@ void AgentParser::parse(size_t argc, char *argv[]) {
     std::vector<std::string> points;
     std::string pointFile;
 
-    for (int i = 1; i < argc;) {
+    for (size_t i = 1; i < argc;) {
 
         if (std::strcmp("-am", argv[i]) == 0) {
             if (m_agentMode != AgentMode::NONE) {

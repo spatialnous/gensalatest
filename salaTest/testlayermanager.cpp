@@ -70,7 +70,7 @@ TEST_CASE("Test layer manager") {
     REQUIRE_FALSE(manager.isVisible(2));
     REQUIRE_FALSE(manager.isVisible(4));
 
-    REQUIRE_THROWS_AS(manager.addLayer("another layer"), LayerManager::DuplicateKeyException);
+    REQUIRE_THROWS_AS(manager.addLayer("another layer"), LayerManager::DuplicateKeyException&);
 
     // test read and write
     SelfCleaningFile serialisedManager("manager.bin");

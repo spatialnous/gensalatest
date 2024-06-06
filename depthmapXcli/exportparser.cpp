@@ -25,7 +25,7 @@ using namespace depthmapX;
 ExportParser::ExportParser() : m_exportMode(ExportMode::NONE) {}
 
 void ExportParser::parse(size_t argc, char *argv[]) {
-    for (int i = 1; i < argc;) {
+    for (size_t i = 1; i < argc;) {
 
         if (std::strcmp("-em", argv[i]) == 0) {
             if (m_exportMode != ExportParser::NONE) {

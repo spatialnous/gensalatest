@@ -47,7 +47,7 @@ std::string AxialParser::getHelp() const {
 }
 
 void AxialParser::parse(size_t argc, char **argv) {
-    for (int i = 1; i < argc; ++i) {
+    for (size_t i = 1; i < argc; ++i) {
         if (std::strcmp(argv[i], "-xl") == 0) {
             ENFORCE_ARGUMENT("-xl", i)
             m_allAxesRoots.push_back(EntityParsing::parsePoint(argv[i]));
