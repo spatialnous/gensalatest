@@ -1,5 +1,32 @@
 set(depthmapXcli depthmapXcli)
 
+set(depthmapXcli_HDRS
+    agentparser.h
+    exportparser.h
+    interfaceversion.h
+    modeparserregistry.h
+    printcommunicator.h
+    segmentshortestpathparser.h
+    visprepparser.h
+    axialparser.h
+    imodeparserfactory.h
+    isovistparser.h
+    parsingutils.h
+    radiusconverter.h
+    simpletimer.h
+    commandlineparser.h
+    imodeparser.h
+    linkparser.h
+    performancesink.h
+    runmethods.h
+    stepdepthparser.h
+    exceptions.h
+    importparser.h
+    mapconvertparser.h
+    performancewriter.h
+    segmentparser.h
+    vgaparser.h
+)
 set(depthmapXcli_SRCS
     main.cpp
     interfaceversion.h
@@ -33,6 +60,8 @@ set(MODULES_CORE FALSE)
 set(MODULES_CORE_TEST FALSE)
 add_subdirectory(../modules modules)
 
-add_executable(${depthmapXcli} ${depthmapXcli_SRCS})
+# The headers are added to the target primarily so that they appear as part
+# of this particular project to IDEs that open it
+add_executable(${depthmapXcli} ${depthmapXcli_HDRS} ${depthmapXcli_SRCS})
 target_link_libraries(${depthmapXcli} ${LINK_LIBS} ${modules_cli} ${modules_core})
 

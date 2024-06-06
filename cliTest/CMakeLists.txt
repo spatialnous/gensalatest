@@ -1,5 +1,11 @@
 set(cliTest cliTest)
-set(cliTest_SRCS 
+
+set(cliTest_HDRS
+    argumentholder.h
+    selfcleaningfile.h
+)
+
+set(cliTest_SRCS
     main.cpp
     ../depthmapXcli/printcommunicator.cpp
     ../depthmapXcli/commandlineparser.cpp
@@ -52,6 +58,8 @@ set(MODULES_CORE FALSE)
 set(MODULES_CORE_TEST FALSE)
 add_subdirectory(../modules modules)
 
-add_executable(${cliTest} ${cliTest_SRCS})
+# The headers are added to the target primarily so that they appear as part
+# of this particular project to IDEs that open it
+add_executable(${cliTest} ${cliTest_HDRS} ${cliTest_SRCS})
 target_link_libraries(${cliTest} ${LINK_LIBS} ${modules_cli} ${modules_cliTest} ${modules_core})
 
