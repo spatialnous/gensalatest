@@ -16,14 +16,13 @@
 #pragma once
 
 #include "imodeparser.h"
-#include <vector>
 #include <memory>
+#include <vector>
 
-typedef std::vector<std::unique_ptr<IModeParser> > ModeParserVec;
+typedef std::vector<std::unique_ptr<IModeParser>> ModeParserVec;
 
-class IModeParserFactory
-{
-public:
+class IModeParserFactory {
+  public:
     virtual const ModeParserVec &getModeParsers() const = 0;
-    virtual ~IModeParserFactory(){}
+    virtual ~IModeParserFactory() {}
 };

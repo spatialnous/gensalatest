@@ -14,10 +14,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "catch.hpp"
+#include "salalib/mapconverter.h"
 #include "salalib/segmmodules/segmmetricshortestpath.h"
 #include "salalib/segmmodules/segmtopologicalshortestpath.h"
 #include "salalib/segmmodules/segmtulipshortestpath.h"
-#include "salalib/mapconverter.h"
 #include "salalib/shapegraph.h"
 
 TEST_CASE("Shortest paths working examples", "") {

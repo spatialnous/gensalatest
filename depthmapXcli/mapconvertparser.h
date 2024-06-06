@@ -18,38 +18,30 @@
 #include "imodeparser.h"
 #include "salalib/shapemap.h"
 
-class MapConvertParser : public IModeParser
-{
-public:
-    MapConvertParser():
-        m_outMapType(ShapeMap::EMPTYMAP),
-        m_outMapName(""),
-        m_removeInputMap(false),
-        m_copyAttributes(false),
-        m_removeStubLengthPRC(0)
-    {}
+class MapConvertParser : public IModeParser {
+  public:
+    MapConvertParser()
+        : m_outMapType(ShapeMap::EMPTYMAP), m_outMapName(""), m_removeInputMap(false),
+          m_copyAttributes(false), m_removeStubLengthPRC(0) {}
 
     // IModeParser interface
-public:
-    std::string getModeName() const
-    {
-        return "MAPCONVERT";
-    }
+  public:
+    std::string getModeName() const { return "MAPCONVERT"; }
 
-    std::string getHelp() const
-    {
-        return  "Mode options for Map Conversion:\n"\
-                "  -co Output map type (to convert to)\n"\
-                "      Possible input/output map types:\n"\
-                "        - drawing\n"\
-                "        - axial\n"\
-                "        - segment\n"\
-                "        - data\n"\
-                "        - convex\n"\
-                "  -con Output map name\n"\
-                "  -cir Remove input map\n"\
-                "  -coc Copy attributes to output map (Only between DATA, AXIAL and SEGMENT)\n"\
-                "  -crsl <%> Percent of line length of axial stubs to remove (Only for AXIAL -> SEGMENT)\n\n";
+    std::string getHelp() const {
+        return "Mode options for Map Conversion:\n"
+               "  -co Output map type (to convert to)\n"
+               "      Possible input/output map types:\n"
+               "        - drawing\n"
+               "        - axial\n"
+               "        - segment\n"
+               "        - data\n"
+               "        - convex\n"
+               "  -con Output map name\n"
+               "  -cir Remove input map\n"
+               "  -coc Copy attributes to output map (Only between DATA, AXIAL and SEGMENT)\n"
+               "  -crsl <%> Percent of line length of axial stubs to remove (Only for AXIAL -> "
+               "SEGMENT)\n\n";
     }
     void parse(size_t argc, char **argv);
     void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
@@ -60,7 +52,7 @@ public:
     bool copyAttributes() const { return m_copyAttributes; }
     double removeStubLength() const { return m_removeStubLengthPRC; }
 
-private:
+  private:
     int m_outMapType;
     std::string m_outMapName;
     bool m_removeInputMap;

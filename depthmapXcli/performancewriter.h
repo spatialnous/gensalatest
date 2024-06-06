@@ -16,18 +16,16 @@
 #pragma once
 
 #include "performancesink.h"
-#include <vector>
 #include <string>
+#include <vector>
 
-
-class PerformanceWriter : public IPerformanceSink
-{
-private:
+class PerformanceWriter : public IPerformanceSink {
+  private:
     std::vector<std::string> m_data;
     std::string m_filename;
-public:
+
+  public:
     PerformanceWriter(const std::string &filename);
-    void addData( const std::string &message, double timeInSeconds);
+    void addData(const std::string &message, double timeInSeconds);
     void write() const;
 };
-

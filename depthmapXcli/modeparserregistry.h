@@ -17,22 +17,19 @@
 
 #include "imodeparser.h"
 #include "imodeparserfactory.h"
-#include <vector>
 #include <memory>
+#include <vector>
 
-class ModeParserRegistry : public IModeParserFactory
-{
-public:
-    ModeParserRegistry()
-    {
-        populateParsers();
-    }
+class ModeParserRegistry : public IModeParserFactory {
+  public:
+    ModeParserRegistry() { populateParsers(); }
 
-    const ModeParserVec &getModeParsers() const {return m_availableParsers;}
-private:
+    const ModeParserVec &getModeParsers() const { return m_availableParsers; }
+
+  private:
     void populateParsers();
     ModeParserVec m_availableParsers;
 };
 
-#define REGISTER_PARSER(parser)\
+#define REGISTER_PARSER(parser)                                                                    \
     m_availableParsers.push_back(std::unique_ptr<IModeParser>(new parser));

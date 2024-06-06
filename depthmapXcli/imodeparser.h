@@ -18,15 +18,14 @@
 // Interface to encapsulate handling command line and invoking the respective
 // depthmapX mode
 
-#include "performancesink.h"
 #include "commandlineparser.h"
+#include "performancesink.h"
 
-class IModeParser
-{
-public:
+class IModeParser {
+  public:
     virtual std::string getModeName() const = 0;
     virtual std::string getHelp() const = 0;
-    virtual void parse( size_t argc, char **argv) = 0;
+    virtual void parse(size_t argc, char **argv) = 0;
     virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const = 0;
-    virtual ~IModeParser(){}
+    virtual ~IModeParser() {}
 };

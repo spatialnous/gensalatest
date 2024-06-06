@@ -18,19 +18,14 @@
 #include "genlib/exceptions.h"
 #include <string>
 
-namespace depthmapX
-{
-    class CommandLineException : public depthmapX::BaseException
-    {
-    public:
-        CommandLineException(std::string message) : depthmapX::BaseException(message)
-        {}
+namespace depthmapX {
+    class CommandLineException : public depthmapX::BaseException {
+      public:
+        CommandLineException(std::string message) : depthmapX::BaseException(message) {}
     };
 
-    class SetupCheckException : public depthmapX::BaseException
-    {
-    public:
-        SetupCheckException(std::string message) : depthmapX::BaseException(message)
-        {}
+    class SetupCheckException : public depthmapX::BaseException {
+      public:
+        SetupCheckException(std::string message) : depthmapX::BaseException(message) {}
     };
-}
+} // namespace depthmapX

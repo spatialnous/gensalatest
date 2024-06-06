@@ -15,37 +15,32 @@
 
 #pragma once
 
-#include "imodeparser.h"
 #include "commandlineparser.h"
+#include "imodeparser.h"
 #include <string>
 
-class ExportParser : public IModeParser
-{
-public:
-    virtual std::string getModeName() const
-    {
-        return "EXPORT";
+class ExportParser : public IModeParser {
+  public:
+    virtual std::string getModeName() const { return "EXPORT"; }
+
+    virtual std::string getHelp() const {
+        return "Mode options for EXPORT:\n"
+               "-em <export mode> one of:\n"
+               "    pointmap-data-csv\n"
+               "    pointmap-connections-csv\n"
+               "    pointmap-links-csv\n"
+               "    shapegraph-map-csv\n"
+               "    shapegraph-map-mif\n"
+               "    shapegraph-connections-csv\n"
+               "    shapegraph-links-unlinks-csv\n";
     }
 
-    virtual std::string getHelp() const
-    {
-        return    "Mode options for EXPORT:\n"\
-                  "-em <export mode> one of:\n"\
-                  "    pointmap-data-csv\n"\
-                  "    pointmap-connections-csv\n"\
-                  "    pointmap-links-csv\n"\
-                  "    shapegraph-map-csv\n"\
-                  "    shapegraph-map-mif\n"\
-                  "    shapegraph-connections-csv\n"\
-                  "    shapegraph-links-unlinks-csv\n";
-    }
-
-public:
+  public:
     ExportParser();
     virtual void parse(size_t argc, char *argv[]);
-    virtual void run(const CommandLineParser &clp, IPerformanceSink& perfWriter) const;
+    virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
 
-    enum ExportMode{
+    enum ExportMode {
         NONE,
         POINTMAP_DATA_CSV,
         POINTMAP_CONNECTIONS_CSV,
@@ -57,7 +52,6 @@ public:
     };
     ExportMode getExportMode() const { return m_exportMode; }
 
-private:
+  private:
     ExportMode m_exportMode;
 };
-

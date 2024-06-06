@@ -15,35 +15,23 @@
 
 #pragma once
 
-#include "imodeparser.h"
 #include "genlib/p2dpoly.h"
+#include "imodeparser.h"
 
-class SegmentParser : public IModeParser
-{
-public:
+class SegmentParser : public IModeParser {
+  public:
     SegmentParser();
 
     // IModeParser interface
-public:
+  public:
     std::string getModeName() const;
     std::string getHelp() const;
     void parse(size_t argc, char **argv);
     void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
 
-    enum class AnalysisType {
-        NONE,
-        ANGULAR_TULIP,
-        ANGULAR_FULL,
-        TOPOLOGICAL,
-        METRIC
-    };
+    enum class AnalysisType { NONE, ANGULAR_TULIP, ANGULAR_FULL, TOPOLOGICAL, METRIC };
 
-    enum class RadiusType {
-        NONE,
-        SEGMENT_STEPS,
-        ANGULAR,
-        METRIC
-    };
+    enum class RadiusType { NONE, SEGMENT_STEPS, ANGULAR, METRIC };
 
     AnalysisType getAnalysisType() const { return m_analysisType; }
 
@@ -53,11 +41,11 @@ public:
 
     int getTulipBins() const { return m_tulipBins; }
 
-    const std::vector<double> getRadii() const { return m_radii;}
+    const std::vector<double> getRadii() const { return m_radii; }
 
-    const std::string getAttribute() const { return m_attribute;}
+    const std::string getAttribute() const { return m_attribute; }
 
-private:
+  private:
     AnalysisType m_analysisType;
     RadiusType m_radiusType;
     bool m_includeChoice;

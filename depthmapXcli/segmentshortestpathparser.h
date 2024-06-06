@@ -27,8 +27,10 @@ class SegmentShortestPathParser : public IModeParser {
 
     virtual std::string getHelp() const {
         return "Mode options for pointmap SEGMENTSHORTESTPATH are:\n"
-               "  -sspo <shortest path origin point> point where to calculate shortest path between.\n"
-               "  -sspd <shortest path destination point> point where to calculate shortest path between.\n"
+               "  -sspo <shortest path origin point> point where to calculate shortest path "
+               "between.\n"
+               "  -sspd <shortest path destination point> point where to calculate shortest path "
+               "between.\n"
                "  -sspt <type> step type. One of metric, tulip or topological.\n";
     }
 

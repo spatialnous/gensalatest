@@ -29,7 +29,7 @@
 
 // leave these alone - C Preprocessor magic to get stuff to the right format
 #define STRINGIFY(v) #v
-#define TITLE_BASE_FORMAT(interface, version, minor, revision)                                                        \
+#define TITLE_BASE_FORMAT(interface, version, minor, revision)                                     \
     interface " " STRINGIFY(version) "." STRINGIFY(minor) "." STRINGIFY(revision)
 
 #endif // VERSION_H

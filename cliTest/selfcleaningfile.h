@@ -15,27 +15,15 @@
 
 #pragma once
 
-#include <string>
 #include <stdio.h>
-class SelfCleaningFile
-{
-public:
-    SelfCleaningFile(const std::string &filename) : _filename(filename)
-    {}
-    ~SelfCleaningFile()
-    {
-        std::remove(_filename.c_str());
-    }
+#include <string>
+class SelfCleaningFile {
+  public:
+    SelfCleaningFile(const std::string &filename) : _filename(filename) {}
+    ~SelfCleaningFile() { std::remove(_filename.c_str()); }
 
-    const std::string &Filename()
-    {
-        return _filename;
-    }
+    const std::string &Filename() { return _filename; }
 
-
-
-
-private:
+  private:
     const std::string _filename;
-
 };

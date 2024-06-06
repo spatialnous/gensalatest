@@ -15,55 +15,42 @@
 
 #pragma once
 
-#include "imodeparser.h"
 #include "genlib/p2dpoly.h"
+#include "imodeparser.h"
 
-class AxialParser : public IModeParser
-{
-public:
+class AxialParser : public IModeParser {
+  public:
     AxialParser();
 
     // IModeParser interface
-public:
+  public:
     std::string getModeName() const;
     std::string getHelp() const;
     void parse(size_t argc, char **argv);
     void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
 
     // accessors
-    bool runAllLines() const
-    {
-        return !m_allAxesRoots.empty();
-    }
+    bool runAllLines() const { return !m_allAxesRoots.empty(); }
 
-    const std::vector<Point2f> & getAllAxesRoots() const{
-        return m_allAxesRoots;
-    }
+    const std::vector<Point2f> &getAllAxesRoots() const { return m_allAxesRoots; }
 
-    bool runFewestLines() const
-    {
-        return m_runFewestLines;
-    }
+    bool runFewestLines() const { return m_runFewestLines; }
 
-    bool runUnlink() const
-    {
+    bool runUnlink() const {
         // not supported for now
         return false;
     }
 
-    bool runAnalysis() const
-    {
-        return m_runAnalysis;
-    }
+    bool runAnalysis() const { return m_runAnalysis; }
 
     bool useChoice() const { return m_choice; }
     bool useLocal() const { return m_local; }
     bool calculateRRA() const { return m_rra; }
 
-    const std::vector<double>& getRadii() const { return m_radii;}
-    const std::string getAttribute() const { return m_attribute;}
+    const std::vector<double> &getRadii() const { return m_radii; }
+    const std::string getAttribute() const { return m_attribute; }
 
-private:
+  private:
     std::vector<Point2f> m_allAxesRoots;
     bool m_runFewestLines;
     bool m_runAnalysis;

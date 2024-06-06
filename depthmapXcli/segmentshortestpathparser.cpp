@@ -18,10 +18,10 @@
 #include "depthmapXcli/parsingutils.h"
 #include "depthmapXcli/runmethods.h"
 #include "depthmapXcli/simpletimer.h"
+#include "salalib/entityparsing.h"
 #include "salalib/segmmodules/segmmetricshortestpath.h"
 #include "salalib/segmmodules/segmtopologicalshortestpath.h"
 #include "salalib/segmmodules/segmtulipshortestpath.h"
-#include "salalib/entityparsing.h"
 #include <cstring>
 #include <sstream>
 

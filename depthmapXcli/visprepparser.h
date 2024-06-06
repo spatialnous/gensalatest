@@ -15,36 +15,32 @@
 
 #pragma once
 
-#include "imodeparser.h"
 #include "genlib/p2dpoly.h"
+#include "imodeparser.h"
 #include <vector>
 
-class VisPrepParser : public IModeParser
-{
-public:
-    VisPrepParser() : m_grid(-1.0), m_maxVisibility(-1.0), m_boundaryGraph(false), m_makeGraph(false), m_unmakeGraph(false), m_removeLinksWhenUnmaking(false)
-    {}
+class VisPrepParser : public IModeParser {
+  public:
+    VisPrepParser()
+        : m_grid(-1.0), m_maxVisibility(-1.0), m_boundaryGraph(false), m_makeGraph(false),
+          m_unmakeGraph(false), m_removeLinksWhenUnmaking(false) {}
 
-    virtual std::string getModeName() const
-    {
-        return "VISPREP";
-    }
+    virtual std::string getModeName() const { return "VISPREP"; }
 
-    virtual std::string getHelp() const
-    {
-        return "Mode options for VISPREP (visual analysis preparation) are:\n"  \
-               "  -pg <gridsize> floating point number defining the grid spacing. If this\n" \
-               "      is provided it will create a new map\n" \
-               "  -pp <fillpoint> point where to fill. Can be repeated\n" \
-               "  -pf <fillpoint file> a file with a point per line to fill\n" \
-               "  -pr <max visibility> restrict visibility (-1 is unrestricted, default)\n" \
-               "  -pb Make boundary graph\n" \
-               "  -pm Make graph\n" \
-               "  -pu Unmake graph\n" \
+    virtual std::string getHelp() const {
+        return "Mode options for VISPREP (visual analysis preparation) are:\n"
+               "  -pg <gridsize> floating point number defining the grid spacing. If this\n"
+               "      is provided it will create a new map\n"
+               "  -pp <fillpoint> point where to fill. Can be repeated\n"
+               "  -pf <fillpoint file> a file with a point per line to fill\n"
+               "  -pr <max visibility> restrict visibility (-1 is unrestricted, default)\n"
+               "  -pb Make boundary graph\n"
+               "  -pm Make graph\n"
+               "  -pu Unmake graph\n"
                "  -pl Remove links when unmaking\n";
     }
 
-    virtual void parse(size_t argc, char** argv);
+    virtual void parse(size_t argc, char **argv);
 
     virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
 
@@ -56,7 +52,7 @@ public:
     bool getUnmakeGraph() const { return m_unmakeGraph; }
     bool getRemoveLinksWhenUnmaking() const { return m_removeLinksWhenUnmaking; }
 
-private:
+  private:
     double m_grid;
     std::vector<Point2f> m_fillPoints;
     double m_maxVisibility;
@@ -65,5 +61,3 @@ private:
     bool m_unmakeGraph;
     bool m_removeLinksWhenUnmaking;
 };
-
-

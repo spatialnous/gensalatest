@@ -127,10 +127,10 @@ TEST_CASE("test attribute row") {
     Verify(Method(col2, updateStats).Using(2.2f, 0.0f)).Once();
     Verify(Method(col2, updateStats).Using(3.2f, 2.2f)).Once();
 
-    REQUIRE_THROWS_AS(row.setValue("colx", 1.1f), std::out_of_range&);
-    REQUIRE_THROWS_AS(row.setValue(2, 1.2f), std::out_of_range&);
-    REQUIRE_THROWS_AS(row.getValue("colx"), std::out_of_range&);
-    REQUIRE_THROWS_AS(row.getValue(2), std::out_of_range&);
+    REQUIRE_THROWS_AS(row.setValue("colx", 1.1f), std::out_of_range &);
+    REQUIRE_THROWS_AS(row.setValue(2, 1.2f), std::out_of_range &);
+    REQUIRE_THROWS_AS(row.getValue("colx"), std::out_of_range &);
+    REQUIRE_THROWS_AS(row.getValue(2), std::out_of_range &);
 
     // test attribute row impl only methods
     // note that these do not affect the column manager - that will have to
@@ -141,7 +141,7 @@ TEST_CASE("test attribute row") {
     row.removeColumn(1);
     REQUIRE(row.getValue(1) == -1.0f);
     REQUIRE(row.getValue(0) == Approx(1.2f));
-    REQUIRE_THROWS_AS(row.getValue(2), std::out_of_range&);
+    REQUIRE_THROWS_AS(row.getValue(2), std::out_of_range &);
 
     // test reading/writing
     SelfCleaningFile scf("rowfile.bin");
@@ -196,7 +196,7 @@ TEST_CASE("test attribute table") {
     REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == Approx(1.4f));
     REQUIRE(table.getRow(AttributeKey(0)).getValue(3) == Approx(1.4f));
 
-    REQUIRE_THROWS_AS(table.getRow(AttributeKey(0)).getValue(4), std::out_of_range&);
+    REQUIRE_THROWS_AS(table.getRow(AttributeKey(0)).getValue(4), std::out_of_range &);
 
     table.removeColumn(0);
     table.removeColumn(1);
@@ -211,10 +211,10 @@ TEST_CASE("test attribute table") {
     REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == Approx(1.4f));
     REQUIRE(table.getRow(AttributeKey(0)).getValue(1) == Approx(1.4f));
 
-    REQUIRE_THROWS_AS(table.getRow(AttributeKey(0)).getValue(2), std::out_of_range&);
+    REQUIRE_THROWS_AS(table.getRow(AttributeKey(0)).getValue(2), std::out_of_range &);
 
     table.addRow(AttributeKey(1));
-    REQUIRE_THROWS_AS(table.getRow(AttributeKey(1)).getValue(2), std::out_of_range&);
+    REQUIRE_THROWS_AS(table.getRow(AttributeKey(1)).getValue(2), std::out_of_range &);
     REQUIRE(table.getRow(AttributeKey(1)).getValue("col2") == -1.0);
     REQUIRE(table.getRow(AttributeKey(1)).getValue(0) == -1.0);
     REQUIRE(table.getRow(AttributeKey(1)).getValue("lcol2") == -1.0);
@@ -248,7 +248,7 @@ TEST_CASE("test attribute table") {
     REQUIRE(table.getColumnIndex("col_foo") == 0);
     REQUIRE(table.getColumn(0).getName() == "col_foo");
 
-    REQUIRE_THROWS_AS(table.getColumnIndex("col2"), std::out_of_range&);
+    REQUIRE_THROWS_AS(table.getColumnIndex("col2"), std::out_of_range &);
 
     table.getRow(AttributeKey(0)).setSelection(true);
 
@@ -284,8 +284,8 @@ TEST_CASE("Existing and non-existing rows") {
 
     table.getRow(AttributeKey(0));
     constRef.getRow(AttributeKey(0));
-    REQUIRE_THROWS_AS(table.getRow(AttributeKey(5)), std::out_of_range&);
-    REQUIRE_THROWS_AS(constRef.getRow(AttributeKey(5)), std::out_of_range&);
+    REQUIRE_THROWS_AS(table.getRow(AttributeKey(5)), std::out_of_range &);
+    REQUIRE_THROWS_AS(constRef.getRow(AttributeKey(5)), std::out_of_range &);
 
     REQUIRE(table.getRowPtr(AttributeKey(1)) != 0);
     REQUIRE(constRef.getRowPtr(AttributeKey(1)) != 0);
