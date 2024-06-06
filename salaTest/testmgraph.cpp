@@ -17,7 +17,7 @@
 #include "salalib/mgraph.h"
 
 TEST_CASE("Test getVisibleLines", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
 
     // create a new MetaGraph
     std::unique_ptr<MetaGraph> mgraph(new MetaGraph());
@@ -76,7 +76,7 @@ TEST_CASE("Test getVisibleLines", "") {
 
 TEST_CASE("Test pointMaps", "") {
     std::unique_ptr<MetaGraph> mgraph(new MetaGraph());
-    int pointMapIdx = mgraph->addNewPointMap("Kenny");
+    auto pointMapIdx = mgraph->addNewPointMap("Kenny");
     REQUIRE(mgraph->getPointMaps().size() == 1);
     REQUIRE(pointMapIdx == 0);
     REQUIRE(mgraph->getPointMaps()[0].getName() == "Kenny");
@@ -84,7 +84,7 @@ TEST_CASE("Test pointMaps", "") {
     REQUIRE(mgraph->getDisplayedPointMap().getName() == "Kenny");
 
     SECTION("Add another and remove the first through the MetaGraph") {
-        int pointMapIdx = mgraph->addNewPointMap("Stan");
+        auto pointMapIdx = mgraph->addNewPointMap("Stan");
         REQUIRE(mgraph->getPointMaps().size() == 2);
         REQUIRE(pointMapIdx == 1);
         REQUIRE(mgraph->getPointMaps()[1].getName() == "Stan");
