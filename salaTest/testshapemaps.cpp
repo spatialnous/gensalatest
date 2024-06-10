@@ -22,7 +22,7 @@
 #include <sstream>
 
 TEST_CASE("Testing ShapeMap::getAllShapes variants") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     Point2f line0Start(0, 1);
     Point2f line0End(3, 2);
     Point2f line1Start(1, 1);
