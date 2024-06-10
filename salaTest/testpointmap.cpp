@@ -17,7 +17,7 @@
 #include "salalib/mgraph.h"
 
 TEST_CASE("Test MetaGraph construction", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     double spacing = 0.5;
     Point2f offset(0, 0); // seems that this is always set to 0,0
 
@@ -98,7 +98,7 @@ TEST_CASE("Test MetaGraph construction", "") {
 }
 
 TEST_CASE("Test grid filling", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     double spacing = 0.5;
     Point2f offset(0, 0); // seems that this is always set to 0,0
 
@@ -183,7 +183,7 @@ TEST_CASE("Test grid filling", "") {
 TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
 
     double spacing = 0.5;
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     Point2f offset(0, 0); // seems that this is always set to 0,0
 
     Point2f bottomLeft(0, 0);
@@ -309,7 +309,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
 }
 
 TEST_CASE("Test PointMap connections output", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     double spacing = 0.5;
     Point2f offset(0, 0); // seems that this is always set to 0,0
 

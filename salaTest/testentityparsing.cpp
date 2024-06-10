@@ -20,7 +20,7 @@
 #include <vector>
 
 TEST_CASE("Failing line parser", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     {
         // header only has 3 elements
         std::stringstream stream;
@@ -49,7 +49,7 @@ TEST_CASE("Failing line parser", "") {
     }
 }
 TEST_CASE("Successful line parser", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     {
         std::stringstream stream;
         stream << "x1,y1,x2,y2" << std::endl;
@@ -93,7 +93,7 @@ TEST_CASE("Successful line parser", "") {
 }
 
 TEST_CASE("Failing point parser", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     {
         // header only has 3 elements
         std::stringstream stream;
@@ -120,7 +120,7 @@ TEST_CASE("Failing point parser", "") {
     }
 }
 TEST_CASE("Successful point parser", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     {
         std::stringstream stream;
         stream << "x,y" << std::endl;
@@ -169,7 +169,7 @@ TEST_CASE("Test point parsing") {
 }
 
 TEST_CASE("Successful Isovist parser") {
-    const float EPSILON = 0.0001;
+    const float EPSILON = 0.0001f;
     {
         std::stringstream stream;
         stream << "x,y\n1.0,2.34\n0.5,9.2\n" << std::flush;

@@ -79,7 +79,7 @@ TEST_CASE("MapInfo failing column attribute columns", "") {
 }
 
 TEST_CASE("MapInfo MID file with empty column", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
 
     // A typical MIF
 
@@ -150,7 +150,7 @@ TEST_CASE("MapInfo MID file with empty column", "") {
 }
 
 TEST_CASE("Complete proper MapInfo file", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
 
     // A typical MIF
 

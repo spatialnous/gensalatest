@@ -61,7 +61,7 @@ TEST_CASE("Failing empty data map conversion", "") {
 }
 
 TEST_CASE("Test drawing to segment conversion", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
 
     Line line1(Point2f(0, 0), Point2f(0, 1));
     Line line2(Point2f(0, 1), Point2f(1, 1));
@@ -124,11 +124,11 @@ TEST_CASE("Test drawing to segment conversion", "") {
 }
 
 TEST_CASE("Test data to segment conversion", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
 
     std::string newAttributeName = "testID";
     ShapeMap dataMap("Data map", ShapeMap::DATAMAP);
-    int newAttributeID = dataMap.addAttribute(newAttributeName);
+    auto newAttributeID = dataMap.addAttribute(newAttributeName);
 
     std::vector<Line> lines;
     std::vector<std::map<int, float>> extraAttributes;

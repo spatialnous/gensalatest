@@ -18,7 +18,7 @@
 
 TEST_CASE("Simple Isovist") {
 
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
 
     // simple plan for isovist. dot as the origin
     //  _ _ _ _

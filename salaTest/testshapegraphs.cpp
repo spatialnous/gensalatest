@@ -120,7 +120,7 @@ TEST_CASE("Testing ShapeGraph::writeSegmentConnections") {
 // move to the ShapeGraph
 
 TEST_CASE("Testing ShapeMap::getAllLinkLines and ShapeMap::getAllUnlinkPoints()") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     const double TOLERANCE_A = 1e-9;
     Point2f line0Start(0.522, 0.424);
     Point2f line0End(0.709, 1.098);

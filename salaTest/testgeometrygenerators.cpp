@@ -18,7 +18,7 @@
 #include "salalib/geometrygenerators.h"
 
 TEST_CASE("Test disk triangles generation", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     int sides = 8;
     float radius = 2;
 
@@ -59,7 +59,7 @@ TEST_CASE("Test disk triangles generation", "") {
 }
 
 TEST_CASE("Test circle perimeter line generation", "") {
-    const float EPSILON = 0.001;
+    const float EPSILON = 0.001f;
     int sides = 8;
     float radius = 2;
 

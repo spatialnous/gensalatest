@@ -74,7 +74,7 @@ TEST_CASE("LINK args valid", "valid") {
         ArgumentHolder ah{"prog", "-f",   "infile",         "-o", "outfile", "-m",
                           "LINK", "-lnk", "1.2,3.4,5.6,7.8"};
         LinkParser cmdP;
-        cmdP.parse(int(ah.argc()), ah.argv());
+        cmdP.parse(ah.argc(), ah.argv());
         REQUIRE(cmdP.getManualLinks().size() == 1);
         REQUIRE(cmdP.getManualLinks()[0] == "1.2,3.4,5.6,7.8");
         REQUIRE(cmdP.getLinkMode() == cmdP.LinkMode::LINK);

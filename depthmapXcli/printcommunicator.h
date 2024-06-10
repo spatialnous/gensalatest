@@ -26,5 +26,5 @@ class PrintCommunicator : public ICommunicator {
         record = 0;
     }
     virtual ~PrintCommunicator() {}
-    virtual void CommPostMessage(int m, int x) const;
+    virtual void CommPostMessage(size_t m, size_t x) const;
 };

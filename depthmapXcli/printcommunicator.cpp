@@ -16,7 +16,7 @@
 #include "depthmapXcli/printcommunicator.h"
 #include <iostream>
 
-void PrintCommunicator::CommPostMessage(int m, int x) const {
+void PrintCommunicator::CommPostMessage(size_t m, size_t x) const {
     switch (m) {
     case Communicator::NUM_STEPS:
         num_steps = x;
