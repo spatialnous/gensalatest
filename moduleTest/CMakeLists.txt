@@ -14,4 +14,7 @@ set(MODULES_CORE_TEST TRUE)
 add_subdirectory(../modules modules)
 
 add_executable(${moduleTest} ${moduleTest_SRCS})
+
+target_compile_options(${moduleTest} PRIVATE ${COMPILE_WARNINGS})
+
 target_link_libraries(${moduleTest} salalib genlib ${modules_coreTest} ${modules_core})

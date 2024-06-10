@@ -16,7 +16,6 @@
 #include "agentparser.h"
 #include "exceptions.h"
 #include "parsingutils.h"
-#include "radiusconverter.h"
 #include "runmethods.h"
 #include "salalib/entityparsing.h"
 #include <cstring>
@@ -67,6 +66,7 @@ void AgentParser::parse(size_t argc, char *argv[]) {
             if (m_totalSystemTimestemps > 0) {
                 throw CommandLineException("-ats can only be used once");
             }
+            size_t t = -1;
             ENFORCE_ARGUMENT("-ats", i)
             if (!has_only_digits(argv[i])) {
                 throw CommandLineException(std::string("-ats must be a number >0, got ") + argv[i]);

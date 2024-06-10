@@ -63,5 +63,8 @@ add_subdirectory(../modules modules)
 # The headers are added to the target primarily so that they appear as part
 # of this particular project to IDEs that open it
 add_executable(${depthmapXcli} ${depthmapXcli_HDRS} ${depthmapXcli_SRCS})
+
+target_compile_options(${depthmapXcli} PRIVATE ${COMPILE_WARNINGS})
+
 target_link_libraries(${depthmapXcli} ${LINK_LIBS} ${modules_cli} ${modules_core})
 

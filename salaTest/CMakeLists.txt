@@ -34,4 +34,7 @@ include_directories(SYSTEM "../ThirdParty/Catch" "../ThirdParty/FakeIt")
 set(LINK_LIBS salalib genlib)
 
 add_executable(${salaTest} ${salaTest_SRCS})
+
+target_compile_options(${salaTest} PRIVATE ${COMPILE_WARNINGS})
+
 target_link_libraries(${salaTest} ${LINK_LIBS})

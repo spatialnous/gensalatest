@@ -7,10 +7,12 @@ set(CMAKE_CXX_STANDARD 17)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Wconversion")
+    set(COMPILE_WARNINGS -Wall -Wextra -Wpedantic -Wconversion)
+    # There's currently too many of these conversion warnings
+    # disable and check individually
+    #set(COMPILE_WARNINGS ${COMPILE_WARNINGS} -Wno-sign-conversion)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} /W4 /EHsc")
-    execute_process(COMMAND make_version_header.bat WORKING_DIRECTORY depthmapX)
+    set(COMPILE_WARNINGS  "/W4 /EHsc")
 endif()
 
 # policy for target sources - we don't expect any old CMakes

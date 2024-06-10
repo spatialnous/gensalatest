@@ -61,5 +61,8 @@ add_subdirectory(../modules modules)
 # The headers are added to the target primarily so that they appear as part
 # of this particular project to IDEs that open it
 add_executable(${cliTest} ${cliTest_HDRS} ${cliTest_SRCS})
+
+target_compile_options(${cliTest} PRIVATE ${COMPILE_WARNINGS})
+
 target_link_libraries(${cliTest} ${LINK_LIBS} ${modules_cli} ${modules_cliTest} ${modules_core})
 
