@@ -219,13 +219,13 @@ TEST_CASE("Shapemap scripts") {
         expectedColVals.push_back(3.0);
     }
 
-    int newCol = shapeGraph->addAttribute("NewCol");
+    auto newCol = shapeGraph->addAttribute("NewCol");
     SalaGrf graph;
     graph.map.shape = shapeGraph.get();
     SalaObj context = SalaObj(SalaObj::S_SHAPEMAPOBJ, graph);
     SalaProgram program(context);
     program.parse(script);
-    program.runupdate(newCol);
+    program.runupdate(static_cast<int>(newCol));
 
     REQUIRE(shapeGraph->getAttributeTable().getNumRows() == expectedColVals.size());
 
@@ -350,13 +350,13 @@ TEST_CASE("Shapemap scripts with unexpected results") {
         expectedColVals.push_back(-1.0);
     }
 
-    int newCol = shapeGraph->addAttribute("NewCol");
+    auto newCol = shapeGraph->addAttribute("NewCol");
     SalaGrf graph;
     graph.map.shape = shapeGraph.get();
     SalaObj context = SalaObj(SalaObj::S_SHAPEMAPOBJ, graph);
     SalaProgram program(context);
     program.parse(script);
-    program.runupdate(newCol);
+    program.runupdate(static_cast<int>(newCol));
 
     REQUIRE(shapeGraph->getAttributeTable().getNumRows() == expectedColVals.size());
 

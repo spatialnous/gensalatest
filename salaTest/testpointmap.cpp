@@ -150,8 +150,11 @@ TEST_CASE("Test grid filling", "") {
         // the selected position is certainly in a cell
         // This calculation should make the point directly
         // at the centre of a central cell
-        Point2f midPoint(gridBottomLeft.x + spacing * (floor(pointMap.getCols() * 0.5) + 0.5),
-                         gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5) + 0.5));
+        Point2f midPoint(gridBottomLeft.x +
+                             spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5) + 0.5),
+                         gridBottomLeft.y +
+                             spacing *
+                                 (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));
         std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
         pointMap.blockLines(lines);
         bool pointsMade = pointMap.makePoints(midPoint, fill_type);
@@ -163,8 +166,9 @@ TEST_CASE("Test grid filling", "") {
         // the selected position is certainly between cells
         // This calculation should make the point directly
         // at the edge of a central cell
-        Point2f midPoint(gridBottomLeft.x + spacing * (floor(pointMap.getCols() * 0.5)),
-                         gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5)));
+        Point2f midPoint(
+            gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5)),
+            gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5)));
         std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
         pointMap.blockLines(lines);
         bool pointsMade = pointMap.makePoints(midPoint, fill_type);
@@ -340,8 +344,9 @@ TEST_CASE("Test PointMap connections output", "") {
 
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
 
-    Point2f midPoint(gridBottomLeft.x + spacing * (floor(pointMap.getCols() * 0.5) + 0.5),
-                     gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5) + 0.5));
+    Point2f midPoint(
+        gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5) + 0.5),
+        gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));
 
     int fill_type = 0; // = QDepthmapView::FULLFILL
     bool gridIsSet = pointMap.setGrid(spacing, offset);
@@ -461,8 +466,9 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "") {
     PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
     pointMap.setGrid(spacing, offset);
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
-    Point2f midPoint(gridBottomLeft.x + spacing * (floor(pointMap.getCols() * 0.5) + 0.5),
-                     gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5) + 0.5));
+    Point2f midPoint(
+        gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5) + 0.5),
+        gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));
     std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
     pointMap.blockLines(lines);
     pointMap.makePoints(midPoint, fill_type);

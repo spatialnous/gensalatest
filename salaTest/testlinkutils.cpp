@@ -29,8 +29,9 @@ TEST_CASE("Test linking - fully filled grid (no geometry)", "") {
     PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
     pointMap.setGrid(spacing, offset);
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
-    Point2f midPoint(gridBottomLeft.x + spacing * (floor(pointMap.getCols() * 0.5) + 0.5),
-                     gridBottomLeft.y + spacing * (floor(pointMap.getRows() * 0.5) + 0.5));
+    Point2f midPoint(
+        gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5) + 0.5),
+        gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));
     std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
     pointMap.blockLines(lines);
     pointMap.makePoints(midPoint, fill_type);

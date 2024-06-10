@@ -66,7 +66,6 @@ void AgentParser::parse(size_t argc, char *argv[]) {
             if (m_totalSystemTimestemps > 0) {
                 throw CommandLineException("-ats can only be used once");
             }
-            size_t t = -1;
             ENFORCE_ARGUMENT("-ats", i)
             if (!has_only_digits(argv[i])) {
                 throw CommandLineException(std::string("-ats must be a number >0, got ") + argv[i]);
@@ -161,7 +160,7 @@ void AgentParser::parse(size_t argc, char *argv[]) {
                         << "). Should only contain digits" << std::flush;
                 throw CommandLineException(message.str().c_str());
             }
-            m_randomReleaseLocationSeed = std::atof(argv[i]);
+            m_randomReleaseLocationSeed = std::atoi(argv[i]);
             if (m_randomReleaseLocationSeed < 0 || m_randomReleaseLocationSeed > 10) {
                 throw CommandLineException(
                     std::string("-alocseed must be a number between 0 and 10, got ") + argv[i]);

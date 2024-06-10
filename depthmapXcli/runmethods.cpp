@@ -390,7 +390,7 @@ namespace dm_runmethods {
                 const AttributeTable &table = map.getAttributeTable();
                 for (size_t i = 0; i < table.getNumColumns(); i++) {
                     if (ap.getAttribute() == table.getColumnName(i).c_str()) {
-                        options.weighted_measure_col = i;
+                        options.weighted_measure_col = static_cast<int>(i);
                     }
                 }
                 if (options.weighted_measure_col == -1) {
@@ -425,7 +425,7 @@ namespace dm_runmethods {
             const AttributeTable &table = map.getAttributeTable();
             for (size_t i = 0; i < table.getNumColumns(); i++) {
                 if (sp.getAttribute() == table.getColumnName(i).c_str()) {
-                    options.weighted_measure_col = i;
+                    options.weighted_measure_col = static_cast<int>(i);
                 }
             }
             if (options.weighted_measure_col == -1) {

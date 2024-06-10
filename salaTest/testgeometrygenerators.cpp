@@ -19,7 +19,7 @@
 
 TEST_CASE("Test disk triangles generation", "") {
     const float EPSILON = 0.001f;
-    int sides = 8;
+    size_t sides = 8;
     float radius = 2;
 
     std::vector<Point2f> expected{Point2f(0, 0),  Point2f(1.41421, 1.41421),
@@ -60,7 +60,7 @@ TEST_CASE("Test disk triangles generation", "") {
 
 TEST_CASE("Test circle perimeter line generation", "") {
     const float EPSILON = 0.001f;
-    int sides = 8;
+    size_t sides = 8;
     float radius = 2;
 
     std::vector<SimpleLine> expected{SimpleLine(Point2f(1.41421, 1.41421), Point2f(0, 2)),
