@@ -27,7 +27,7 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
     float vgaMaxY = 6.00;
     float cellSize = 1.0;
     float minorOffset =
-        cellSize * 0.05; // used to make sure that shapes don't fall exactly on the pointmap pixels
+        cellSize * 0.05f; // used to make sure that shapes don't fall exactly on the pointmap pixels
 
     // The testing pointmap looks like below, filled at the 'o'
     //
@@ -92,17 +92,17 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
         if (key.y > maxJ)
             maxJ = key.y;
     }
-    int midI = floor((minI + maxI) * 0.5);
-    int midJ = floor((minJ + maxJ) * 0.5);
+    auto midI = static_cast<int>(floor((minI + maxI) * 0.5));
+    auto midJ = static_cast<int>(floor((minJ + maxJ) * 0.5));
 
     std::string attributeName = "Shape Value";
-    int vgaAttrColIdx = vgaMap.addAttribute(attributeName);
+    auto vgaAttrColIdx = vgaMap.addAttribute(attributeName);
 
     SECTION("Data map") {
         mgraph->addShapeMap("Test ShapeMap");
         ShapeMap &sourceMap = mgraph->getDataMaps().back();
 
-        int sourceAttrColIdx = sourceMap.addAttribute(attributeName);
+        auto sourceAttrColIdx = sourceMap.addAttribute(attributeName);
 
         for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
             REQUIRE(vgaRowIter->getRow().getValue(vgaAttrColIdx) == -1);
@@ -584,7 +584,7 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             Point2f(vgaMaxX - minorOffset, (vgaMinY + vgaMaxY) * 0.5 + minorOffset)  //
         });
 
-        int sourceAttrColIdx = sourceMap.addAttribute(attributeName);
+        auto sourceAttrColIdx = sourceMap.addAttribute(attributeName);
 
         sourceMap.getAttributeTable().getRow(AttributeKey(0)).setValue(sourceAttrColIdx, 1);
         sourceMap.getAttributeTable().getRow(AttributeKey(1)).setValue(sourceAttrColIdx, 2);

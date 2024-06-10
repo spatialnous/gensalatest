@@ -15,7 +15,6 @@
 
 #include "catch.hpp"
 #include "salalib/mapconverter.h"
-#include "salalib/mgraph.h"
 #include <iostream>
 #include <sstream>
 
@@ -31,7 +30,7 @@ TEST_CASE("Testing deleting shapes from shapemaps") {
     REQUIRE(shapeMap->getAllShapes().size() == 4);
 
     SECTION("Delete from simple shapemap from the beginning") {
-        int shapeCount = shapeMap->getAllShapes().size();
+        auto shapeCount = shapeMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             shapeMap->removeShape(shapeMap->getAllShapes().begin()->first, false);
             REQUIRE(shapeMap->getAllShapes().size() == idx - 1);
@@ -39,7 +38,7 @@ TEST_CASE("Testing deleting shapes from shapemaps") {
     }
 
     SECTION("Delete from simple shapemap from the end") {
-        int shapeCount = shapeMap->getAllShapes().size();
+        auto shapeCount = shapeMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             shapeMap->removeShape(shapeMap->getAllShapes().rbegin()->first, false);
             REQUIRE(shapeMap->getAllShapes().size() == idx - 1);
@@ -47,7 +46,7 @@ TEST_CASE("Testing deleting shapes from shapemaps") {
     }
 
     SECTION("Delete from simple shapemap from the middle") {
-        int shapeCount = shapeMap->getAllShapes().size();
+        auto shapeCount = shapeMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = depthmapX::getMapAtIndex(shapeMap->getAllShapes(),
                                                     int(shapeMap->getAllShapes().size() / 2))
@@ -88,7 +87,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
     axialConnections[2] = {1, 3};
     axialConnections[3] = {0, 2};
 
-    int axialConnectivityColIdx = axialMap->getAttributeTable().getColumnIndex("Connectivity");
+    auto axialConnectivityColIdx = axialMap->getAttributeTable().getColumnIndex("Connectivity");
     AttributeTable &axialTable = axialMap->getAttributeTable();
 
     // check if shapes have connectivity attribute values that reflect the expected number of
@@ -119,7 +118,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
             connectivitiesAfterRemoval[iter->first] = axialConnections[iter->first].size();
         }
 
-        int shapeCount = axialMap->getAllShapes().size();
+        auto shapeCount = axialMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = axialMap->getAllShapes().begin()->first;
             axialMap->removeShape(shapeRef, false);
@@ -151,7 +150,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
             connectivitiesAfterRemoval[iter->first] = axialConnections[iter->first].size();
         }
 
-        int shapeCount = axialMap->getAllShapes().size();
+        auto shapeCount = axialMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = axialMap->getAllShapes().rbegin()->first;
             axialMap->removeShape(shapeRef, false);
@@ -183,7 +182,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
             connectivitiesAfterRemoval[iter->first] = axialConnections[iter->first].size();
         }
 
-        int shapeCount = axialMap->getAllShapes().size();
+        auto shapeCount = axialMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = depthmapX::getMapAtIndex(axialMap->getAllShapes(),
                                                     int(axialMap->getAllShapes().size() / 2))
@@ -276,7 +275,7 @@ TEST_CASE("Testing deleting shapes from segment maps") {
     segmentForConnections[11] = {};
     segmentBackConnections[11] = {7, 8, 10};
 
-    int segmentConnectivityColIdx = segmentMap->getAttributeTable().getColumnIndex("Connectivity");
+    auto segmentConnectivityColIdx = segmentMap->getAttributeTable().getColumnIndex("Connectivity");
     AttributeTable &segmentTable = segmentMap->getAttributeTable();
 
     // check if shapes have connectivity attribute values that reflect the expected number of
@@ -329,7 +328,7 @@ TEST_CASE("Testing deleting shapes from segment maps") {
                                                       segmentBackConnections[iter->first].size();
         }
 
-        int shapeCount = segmentMap->getAllShapes().size();
+        auto shapeCount = segmentMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = segmentMap->getAllShapes().begin()->first;
             segmentMap->removeShape(shapeRef, false);
@@ -347,7 +346,7 @@ TEST_CASE("Testing deleting shapes from segment maps") {
                                                       segmentBackConnections[iter->first].size();
         }
 
-        int shapeCount = segmentMap->getAllShapes().size();
+        auto shapeCount = segmentMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = segmentMap->getAllShapes().rbegin()->first;
             segmentMap->removeShape(shapeRef, false);
@@ -365,7 +364,7 @@ TEST_CASE("Testing deleting shapes from segment maps") {
                                                       segmentBackConnections[iter->first].size();
         }
 
-        int shapeCount = segmentMap->getAllShapes().size();
+        auto shapeCount = segmentMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = depthmapX::getMapAtIndex(segmentMap->getAllShapes(),
                                                     int(segmentMap->getAllShapes().size() / 2))

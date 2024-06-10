@@ -15,7 +15,6 @@
 
 #include "catch.hpp"
 #include "salalib/mapconverter.h"
-#include "salalib/mgraph.h"
 
 TEST_CASE("Failing empty drawing map conversion", "") {
     std::vector<SpacePixelFile> drawingFiles;
@@ -167,7 +166,7 @@ TEST_CASE("Test data to segment conversion", "") {
         dataMap.makeLineShape(lines[2], false, false, extraAttributes[2]);
         std::unique_ptr<ShapeGraph> segmentMap =
             MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true);
-        int segmentNewAttributeID =
+        auto segmentNewAttributeID =
             segmentMap->getAttributeTable().getColumnIndex(newAttributeName);
         std::map<int, SalaShape> &shapes = segmentMap->getAllShapes();
         REQUIRE(shapes.size() == 3);
@@ -193,7 +192,7 @@ TEST_CASE("Test data to segment conversion", "") {
         dataMap.makeLineShape(lines[2], false, false, extraAttributes[2]);
         std::unique_ptr<ShapeGraph> segmentMap =
             MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true);
-        int segmentNewAttributeID =
+        auto segmentNewAttributeID =
             segmentMap->getAttributeTable().getColumnIndex(newAttributeName);
         std::map<int, SalaShape> &shapes = segmentMap->getAllShapes();
         REQUIRE(shapes.size() == 3);
