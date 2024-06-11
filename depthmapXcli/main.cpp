@@ -16,14 +16,13 @@
 #include "commandlineparser.h"
 #include "modeparserregistry.h"
 #include "performancewriter.h"
-#include "runmethods.h"
 #include <iostream>
 
 int main(int argc, char *argv[]) {
     ModeParserRegistry registry;
     CommandLineParser args(registry);
     try {
-        args.parse(argc, argv);
+        args.parse(static_cast<size_t>(argc), argv);
         if (!args.isValid()) {
             if (args.printVersionMode()) {
                 args.printVersion();

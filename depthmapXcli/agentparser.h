@@ -82,7 +82,7 @@ class AgentParser : public IModeParser {
     // agent options
     AgentMode getAgentMode() const { return m_agentMode; }
 
-    int totalSystemTimestemps() const { return m_totalSystemTimestemps; }
+    size_t totalSystemTimestemps() const { return m_totalSystemTimestemps; }
     double releaseRate() const { return m_releaseRate; }
     int recordTrailsForAgents() const { return m_recordTrailsForAgents; }
     int randomReleaseLocationSeed() const { return m_randomReleaseLocationSeed; }
@@ -99,7 +99,7 @@ class AgentParser : public IModeParser {
     // agent options
     AgentMode m_agentMode;
 
-    int m_totalSystemTimestemps = 0;
+    size_t m_totalSystemTimestemps = 0;
     double m_releaseRate = 0.0;
     int m_recordTrailsForAgents = -1;
 

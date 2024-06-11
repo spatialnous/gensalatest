@@ -70,7 +70,7 @@ void AgentParser::parse(size_t argc, char *argv[]) {
             if (!has_only_digits(argv[i])) {
                 throw CommandLineException(std::string("-ats must be a number >0, got ") + argv[i]);
             }
-            m_totalSystemTimestemps = std::atoi(argv[i]);
+            m_totalSystemTimestemps = static_cast<size_t>(std::atoi(argv[i]));
             if (m_totalSystemTimestemps <= 0) {
                 throw CommandLineException(std::string("-ats must be a number >0, got ") + argv[i]);
             }

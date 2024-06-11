@@ -74,7 +74,7 @@ TEST_CASE("Shortest paths working examples", "") {
         for (size_t i = 0; i < lines.size(); i++) {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
-                segmentMap->getShapesInRegion(selRegion).begin()->first);
+                static_cast<size_t>(segmentMap->getShapesInRegion(selRegion).begin()->first));
 
             REQUIRE(shapeRow.getValue(angleColIdx) == Approx(expectedAngles[i]).epsilon(EPSILON));
             REQUIRE(shapeRow.getValue(orderColIdx) == expectedOrder[i]);
@@ -97,7 +97,7 @@ TEST_CASE("Shortest paths working examples", "") {
         for (size_t i = 0; i < lines.size(); i++) {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
-                segmentMap->getShapesInRegion(selRegion).begin()->first);
+                static_cast<size_t>(segmentMap->getShapesInRegion(selRegion).begin()->first));
             REQUIRE(shapeRow.getValue(distanceColIdx) ==
                     Approx(expectedDistances[i]).epsilon(EPSILON));
             REQUIRE(shapeRow.getValue(orderColIdx) == expectedOrder[i]);
@@ -119,7 +119,7 @@ TEST_CASE("Shortest paths working examples", "") {
         for (size_t i = 0; i < lines.size(); i++) {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
-                segmentMap->getShapesInRegion(selRegion).begin()->first);
+                static_cast<size_t>(segmentMap->getShapesInRegion(selRegion).begin()->first));
             REQUIRE(shapeRow.getValue(depthColIdx) == Approx(expectedDepths[i]).epsilon(EPSILON));
             REQUIRE(shapeRow.getValue(orderColIdx) == expectedOrder[i]);
         }
