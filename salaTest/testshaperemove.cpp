@@ -49,7 +49,7 @@ TEST_CASE("Testing deleting shapes from shapemaps") {
         auto shapeCount = shapeMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = depthmapX::getMapAtIndex(shapeMap->getAllShapes(),
-                                                    int(shapeMap->getAllShapes().size() / 2))
+                                                    shapeMap->getAllShapes().size() / 2)
                                ->first;
             shapeMap->removeShape(shapeRef, false);
             REQUIRE(shapeMap->getAllShapes().size() == idx - 1);
@@ -111,7 +111,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
     }
 
     SECTION("Delete from an axial map from the beginning") {
-        std::map<int, int> connectivitiesAfterRemoval;
+        std::map<int, size_t> connectivitiesAfterRemoval;
 
         for (auto iter = axialMap->getAllShapes().begin(); iter != axialMap->getAllShapes().end();
              iter++) {
@@ -143,7 +143,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
     }
 
     SECTION("Delete from an axial map from the end") {
-        std::map<int, int> connectivitiesAfterRemoval;
+        std::map<int, size_t> connectivitiesAfterRemoval;
 
         for (auto iter = axialMap->getAllShapes().begin(); iter != axialMap->getAllShapes().end();
              iter++) {
@@ -175,7 +175,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
     }
 
     SECTION("Delete from an axial map from the middle") {
-        std::map<int, int> connectivitiesAfterRemoval;
+        std::map<int, size_t> connectivitiesAfterRemoval;
 
         for (auto iter = axialMap->getAllShapes().begin(); iter != axialMap->getAllShapes().end();
              iter++) {
@@ -185,7 +185,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
         auto shapeCount = axialMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = depthmapX::getMapAtIndex(axialMap->getAllShapes(),
-                                                    int(axialMap->getAllShapes().size() / 2))
+                                                    axialMap->getAllShapes().size() / 2)
                                ->first;
             axialMap->removeShape(shapeRef, false);
             REQUIRE(axialMap->getAllShapes().size() == idx - 1);
@@ -320,7 +320,7 @@ TEST_CASE("Testing deleting shapes from segment maps") {
     }
 
     SECTION("Delete from a segment map from the beginning") {
-        std::map<int, int> connectivitiesAfterRemoval;
+        std::map<int, size_t> connectivitiesAfterRemoval;
 
         for (auto iter = segmentMap->getAllShapes().begin();
              iter != segmentMap->getAllShapes().end(); iter++) {
@@ -338,7 +338,7 @@ TEST_CASE("Testing deleting shapes from segment maps") {
     }
 
     SECTION("Delete from a segment map from the end") {
-        std::map<int, int> connectivitiesAfterRemoval;
+        std::map<int, size_t> connectivitiesAfterRemoval;
 
         for (auto iter = segmentMap->getAllShapes().begin();
              iter != segmentMap->getAllShapes().end(); iter++) {
@@ -356,7 +356,7 @@ TEST_CASE("Testing deleting shapes from segment maps") {
     }
 
     SECTION("Delete from a segment map from the middle") {
-        std::map<int, int> connectivitiesAfterRemoval;
+        std::map<int, size_t> connectivitiesAfterRemoval;
 
         for (auto iter = segmentMap->getAllShapes().begin();
              iter != segmentMap->getAllShapes().end(); iter++) {
@@ -367,7 +367,7 @@ TEST_CASE("Testing deleting shapes from segment maps") {
         auto shapeCount = segmentMap->getAllShapes().size();
         for (size_t idx = shapeCount; idx > 0; idx--) {
             int shapeRef = depthmapX::getMapAtIndex(segmentMap->getAllShapes(),
-                                                    int(segmentMap->getAllShapes().size() / 2))
+                                                    segmentMap->getAllShapes().size() / 2)
                                ->first;
             segmentMap->removeShape(shapeRef, false);
             REQUIRE(segmentMap->getAllShapes().size() == idx - 1);

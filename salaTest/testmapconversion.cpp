@@ -138,7 +138,8 @@ TEST_CASE("Test data to segment conversion", "") {
 
     for (size_t i = 0; i < lines.size(); i++) {
         extraAttributes.push_back(std::map<int, float>());
-        extraAttributes.back()[newAttributeID] = extraAttributes.size();
+        extraAttributes.back()[static_cast<int>(newAttributeID)] =
+            static_cast<float>(extraAttributes.size());
     }
 
     SECTION("Single line with extra attributes") {
@@ -173,8 +174,10 @@ TEST_CASE("Test data to segment conversion", "") {
         auto shapeIter = shapes.begin();
         for (size_t i = 0; i < lines.size(); i++) {
             REQUIRE(shapeIter->first == i);
-            AttributeRow &row = segmentMap->getAttributeRowFromShapeIndex(shapeIter->first);
-            REQUIRE(row.getValue(segmentNewAttributeID) == extraAttributes[i][newAttributeID]);
+            AttributeRow &row =
+                segmentMap->getAttributeRowFromShapeIndex(static_cast<size_t>(shapeIter->first));
+            REQUIRE(row.getValue(segmentNewAttributeID) ==
+                    extraAttributes[i][static_cast<int>(newAttributeID)]);
             const Line &segmentLine = shapeIter->second.getLine();
             REQUIRE(segmentLine.ax() == Approx(lines[i].ax()).epsilon(EPSILON));
             REQUIRE(segmentLine.ay() == Approx(lines[i].ay()).epsilon(EPSILON));
@@ -199,8 +202,10 @@ TEST_CASE("Test data to segment conversion", "") {
         auto shapeIter = shapes.begin();
         for (size_t i = 0; i < lines.size(); i++) {
             REQUIRE(shapeIter->first == i);
-            AttributeRow &row = segmentMap->getAttributeRowFromShapeIndex(shapeIter->first);
-            REQUIRE(row.getValue(segmentNewAttributeID) == extraAttributes[i][newAttributeID]);
+            AttributeRow &row =
+                segmentMap->getAttributeRowFromShapeIndex(static_cast<size_t>(shapeIter->first));
+            REQUIRE(row.getValue(segmentNewAttributeID) ==
+                    extraAttributes[i][static_cast<int>(newAttributeID)]);
             const Line &segmentLine = shapeIter->second.getLine();
             REQUIRE(segmentLine.ax() == Approx(lines[i].ax()).epsilon(EPSILON));
             REQUIRE(segmentLine.ay() == Approx(lines[i].ay()).epsilon(EPSILON));
