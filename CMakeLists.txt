@@ -9,7 +9,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(COMPILE_WARNINGS -Wall -Wextra -Wpedantic -Wconversion)
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    set(COMPILE_WARNINGS  "/W4 /EHsc")
+    set(COMPILE_WARNINGS  "/W4 /Wall")
 endif()
 
 # policy for target sources - we don't expect any old CMakes
