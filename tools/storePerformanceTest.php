@@ -1,4 +1,8 @@
 <?php
+# SPDX-FileCopyrightText: 2017 Petros Koutsolampros
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 $data = file_get_contents('php://input');
 $obj = json_decode($data);
 

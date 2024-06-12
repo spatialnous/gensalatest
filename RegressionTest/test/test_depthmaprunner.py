@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2017 Christian Sailer
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 from context import depthmaprunner
 
 import cmdlinewrapper

@@ -1,4 +1,7 @@
-
+# SPDX-FileCopyrightText: 2017-2019 Christian Sailer
+# SPDX-FileCopyrightText: 2017-2024 Petros Koutsolampros
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 class PerformanceRegressionConfig:
     """ Encapsulate performance regression config

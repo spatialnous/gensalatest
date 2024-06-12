@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2020 Petros Koutsolampros
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 set(moduleTest moduleTest)
 
 set(moduleTest_SRCS

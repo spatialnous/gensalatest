@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2017 Christian Sailer
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import unittest
 from test_config import writeConfig
 from RegressionTestRunner import RegressionTestRunner
