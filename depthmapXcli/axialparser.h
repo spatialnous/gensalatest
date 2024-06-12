@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Christian Sailer
+// Copyright (C) 2017, Christian Sailer
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,8 +15,9 @@
 
 #pragma once
 
-#include "genlib/p2dpoly.h"
 #include "imodeparser.h"
+
+#include "genlib/p2dpoly.h"
 
 class AxialParser : public IModeParser {
   public:

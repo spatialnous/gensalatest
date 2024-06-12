@@ -13,7 +13,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "depthmapXcli/printcommunicator.h"
+#include "printcommunicator.h"
+
 #include <iostream>
 
 void PrintCommunicator::CommPostMessage(size_t m, size_t x) const {

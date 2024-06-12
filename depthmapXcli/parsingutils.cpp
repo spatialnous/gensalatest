@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Christian Sailer
+// Copyright (C) 2017, Christian Sailer
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,7 +14,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "parsingutils.h"
+
 #include "exceptions.h"
+
 #include <algorithm>
 #include <cstring>
 #include <iostream>

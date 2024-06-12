@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Christian Sailer
+// Copyright (C) 2017, Christian Sailer
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 #include "commandlineparser.h"
 #include "modeparserregistry.h"
 #include "performancewriter.h"
+
 #include <iostream>
 
 int main(int argc, char *argv[]) {

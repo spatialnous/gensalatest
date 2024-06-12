@@ -1,4 +1,4 @@
-// Copyright (C) 2020 Petros Koutsolampros
+// Copyright (C) 2020, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,14 +14,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "segmentshortestpathparser.h"
-#include "depthmapXcli/exceptions.h"
-#include "depthmapXcli/parsingutils.h"
-#include "depthmapXcli/runmethods.h"
-#include "depthmapXcli/simpletimer.h"
+
+#include "exceptions.h"
+#include "parsingutils.h"
+#include "runmethods.h"
+#include "simpletimer.h"
+
 #include "salalib/entityparsing.h"
 #include "salalib/segmmodules/segmmetricshortestpath.h"
 #include "salalib/segmmodules/segmtopologicalshortestpath.h"
 #include "salalib/segmmodules/segmtulipshortestpath.h"
+
 #include <cstring>
 #include <sstream>
 

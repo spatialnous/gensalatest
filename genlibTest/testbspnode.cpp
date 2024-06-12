@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Petros Koutsolampros
+// Copyright (C) 2017, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,10 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "catch.hpp"
 #include "genlib/bsptree.h"
 #include "genlib/comm.h"
 #include "genlib/p2dpoly.h"
+
+#include "catch.hpp"
 
 TEST_CASE("BSPTree::pickMidpointLine") {
     std::vector<TaggedLine> lines;

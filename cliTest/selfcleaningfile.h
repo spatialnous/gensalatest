@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Christian Sailer
+// Copyright (C) 2017, Christian Sailer
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <string>
+
 class SelfCleaningFile {
   public:
     SelfCleaningFile(const std::string &filename) : _filename(filename) {}

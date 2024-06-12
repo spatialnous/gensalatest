@@ -1,5 +1,5 @@
-// Copyright (C) 2017 Christian Sailer
-// Copyright (C) 2017 Petros Koutsolampros
+// Copyright (C) 2017, Christian Sailer
+// Copyright (C) 2017, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -25,11 +25,12 @@
 #include "mapconvertparser.h"
 #include "performancesink.h"
 #include "radiusconverter.h"
-#include "salalib/isovistdef.h"
-#include "salalib/mgraph.h"
 #include "segmentparser.h"
 #include "stepdepthparser.h"
 #include "vgaparser.h"
+
+#include "salalib/isovistdef.h"
+#include "salalib/mgraph.h"
 
 #include <string>
 #include <vector>

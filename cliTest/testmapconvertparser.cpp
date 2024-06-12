@@ -1,4 +1,4 @@
-// Copyright (C) 2018 Petros Koutsolampros
+// Copyright (C) 2018, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,8 +14,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "argumentholder.h"
+
 #include "depthmapXcli/mapconvertparser.h"
-#include <catch.hpp>
+
+#include "catch.hpp"
 
 TEST_CASE("MapConvertParserFail", "Error cases") {
     SECTION("Missing argument to co") {

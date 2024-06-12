@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Petros Koutsolampros
+// Copyright (C) 2017, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,7 +17,9 @@
 #include "exceptions.h"
 #include "parsingutils.h"
 #include "runmethods.h"
+
 #include "salalib/entityparsing.h"
+
 #include <cstring>
 #include <sstream>
 

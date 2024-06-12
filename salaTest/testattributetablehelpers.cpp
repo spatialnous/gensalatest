@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Christian Sailer
+// Copyright (C) 2017, Christian Sailer
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,14 +13,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#include "salalib/attributetablehelpers.h"
+
 #include "catch.hpp"
 
 #include "Catch/fakeit.hpp"
-#include "salalib/attributetablehelpers.h"
 
 TEST_CASE("push to layer") {
     using namespace dXreimpl;
     using namespace fakeit;
+    // TODO: Warning from fakeit: Zero size arrays are an extension
     Mock<LayerManager> layMan;
     AttributeTable table;
     When(Method(layMan, addLayer)).Do([](const std::string &name) -> size_t {

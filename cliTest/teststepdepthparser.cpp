@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Petros Koutsolampros
+// Copyright (C) 2017, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,9 +14,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "argumentholder.h"
-#include "depthmapXcli/stepdepthparser.h"
 #include "selfcleaningfile.h"
-#include <catch.hpp>
+
+#include "depthmapXcli/stepdepthparser.h"
+
+#include "catch.hpp"
+
+#include <fstream>
 
 TEST_CASE("StepDepthParserFail", "Error cases") {
     SECTION("Missing argument to -sdp") {

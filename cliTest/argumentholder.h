@@ -1,4 +1,4 @@
-// Copyright (C) 2017 Christian Sailer
+// Copyright (C) 2017, Christian Sailer
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,10 +13,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef ARGUMENTHOLDER_H
-#define ARGUMENTHOLDER_H
+#pragma once
+
 #include <string>
 #include <vector>
+
 class ArgumentHolder {
   public:
     ArgumentHolder(std::initializer_list<std::string> l) : mArguments(l) {
@@ -33,5 +34,3 @@ class ArgumentHolder {
     std::vector<std::string> mArguments;
     std::vector<const char *> mArgv;
 };
-
-#endif // ARGUMENTHOLDER_H

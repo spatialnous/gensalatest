@@ -1,5 +1,5 @@
-// Copyright (C) 2017-2018 Christian Sailer
-// Copyright (C) 2017-2018 Petros Koutsolampros
+// Copyright (C) 2017-2018, Christian Sailer
+// Copyright (C) 2017-2018, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "../cliTest/selfcleaningfile.h"
 #include "../genlib/stringutils.h"
+
+#include "../cliTest/selfcleaningfile.h"
 #include "catch.hpp"
+
 #include <fstream>
 
 TEST_CASE("Tests for split function", "") {

@@ -1,4 +1,4 @@
-// Copyright (C) 2018 Christian Sailer
+// Copyright (C) 2018, Christian Sailer
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,9 +13,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "catch.hpp"
-
 #include "genlib/containerutils.h"
+
+#include "catch.hpp"
 
 #include <vector>
 

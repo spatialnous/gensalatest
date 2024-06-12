@@ -1,4 +1,4 @@
-// Copyright (C) 2018 Petros Koutsolampros
+// Copyright (C) 2018, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,7 +15,6 @@
 
 #pragma once
 
-#include "genlib/p2dpoly.h"
 #include "imodeparser.h"
 
 class SegmentParser : public IModeParser {

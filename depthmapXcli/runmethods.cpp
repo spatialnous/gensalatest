@@ -1,5 +1,5 @@
-// Copyright (C) 2017 Christian Sailer
-// Copyright (C) 2017 Petros Koutsolampros
+// Copyright (C) 2017, Christian Sailer
+// Copyright (C) 2017, Petros Koutsolampros
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@
 #include "exceptions.h"
 #include "printcommunicator.h"
 #include "radiusconverter.h"
-#include "salalib/entityparsing.h"
-#include "salalib/linkutils.h"
-#include "salalib/mgraph.h"
 #include "simpletimer.h"
 
+#include "salalib/entityparsing.h"
 #include "salalib/gridproperties.h"
 #include "salalib/importutils.h"
+#include "salalib/linkutils.h"
+#include "salalib/mgraph.h"
 
 #include <memory>
 #include <sstream>
