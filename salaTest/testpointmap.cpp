@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "salalib/mgraph.h"
+#include "salalib/vgamodules/vgametricdepth.h"
 
 #include "catch.hpp"
 
@@ -541,4 +542,35 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "") {
             pointMap.getMergedPixelPairs();
         REQUIRE(pixelPairs3.size() == 0);
     }
+}
+
+TEST_CASE("Pointmap copy()", "") {
+    std::vector<Line> lines;
+    lines.push_back(Line(Point2f(1.888668, 1.560937), Point2f(1.888668, 6.908548)));
+    lines.push_back(Line(Point2f(1.888668, 6.908548), Point2f(7.882500, 6.908548)));
+    lines.push_back(Line(Point2f(7.882500, 6.908548), Point2f(7.897130, 5.123703)));
+    lines.push_back(Line(Point2f(4.813618, 5.139680), Point2f(7.897130, 5.123703)));
+    lines.push_back(Line(Point2f(4.813618, 3.862943), Point2f(4.813618, 5.139680)));
+    lines.push_back(Line(Point2f(4.813618, 3.862943), Point2f(6.068108, 3.848524)));
+    lines.push_back(Line(Point2f(6.068108, 3.848524), Point2f(6.084223, 1.544019)));
+    lines.push_back(Line(Point2f(1.888668, 1.560937), Point2f(6.084223, 1.544019)));
+    ShapeMap shp;
+    for (const auto &line : lines) {
+        shp.makeLineShape(line);
+    }
+
+    PointMap pnt(shp.getRegion());
+    pnt.setGrid(0.5);
+    pnt.blockLines(lines);
+    pnt.fillPoint(Point2f(3.0, 6.0));
+    pnt.sparkGraph2(nullptr, false, -1);
+
+    PointMap newPnt(shp.getRegion());
+    newPnt.copy(pnt, true, true);
+
+    newPnt.clearSel();
+    Point2f p(3.01, 6.7);
+    QtRegion region(p, p);
+    newPnt.setCurSel(region, true);
+    auto analysisResult = VGAMetricDepth().run(nullptr, newPnt, false);
 }

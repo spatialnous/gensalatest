@@ -84,7 +84,26 @@ TEST_CASE("Test ShapeMap::copy()") {
     newShapeGraph->copy(*shapeGraph, ShapeMap::COPY_ALL);
     REQUIRE(newShapeGraph->getAllShapes() == shapeGraph->getAllShapes());
 
-    REQUIRE(newShapeGraph->getConnections().size() == 58);
+    REQUIRE(newShapeGraph->getConnections().size() == shapeGraph->getConnections().size());
+    for (size_t i = 0; i < shapeGraph->getConnections().size(); i++) {
+        REQUIRE(newShapeGraph->getConnections()[i].m_connections ==
+                shapeGraph->getConnections()[i].m_connections);
+    }
+
+    Point2f p1(0982.8, -1620.3);
+    Point2f p2(1217.1, -1977.3);
+    QtRegion region(p1, p1);
+    shapeGraph->setCurSel(region);
+    REQUIRE(shapeGraph->getSelCount() == 1);
+    REQUIRE(*shapeGraph->getSelSet().begin() == 6);
+    shapeGraph->linkShapes(p2);
+    REQUIRE(shapeGraph->getLinks().size() == 1);
+
+    newShapeGraph->setCurSel(region);
+    REQUIRE(newShapeGraph->getSelCount() == 1);
+    REQUIRE(*newShapeGraph->getSelSet().begin() == 6);
+    newShapeGraph->linkShapes(p2);
+    REQUIRE(newShapeGraph->getLinks().size() == 1);
 };
 
 TEST_CASE("Testing ShapeMap::getAllShapes variants") {
