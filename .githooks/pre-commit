@@ -6,6 +6,13 @@
 
 set -e
 
+echo "Checking for submodule commits not pushed"
+if [[ $(git submodule foreach --quiet 'git diff --stat main origin/main') ]]; then
+    echo "Submodules not pushed"
+    exit 1
+else
+    echo "Submodules pushed"
+fi
 reuse lint
 echo "Running clang-format..."
 for FILE in $(git diff --cached --name-only --diff-filter=d | grep -E '.*\.(c|cpp|h|hpp)')
