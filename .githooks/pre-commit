@@ -10,7 +10,7 @@ echo "Checking for submodule commits not pushed"
 CHNG=$(git submodule foreach --quiet 'git diff --stat main origin/main')
 if [[ $? != 0 ]]; then
     echo "Command failed."
-elif [[ $CHNG ]]; then
+elif [[ "$CHNG" ]]; then
     echo "Submodules not pushed"
     exit 1
 else
