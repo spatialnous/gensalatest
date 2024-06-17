@@ -2,15 +2,13 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
 echo "Checking for submodule commits not pushed"
 CHNG=$(git submodule foreach --quiet 'git diff --stat main origin/main')
-if [[ $? != 0 ]]; then
-    echo "Command failed."
-elif [[ "$CHNG" ]]; then
+if [ ! -z "$CHNG" -a "$CHNG" != " " ]; then
     echo "Submodules not pushed"
     exit 1
 else
