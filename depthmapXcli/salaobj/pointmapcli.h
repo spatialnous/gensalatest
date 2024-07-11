@@ -36,7 +36,7 @@ class PointMapCLI : public AttributeMapCLI {
     int m_viewing_deprecated;
     int m_draw_step;
 
-    mutable bool m_finished;
+    mutable bool m_finished = false;
     mutable PixelRef bl;
     mutable PixelRef cur; // cursor for points
     mutable PixelRef rc;  // cursor for grid lines

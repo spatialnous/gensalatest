@@ -619,7 +619,7 @@ int MetaGraphCLI::makeIsovistPath(Communicator *communicator, double fov, bool) 
         return 0;
     }
 
-    ShapeMapCLI *isovists;
+    ShapeMapCLI *isovists = nullptr;
 
     bool first = true;
     if (makeBSPtree(m_bspNodeTree, communicator)) {
@@ -712,9 +712,7 @@ bool MetaGraphCLI::makeBSPtree(BSPNodeTree &bspNodeTree, Communicator *communica
     auto shownMaps = getShownDrawingMaps();
     for (const auto &mapLayer : shownMaps) {
         auto refShapes = mapLayer.first.get().getInternalMap().getAllShapes();
-        int k = -1;
         for (const auto &refShape : refShapes) {
-            k++;
             std::vector<Line> newLines = refShape.second.getAsLines();
             // must check it is not a zero length line:
             for (const Line &line : newLines) {

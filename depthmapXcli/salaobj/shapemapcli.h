@@ -18,7 +18,7 @@ class ShapeMapCLI : public AttributeMapCLI {
     mutable bool m_show; // used when shape map is a drawing layer
     bool m_editable;
 
-    mutable int m_current_shape;
+    mutable int m_current_shape = -1;
     mutable std::vector<size_t> m_display_shapes;
 
     mutable bool m_newshape; // if a new shape has been added
