@@ -1814,27 +1814,6 @@ bool MetaGraphCLI::pushValuesToLayer(int sourcetype, size_t sourcelayer, int des
     return true;
 }
 
-// Agent functionality: some of it still kept here with the metagraph
-// (to allow push value to layer and back again)
-
-void MetaGraphCLI::runAgentEngine(Communicator *comm) {
-    if (!hasDisplayedPointMap()) {
-        throw(depthmapX::RuntimeException("No Pointmap on display"));
-    }
-    size_t totalSystemTimesteps = 10000;
-    double releaseRate = 0.1;
-    size_t agentLifeTimesteps = 1000;
-    unsigned short agentFOV = 32;
-    size_t agentStepsBeforeTurnDecision = 3;
-    int agentViewAlgorithm = 0;
-    int randomReleaseLocationSeed = -1;
-    auto analysis =
-        AgentAnalysis(totalSystemTimesteps, releaseRate, agentLifeTimesteps, agentFOV,
-                      agentStepsBeforeTurnDecision, agentViewAlgorithm, randomReleaseLocationSeed,
-                      std::vector<Point2f>(), std::nullopt, std::nullopt);
-    analysis.run(comm, getDisplayedPointMap().getInternalMap());
-}
-
 // Thru vision
 // TODO: Undocumented functionality
 bool MetaGraphCLI::analyseThruVision(Communicator *comm, std::optional<size_t> gatelayer) {

@@ -500,11 +500,7 @@ class MetaGraphCLI {
         else // if (m_viewClass & VIEWDATA)
             return getDisplayedDataMap().getSelSet();
     }
-    //
-  public:
-    void runAgentEngine(Communicator *comm);
-    //
-  public:
+
     // thru vision
     bool analyseThruVision(Communicator *comm = NULL,
                            std::optional<size_t> gatelayer = std::nullopt);

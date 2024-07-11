@@ -514,32 +514,29 @@ namespace dm_runmethods {
         }
 
         std::optional<std::pair<size_t, std::reference_wrapper<ShapeMap>>> m_recordTrails =
-            std::nullopt;
-        //        std::optional<std::pair<size_t, std::reference_wrapper<ShapeMap>>> m_recordTrails
-        //        =
-        //            agentP.recordTrailsForAgents() > 0
-        //                ? std::make_optional(
-        //                      std::make_pair(static_cast<size_t>(agentP.recordTrailsForAgents()),
-        //                                     std::ref(mGraph.getDataMaps()
-        //                                                  .emplace_back("Agent Trails",
-        //                                                  ShapeMap::DATAMAP) .getInternalMap())))
-        //                : std::nullopt;
+            agentP.recordTrailsForAgents() > 0
+                ? std::make_optional(
+                      std::make_pair(static_cast<size_t>(agentP.recordTrailsForAgents()),
+                                     std::ref(mGraph.getDataMaps()
+                                                  .emplace_back("Agent Trails", ShapeMap::DATAMAP)
+                                                  .getInternalMap())))
+                : std::nullopt;
 
         // the ui and code suggest that the results can be put on a separate
         // 'data map', but the functionality does not seem to actually be
         // there thus it is skipped for now
         std::optional<std::reference_wrapper<ShapeMap>> gateLayer = std::nullopt;
 
-        auto analysis = AgentAnalysis(agentP.totalSystemTimestemps(), agentP.releaseRate(),
-                                      static_cast<size_t>(agentP.agentLifeTimesteps()),
-                                      static_cast<unsigned short>(agentP.agentFOV()),
-                                      static_cast<size_t>(agentP.agentStepsBeforeTurnDecision()),
-                                      agentViewAlgorithm, agentP.randomReleaseLocationSeed(),
-                                      agentP.getReleasePoints(), gateLayer, m_recordTrails);
+        auto analysis =
+            AgentAnalysis(currentMap.getInternalMap(), agentP.totalSystemTimestemps(),
+                          agentP.releaseRate(), static_cast<size_t>(agentP.agentLifeTimesteps()),
+                          static_cast<unsigned short>(agentP.agentFOV()),
+                          static_cast<size_t>(agentP.agentStepsBeforeTurnDecision()),
+                          agentViewAlgorithm, agentP.randomReleaseLocationSeed(),
+                          agentP.getReleasePoints(), gateLayer, m_recordTrails);
 
         std::cout << "ok\nRunning agent analysis... " << std::flush;
-        DO_TIMED("Running agent analysis",
-                 analysis.run(getCommunicator(cmdP).get(), currentMap.getInternalMap(), false);)
+        DO_TIMED("Running agent analysis", analysis.run(getCommunicator(cmdP).get());)
         std::cout << " ok\nWriting out result..." << std::flush;
         std::vector<AgentParser::OutputType> resultTypes = agentP.outputTypes();
         if (resultTypes.size() == 0) {
