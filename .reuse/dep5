@@ -11,11 +11,11 @@ Files: RegressionTest/BaselineBinaries/* dist/* docs/*.md
 Copyright: depthmapX authors
 License: GPL-3.0-or-later
 
-Files: .travis.yml ci/.gitattributes tools/build-image/readme.txt
+Files: .travis.yml ci/.gitattributes tools/build_image/readme.txt
 Copyright: Christian Sailer
 License: GPL-3.0-or-later
 
-Files: RegressionTest/*.json tools/build-image/Dockerfile
+Files: RegressionTest/*.json tools/build_image/Dockerfile
 Copyright: Christian Sailer, Petros Koutsolampros <commits@pklampros.io>
 License: GPL-3.0-or-later
 
