@@ -82,7 +82,7 @@ class AgentParser : public IModeParser {
     int agentStepsBeforeTurnDecision() const { return m_agentStepsBeforeTurnDecision; }
     int agentLifeTimesteps() const { return m_agentLifeTimesteps; }
 
-    std::vector<Point2f> getReleasePoints() const { return m_releasePoints; }
+    const std::vector<Point2f> &getReleasePoints() const { return m_releasePoints; }
 
     std::vector<OutputType> outputTypes() const { return m_outputTypes; }
 

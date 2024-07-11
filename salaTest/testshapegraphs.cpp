@@ -3,13 +3,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "salalib/mapconverter.h"
-#include "salalib/mgraph.h"
 #include "salalib/shapegraph.h"
 #include "salalib/shapemap.h"
 
 #include "genlib/p2dpoly.h"
 
 #include "catch.hpp"
+#include "salalib/shapemapgroupdata.h"
 
 #include <iostream>
 #include <sstream>
@@ -23,17 +23,25 @@ TEST_CASE("Testing ShapeGraph::writeAxialConnections") {
     Point2f line3Start(2, 1);
     Point2f line3End(2, -2);
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
 
-    metaGraph->m_drawingFiles.emplace_back("Test SpacePixelGroup");
-    metaGraph->m_drawingFiles.back().m_spacePixels.emplace_back("Test ShapeMap");
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Test SpacePixelGroup";
+    auto &spacePixels = drawingFiles.back().second;
+    spacePixels.emplace_back("Test ShapeMap");
 
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line1Start, line1End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line2Start, line2End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line3Start, line3End));
+    spacePixels.back().makeLineShape(Line(line1Start, line1End));
+    spacePixels.back().makeLineShape(Line(line2Start, line2End));
+    spacePixels.back().makeLineShape(Line(line3Start, line3End));
 
-    auto shapegraph =
-        MapConverter::convertDrawingToAxial(0, "Test axial", metaGraph->m_drawingFiles);
+    auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
+
+    auto shapegraph = MapConverter::convertDrawingToAxial(0, "Test axial", drawingMapRefs);
+
+    REQUIRE(shapegraph->getConnections().size() == 3);
+    REQUIRE(shapegraph->getConnections()[0].m_connections.size() == 2);
+    REQUIRE(shapegraph->getConnections()[1].m_connections.size() == 1);
+    REQUIRE(shapegraph->getConnections()[2].m_connections.size() == 1);
 
     SECTION("writeAxialConnectionsAsDotGraph") {
         std::stringstream stream;
@@ -76,17 +84,17 @@ TEST_CASE("Testing ShapeGraph::writeSegmentConnections") {
     Point2f line3Start(2, 0);
     Point2f line3End(2, 2);
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Test SpacePixelGroup";
+    auto &spacePixels = drawingFiles.back().second;
+    spacePixels.emplace_back("Test ShapeMap");
 
-    metaGraph->m_drawingFiles.emplace_back("Test SpacePixelGroup");
-    metaGraph->m_drawingFiles.back().m_spacePixels.emplace_back("Test ShapeMap");
+    spacePixels.back().makeLineShape(Line(line2Start, line2End));
+    spacePixels.back().makeLineShape(Line(line3Start, line3End));
 
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line1Start, line1End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line2Start, line2End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line3Start, line3End));
-
-    auto shapegraph =
-        MapConverter::convertDrawingToSegment(0, "Test segment", metaGraph->m_drawingFiles);
+    auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
+    auto shapegraph = MapConverter::convertDrawingToSegment(0, "Test segment", drawingMapRefs);
 
     SECTION("writeSegmentConnectionsAsPairsCSV") {
         std::stringstream stream;

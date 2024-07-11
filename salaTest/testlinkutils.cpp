@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "salalib/linkutils.h"
-#include "salalib/mgraph.h"
 
 #include "catch.hpp"
+#include "salalib/shapemapgroupdata.h"
 
 TEST_CASE("Test linking - fully filled grid (no geometry)", "") {
     double spacing = 0.5;
@@ -14,15 +14,13 @@ TEST_CASE("Test linking - fully filled grid (no geometry)", "") {
     Point2f topRight(2, 4);
     int fill_type = 0; // = QDepthmapView::FULLFILL
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
-    metaGraph->setRegion(bottomLeft, topRight);
-    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
+    PointMap pointMap(QtRegion(bottomLeft, topRight), "Test PointMap");
     pointMap.setGrid(spacing, offset);
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
     Point2f midPoint(
         gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5) + 0.5),
         gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));
-    std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+    std::vector<Line> lines;
     pointMap.blockLines(lines);
     pointMap.makePoints(midPoint, fill_type);
 
@@ -183,22 +181,23 @@ TEST_CASE("Test linking - half filled grid", "") {
     Point2f bottomLeft(std::min(lineStart.x, lineEnd.x), std::min(lineStart.y, lineEnd.y));
     Point2f topRight(std::max(lineStart.x, lineEnd.x), std::max(lineStart.y, lineEnd.y));
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
-    metaGraph->m_drawingFiles.emplace_back("Test SpacePixelGroup");
-    metaGraph->m_drawingFiles.back().m_spacePixels.emplace_back("Test ShapeMap");
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(lineStart, lineEnd));
-    metaGraph->m_drawingFiles.back().m_region =
-        metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion();
-    metaGraph->setRegion(metaGraph->m_drawingFiles.back().m_region.bottom_left,
-                         metaGraph->m_drawingFiles.back().m_region.top_right);
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
 
-    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Test SpacePixelGroup";
+    auto &spacePixels = drawingFiles.back().second;
+    spacePixels.emplace_back("Test ShapeMap");
+
+    spacePixels.back().makeLineShape(Line(lineStart, lineEnd));
+    spacePixelFileData.region = spacePixels.back().getRegion();
+
+    PointMap pointMap(QtRegion(bottomLeft, topRight), "Test PointMap");
     pointMap.setGrid(spacing, offset);
 
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
     Point2f gridTopRight = pointMap.getRegion().top_right;
     Point2f topLeftFillPoint(gridBottomLeft.x + spacing, gridTopRight.y - spacing);
-    std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+    std::vector<Line> lines = spacePixels.back().getAllShapesAsLines();
     pointMap.blockLines(lines);
     pointMap.makePoints(topLeftFillPoint, fill_type);
 

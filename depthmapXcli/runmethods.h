@@ -14,12 +14,12 @@
 #include "mapconvertparser.h"
 #include "performancesink.h"
 #include "radiusconverter.h"
+#include "salaobj/metagraphcli.h"
 #include "segmentparser.h"
 #include "stepdepthparser.h"
 #include "vgaparser.h"
 
 #include "salalib/isovistdef.h"
-#include "salalib/mgraph.h"
 
 #include <string>
 #include <vector>
@@ -35,7 +35,7 @@ class Line;
 class Point2f;
 
 namespace dm_runmethods {
-    std::unique_ptr<MetaGraph> loadGraph(const std::string &filename, IPerformanceSink &perfWriter);
+    MetaGraphCLI loadGraph(const std::string &filename, IPerformanceSink &perfWriter);
     void importFiles(const CommandLineParser &cmdP, const ImportParser &parser,
                      IPerformanceSink &perfWriter);
     void linkGraph(const CommandLineParser &cmdP, const LinkParser &parser,

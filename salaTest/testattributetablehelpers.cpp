@@ -27,11 +27,12 @@ TEST_CASE("push to layer") {
 
     auto &row = table.addRow(AttributeKey(0));
     row.setValue(0, 0.5f);
-    row.setSelection(true);
+
     auto &row2 = table.addRow(AttributeKey(1));
     row2.setValue(0, 1.0f);
 
-    pushSelectionToLayer(table, layMan.get(), "testlayer");
+    std::set<int> selSet = {0};
+    pushSelectionToLayer(table, layMan.get(), "testlayer", selSet);
     Verify(Method(layMan, addLayer)).Once();
     Verify(Method(layMan, getKey).Using(1)).Once();
     Verify(Method(layMan, setLayerVisible).Using(1, true)).Once();

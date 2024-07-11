@@ -42,16 +42,22 @@ TEST_CASE("Shortest paths working examples", "") {
 
     // select the two edges
     QtRegion selRegion(lines[1].midpoint(), lines[1].midpoint());
-    segmentMap->setCurSel(selRegion, false);
+
+    auto shapesInRegion = segmentMap->getShapesInRegion(selRegion);
+
     selRegion.bottom_left = lines[9].midpoint();
     selRegion.top_right = lines[9].midpoint();
-    segmentMap->setCurSel(selRegion, true);
-    REQUIRE(segmentMap->getSelCount() == 2);
+    auto newShapesInRegion = segmentMap->getShapesInRegion(selRegion);
+
+    shapesInRegion.insert(newShapesInRegion.begin(), newShapesInRegion.end());
+    REQUIRE(shapesInRegion.size() == 2);
 
     {
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Angle"));
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Order"));
-        SegmentTulipShortestPath(*segmentMap.get()).run(nullptr);
+        SegmentTulipShortestPath(*segmentMap.get(), shapesInRegion.begin()->first,
+                                 shapesInRegion.rbegin()->first)
+            .run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Angle"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Order"));
         size_t angleColIdx =
@@ -74,7 +80,9 @@ TEST_CASE("Shortest paths working examples", "") {
     {
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Distance"));
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Order"));
-        SegmentMetricShortestPath(*segmentMap.get()).run(nullptr);
+        SegmentMetricShortestPath(*segmentMap.get(), shapesInRegion.begin()->first,
+                                  shapesInRegion.rbegin()->first)
+            .run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Distance"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Metric Shortest Path Order"));
         size_t distanceColIdx =
@@ -97,7 +105,9 @@ TEST_CASE("Shortest paths working examples", "") {
     {
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Depth"));
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Order"));
-        SegmentTopologicalShortestPath(*segmentMap.get()).run(nullptr);
+        SegmentTopologicalShortestPath(*segmentMap.get(), shapesInRegion.begin()->first,
+                                       shapesInRegion.rbegin()->first)
+            .run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Depth"));
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Topological Shortest Path Order"));
         size_t depthColIdx =

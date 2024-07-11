@@ -73,3 +73,4 @@ target_compile_options(${depthmapXcli} PRIVATE ${COMPILE_WARNINGS})
 
 target_link_libraries(${depthmapXcli} ${LINK_LIBS} ${modules_cli} ${modules_core})
 
+add_subdirectory(salaobj)

@@ -241,19 +241,6 @@ TEST_CASE("test attribute table") {
 
     REQUIRE_THROWS_AS(table.getColumnIndex("col2"), std::out_of_range &);
 
-    table.getRow(AttributeKey(0)).setSelection(true);
-
-    REQUIRE(table.getRow(AttributeKey(0)).isSelected());
-    auto iter = table.begin();
-    REQUIRE(iter->getRow().isSelected());
-    ++iter;
-    REQUIRE_FALSE(iter->getRow().isSelected());
-
-    table.deselectAllRows();
-    for (auto &item : table) {
-        REQUIRE_FALSE(item.getRow().isSelected());
-    }
-
     // check read/write
     LayerManagerImpl layerManager;
     SelfCleaningFile scf("tablefile.bin");
@@ -404,9 +391,10 @@ TEST_CASE("Attribute Table - serialisation") {
 
     row2.setValue(0, 11.0f);
     row2.setValue(1, 12.0f);
-    row2.setSelection(true);
 
-    dXreimpl::pushSelectionToLayer(newTable, layerManager, "sel layer");
+    std::set<int> selSet = {1};
+
+    dXreimpl::pushSelectionToLayer(newTable, layerManager, "sel layer", selSet);
     REQUIRE(isObjectVisible(layerManager, row2));
     REQUIRE_FALSE(isObjectVisible(layerManager, row));
 

@@ -5,31 +5,57 @@
 #include "salalib/mapconverter.h"
 
 #include "catch.hpp"
+#include "salalib/shapemapgroupdata.h"
 
 TEST_CASE("Failing empty drawing map conversion", "") {
-    std::vector<SpacePixelFile> drawingFiles;
-    REQUIRE_THROWS_WITH(MapConverter::convertDrawingToAxial(nullptr, "Axial map", drawingFiles),
-                        Catch::Contains("Failed to convert lines"));
-    REQUIRE_THROWS_WITH(MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles),
-                        Catch::Contains("No lines found in drawing"));
-    REQUIRE_THROWS_WITH(MapConverter::convertDrawingToConvex(nullptr, "Convex map", drawingFiles),
-                        Catch::Contains("No polygons found in drawing"));
+    {
+        std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles;
+        auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
 
-    drawingFiles.push_back(SpacePixelFile("Drawing file"));
-    REQUIRE_THROWS_WITH(MapConverter::convertDrawingToAxial(nullptr, "Axial map", drawingFiles),
-                        Catch::Contains("Failed to convert lines"));
-    REQUIRE_THROWS_WITH(MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles),
-                        Catch::Contains("No lines found in drawing"));
-    REQUIRE_THROWS_WITH(MapConverter::convertDrawingToConvex(nullptr, "Convex map", drawingFiles),
-                        Catch::Contains("No polygons found in drawing"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToAxial(nullptr, "Axial map", drawingMapRefs),
+            Catch::Contains("Failed to convert lines"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
+            Catch::Contains("No lines found in drawing"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToConvex(nullptr, "Convex map", drawingMapRefs),
+            Catch::Contains("No polygons found in drawing"));
+    }
+    {
+        std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
+        auto &spacePixelFileData = drawingFiles.back().first;
+        spacePixelFileData.name = "Test SpacePixelGroup";
+        auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
 
-    drawingFiles.back().m_spacePixels.push_back(ShapeMap("Drawing layer", ShapeMap::DRAWINGMAP));
-    REQUIRE_THROWS_WITH(MapConverter::convertDrawingToAxial(nullptr, "Axial map", drawingFiles),
-                        Catch::Contains("Failed to convert lines"));
-    REQUIRE_THROWS_WITH(MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles),
-                        Catch::Contains("No lines found in drawing"));
-    REQUIRE_THROWS_WITH(MapConverter::convertDrawingToConvex(nullptr, "Convex map", drawingFiles),
-                        Catch::Contains("No polygons found in drawing"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToAxial(nullptr, "Axial map", drawingMapRefs),
+            Catch::Contains("Failed to convert lines"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
+            Catch::Contains("No lines found in drawing"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToConvex(nullptr, "Convex map", drawingMapRefs),
+            Catch::Contains("No polygons found in drawing"));
+    }
+
+    {
+        std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
+        auto &spacePixelFileData = drawingFiles.back().first;
+        spacePixelFileData.name = "Test SpacePixelGroup";
+        drawingFiles.back().second.push_back(ShapeMap("Drawing layer", ShapeMap::DRAWINGMAP));
+        auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
+
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToAxial(nullptr, "Axial map", drawingMapRefs),
+            Catch::Contains("Failed to convert lines"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
+            Catch::Contains("No lines found in drawing"));
+        REQUIRE_THROWS_WITH(
+            MapConverter::convertDrawingToConvex(nullptr, "Convex map", drawingMapRefs),
+            Catch::Contains("No polygons found in drawing"));
+    }
 }
 
 TEST_CASE("Failing empty axial to segment map conversion", "") {
@@ -56,17 +82,23 @@ TEST_CASE("Test drawing to segment conversion", "") {
     Line line2(Point2f(0, 1), Point2f(1, 1));
     Line line3(Point2f(1, 1), Point2f(1, 0));
 
-    std::vector<SpacePixelFile> drawingFiles;
-    drawingFiles.push_back(SpacePixelFile("Drawing file"));
-    drawingFiles.back().m_spacePixels.push_back(ShapeMap("Drawing layer", ShapeMap::DRAWINGMAP));
-    ShapeMap &drawingLayer = drawingFiles.back().m_spacePixels.back();
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
+
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Test SpacePixelGroup";
+    auto &spacePixels = drawingFiles.back().second;
+    spacePixels.emplace_back("Drawing layer", ShapeMap::DRAWINGMAP);
+
+    ShapeMap &drawingLayer = spacePixels.back();
+
+    auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
 
     SECTION("Single line") {
         drawingLayer.makeLineShape(line1);
 
         // TODO: This fails with std::bad_alloc because there's only 1 line in the drawing
         REQUIRE_THROWS_WITH(
-            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles),
+            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
             Catch::Contains("std::bad_alloc"));
     }
 
@@ -76,7 +108,7 @@ TEST_CASE("Test drawing to segment conversion", "") {
 
         // TODO: This fails with std::bad_alloc because there's only 2 lines in the drawing
         REQUIRE_THROWS_WITH(
-            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles),
+            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
             Catch::Contains("std::bad_alloc"));
     }
 
@@ -85,7 +117,7 @@ TEST_CASE("Test drawing to segment conversion", "") {
         drawingLayer.makeLineShape(line2);
         drawingLayer.makeLineShape(line3);
         std::unique_ptr<ShapeGraph> segmentMap =
-            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingFiles);
+            MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs);
         std::map<int, SalaShape> &shapes = segmentMap->getAllShapes();
         REQUIRE(shapes.size() == 3);
         auto shapeIter = shapes.begin();

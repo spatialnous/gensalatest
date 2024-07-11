@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "salalib/mgraph.h"
+#include "salalib/metagraph.h"
+#include "salalib/shapemapgroupdata.h"
 
 #include "catch.hpp"
 
@@ -17,79 +18,38 @@ TEST_CASE("Test getVisibleLines", "") {
     Point2f hiddenLineStart(1, 1);
     Point2f hiddenLineEnd(3, 5);
 
-    // push a SpacePixelFile in the MetaGraph
-    mgraph->m_drawingFiles.emplace_back("Test SpacePixelFile");
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
+
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Test SpacePixelGroup";
+    auto &spacePixels = drawingFiles.back().second;
 
     // push a ShapeMap in the SpacePixelFile
-    mgraph->m_drawingFiles.back().m_spacePixels.emplace_back("Visible ShapeMap");
+    spacePixels.emplace_back("Visible ShapeMap");
 
     // add a line to the first ShapeMap
-    mgraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(
-        Line(visibleLineStart, visibleLineEnd));
+    spacePixels.back().makeLineShape(Line(visibleLineStart, visibleLineEnd));
 
     // push a ShapeMap in the SpacePixelFile
-    mgraph->m_drawingFiles.back().m_spacePixels.emplace_back("Hidden ShapeMap");
+    spacePixels.emplace_back("Hidden ShapeMap");
 
     // add a line to the second ShapeMap
-    mgraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(
-        Line(hiddenLineStart, hiddenLineEnd));
+    spacePixels.back().makeLineShape(Line(hiddenLineStart, hiddenLineEnd));
 
-    SECTION("Get visible lines when none is hidden") {
-        // first check without hiding anything
+    SECTION("Get lines") {
 
-        const std::vector<SimpleLine> &visibleLines = mgraph->getVisibleDrawingLines();
+        const std::vector<SimpleLine> &visibleLines0 = spacePixels[0].getAllShapesAsSimpleLines();
+        const std::vector<SimpleLine> &visibleLines1 = spacePixels[1].getAllShapesAsSimpleLines();
 
-        REQUIRE(visibleLines.size() == 2);
-        REQUIRE(visibleLines[0].start().x == Approx(visibleLineStart.x).epsilon(EPSILON));
-        REQUIRE(visibleLines[0].start().y == Approx(visibleLineStart.y).epsilon(EPSILON));
-        REQUIRE(visibleLines[0].end().x == Approx(visibleLineEnd.x).epsilon(EPSILON));
-        REQUIRE(visibleLines[0].end().y == Approx(visibleLineEnd.y).epsilon(EPSILON));
-        REQUIRE(visibleLines[1].start().x == Approx(hiddenLineStart.x).epsilon(EPSILON));
-        REQUIRE(visibleLines[1].start().y == Approx(hiddenLineStart.y).epsilon(EPSILON));
-        REQUIRE(visibleLines[1].end().x == Approx(hiddenLineEnd.x).epsilon(EPSILON));
-        REQUIRE(visibleLines[1].end().y == Approx(hiddenLineEnd.y).epsilon(EPSILON));
-    }
-
-    SECTION("Get visible lines when some are hidden") {
-        // now hide the second SpacePixelFile
-        mgraph->m_drawingFiles.back().m_spacePixels.back().setShow(false);
-
-        const std::vector<SimpleLine> &visibleLines = mgraph->getVisibleDrawingLines();
-
-        REQUIRE(visibleLines.size() == 1);
-        REQUIRE(visibleLines[0].start().x == Approx(visibleLineStart.x).epsilon(EPSILON));
-        REQUIRE(visibleLines[0].start().y == Approx(visibleLineStart.y).epsilon(EPSILON));
-        REQUIRE(visibleLines[0].end().x == Approx(visibleLineEnd.x).epsilon(EPSILON));
-        REQUIRE(visibleLines[0].end().y == Approx(visibleLineEnd.y).epsilon(EPSILON));
-    }
-}
-
-TEST_CASE("Test pointMaps", "") {
-    std::unique_ptr<MetaGraph> mgraph(new MetaGraph());
-    auto pointMapIdx = mgraph->addNewPointMap("Kenny");
-    REQUIRE(mgraph->getPointMaps().size() == 1);
-    REQUIRE(pointMapIdx == 0);
-    REQUIRE(mgraph->getPointMaps()[0].getName() == "Kenny");
-    REQUIRE(mgraph->getDisplayedPointMapRef() == pointMapIdx);
-    REQUIRE(mgraph->getDisplayedPointMap().getName() == "Kenny");
-
-    SECTION("Add another and remove the first through the MetaGraph") {
-        auto pointMapIdx = mgraph->addNewPointMap("Stan");
-        REQUIRE(mgraph->getPointMaps().size() == 2);
-        REQUIRE(pointMapIdx == 1);
-        REQUIRE(mgraph->getPointMaps()[1].getName() == "Stan");
-        REQUIRE(mgraph->getDisplayedPointMapRef() == 1);
-        REQUIRE(mgraph->getDisplayedPointMap().getName() == "Stan");
-
-        mgraph->setState(MetaGraph::POINTMAPS);
-        mgraph->setViewClass(MetaGraph::SHOWVGATOP);
-        mgraph->setDisplayedPointMapRef(0);
-        REQUIRE(mgraph->getDisplayedPointMapRef() == 0);
-        REQUIRE(mgraph->getDisplayedPointMap().getName() == "Kenny");
-
-        mgraph->removeDisplayedMap();
-        REQUIRE(mgraph->getPointMaps().size() == 1);
-        REQUIRE(mgraph->getPointMaps()[0].getName() == "Stan");
-        REQUIRE(mgraph->getDisplayedPointMapRef() == 0);
+        REQUIRE(visibleLines0.size() == 1);
+        REQUIRE(visibleLines1.size() == 1);
+        REQUIRE(visibleLines0[0].start().x == Approx(visibleLineStart.x).epsilon(EPSILON));
+        REQUIRE(visibleLines0[0].start().y == Approx(visibleLineStart.y).epsilon(EPSILON));
+        REQUIRE(visibleLines0[0].end().x == Approx(visibleLineEnd.x).epsilon(EPSILON));
+        REQUIRE(visibleLines0[0].end().y == Approx(visibleLineEnd.y).epsilon(EPSILON));
+        REQUIRE(visibleLines1[0].start().x == Approx(hiddenLineStart.x).epsilon(EPSILON));
+        REQUIRE(visibleLines1[0].start().y == Approx(hiddenLineStart.y).epsilon(EPSILON));
+        REQUIRE(visibleLines1[0].end().x == Approx(hiddenLineEnd.x).epsilon(EPSILON));
+        REQUIRE(visibleLines1[0].end().y == Approx(hiddenLineEnd.y).epsilon(EPSILON));
     }
 }

@@ -2,10 +2,11 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "salalib/mgraph.h"
-#include "salalib/pointdata.h"
+#include "salalib/pointmap.h"
+#include "salalib/pushvalues.h"
+#include "salalib/shapegraph.h"
 #include "salalib/shapemap.h"
-#include "salalib/spacepixfile.h"
+#include "salalib/shapemapgroupdata.h"
 
 #include "catch.hpp"
 
@@ -39,10 +40,13 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
     // in fact it should not be a requirement to make all these maps through
     // the metagraph, but instead through a "map pusher" of some sorts
 
-    std::unique_ptr<MetaGraph> mgraph(new MetaGraph);
-    mgraph->m_drawingFiles.emplace_back("Drawing file");
-    mgraph->m_drawingFiles.back().m_spacePixels.emplace_back("Drawing Map");
-    ShapeMap &drawingMap = mgraph->m_drawingFiles.back().m_spacePixels.back();
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Drawing file";
+    auto &spacePixels = drawingFiles.back().second;
+    spacePixels.emplace_back("Drawing Map");
+
+    ShapeMap &drawingMap = spacePixels.back();
 
     // rectangle containing the filled area of the pointmap offset by 0.5 to
     // make sure it falls exactly on the edge of the 1.0-sized cell
@@ -54,12 +58,11 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             Point2f(vgaMaxX - cellSize * 0.5, vgaMinY + cellSize * 0.5)  //
         },
         false);
-    mgraph->updateParentRegions(drawingMap);
+    //    mgraph->updateParentRegions(drawingMap);
 
-    mgraph->addNewPointMap("VGA Map");
-    PointMap &vgaMap = mgraph->getPointMaps().back();
+    PointMap vgaMap(drawingMap.getRegion(), "VGA Map");
     vgaMap.setGrid(1.0);
-    std::vector<Line> lines = mgraph->getShownDrawingFilesAsLines();
+    std::vector<Line> lines = drawingMap.getAllShapesAsLines();
     vgaMap.blockLines(lines);
     vgaMap.makePoints(
         Point2f((vgaMinX + vgaMaxX) * 0.5 + minorOffset, (vgaMinY + vgaMaxY) * 0.5 + minorOffset),
@@ -89,8 +92,7 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
     auto vgaAttrColIdx = vgaMap.addAttribute(attributeName);
 
     SECTION("Data map") {
-        mgraph->addShapeMap("Test ShapeMap");
-        ShapeMap &sourceMap = mgraph->getDataMaps().back();
+        ShapeMap sourceMap("Test ShapeMap");
 
         auto sourceAttrColIdx = sourceMap.addAttribute(attributeName);
 
@@ -117,8 +119,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
 
             sourceMap.getAttributeTable().getRow(AttributeKey(0)).setValue(sourceAttrColIdx, 1);
 
-            mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                      sourceAttrColIdx, vgaAttrColIdx, MetaGraph::PUSH_FUNC_MAX);
+            PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                     PushValues::Func::MAX);
 
             // all values are 1 (like the polygon) except from those on the edges
             for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
@@ -165,9 +167,9 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             sourceMap.getAttributeTable().getRow(AttributeKey(1)).setValue(sourceAttrColIdx, 2);
 
             SECTION("Shared border max function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_MAX);
+
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::MAX);
 
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
                      vgaRowIter++) {
@@ -188,9 +190,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             }
 
             SECTION("Shared border min function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_MIN);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::MIN);
 
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
                      vgaRowIter++) {
@@ -211,9 +212,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             }
 
             SECTION("Shared border average function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_AVG);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::AVG);
 
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
                      vgaRowIter++) {
@@ -234,9 +234,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             }
 
             SECTION("Shared border total function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_TOT);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::TOT);
 
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
                      vgaRowIter++) {
@@ -267,8 +266,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
 
             sourceMap.getAttributeTable().getRow(AttributeKey(0)).setValue(sourceAttrColIdx, 1);
 
-            mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                      sourceAttrColIdx, vgaAttrColIdx, MetaGraph::PUSH_FUNC_MAX);
+            PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                     PushValues::Func::MAX);
 
             // all values are -1 except from those under the line (1)
             for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
@@ -299,9 +298,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             sourceMap.getAttributeTable().getRow(AttributeKey(1)).setValue(sourceAttrColIdx, 2);
 
             SECTION("Crossing lines max function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_MAX);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::MAX);
 
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
                      vgaRowIter++) {
@@ -322,9 +320,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             }
 
             SECTION("Crossing lines min function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_MIN);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::MIN);
 
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
                      vgaRowIter++) {
@@ -345,9 +342,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             }
 
             SECTION("Crossing lines average function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_AVG);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::AVG);
 
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
                      vgaRowIter++) {
@@ -368,9 +364,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             }
 
             SECTION("Crossing lines total function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_TOT);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::TOT);
 
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
                      vgaRowIter++) {
@@ -407,8 +402,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
 
             sourceMap.getAttributeTable().getRow(AttributeKey(0)).setValue(sourceAttrColIdx, 1);
 
-            mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                      sourceAttrColIdx, vgaAttrColIdx, MetaGraph::PUSH_FUNC_MAX);
+            PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                     PushValues::Func::MAX);
 
             // all values are -1 except from those under the line (1)
             for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
@@ -451,9 +446,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             sourceMap.getAttributeTable().getRow(AttributeKey(1)).setValue(sourceAttrColIdx, 2);
 
             SECTION("Crossing open polylines max function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_MAX);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::MAX);
 
                 // all values are -1 except from those under the line (1)
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
@@ -475,9 +469,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             }
 
             SECTION("Crossing open polylines min function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_MIN);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::MIN);
 
                 // all values are -1 except from those under the line (1)
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
@@ -499,9 +492,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             }
 
             SECTION("Crossing open polylines average function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_AVG);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::AVG);
 
                 // all values are -1 except from those under the line (1)
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
@@ -523,9 +515,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
             }
 
             SECTION("Crossing open polylines total function") {
-                mgraph->pushValuesToLayer(MetaGraph::VIEWDATA, 0, MetaGraph::VIEWVGA, 0,
-                                          sourceAttrColIdx, vgaAttrColIdx,
-                                          MetaGraph::PUSH_FUNC_TOT);
+                PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                         PushValues::Func::TOT);
 
                 // all values are -1 except from those under the line (1)
                 for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end();
@@ -552,10 +543,9 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
         // the pushValues function takes the base shapemap so these sections are mainly to test
         // sending ShapeGraphs and setting the source map type to MetaGraph::VIEWAXIAL
 
-        mgraph->addShapeGraph("Test Axial Map", ShapeMap::AXIALMAP);
-        ShapeGraph &sourceMap = *mgraph->getShapeGraphs().back().get();
+        ShapeGraph sourceMap("Test Axial Map", ShapeMap::AXIALMAP);
 
-        sourceMap.init(2, mgraph->getRegion());
+        sourceMap.init(2, sourceMap.getRegion());
         sourceMap.initialiseAttributesAxial();
 
         for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
@@ -584,8 +574,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
         REQUIRE(sourceMap.getAttributeTable().hasColumn("Connectivity"));
 
         SECTION("Crossing lines max function") {
-            mgraph->pushValuesToLayer(MetaGraph::VIEWAXIAL, 0, MetaGraph::VIEWVGA, 0,
-                                      sourceAttrColIdx, vgaAttrColIdx, MetaGraph::PUSH_FUNC_MAX);
+            PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                     PushValues::Func::MAX);
 
             for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
                 PixelRef key(vgaRowIter->getKey().value);
@@ -605,8 +595,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
         }
 
         SECTION("Crossing lines min function") {
-            mgraph->pushValuesToLayer(MetaGraph::VIEWAXIAL, 0, MetaGraph::VIEWVGA, 0,
-                                      sourceAttrColIdx, vgaAttrColIdx, MetaGraph::PUSH_FUNC_MIN);
+            PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                     PushValues::Func::MIN);
 
             for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
                 PixelRef key(vgaRowIter->getKey().value);
@@ -626,8 +616,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
         }
 
         SECTION("Crossing lines average function") {
-            mgraph->pushValuesToLayer(MetaGraph::VIEWAXIAL, 0, MetaGraph::VIEWVGA, 0,
-                                      sourceAttrColIdx, vgaAttrColIdx, MetaGraph::PUSH_FUNC_AVG);
+            PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                     PushValues::Func::AVG);
 
             for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
                 PixelRef key(vgaRowIter->getKey().value);
@@ -647,8 +637,8 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
         }
 
         SECTION("Crossing lines total function") {
-            mgraph->pushValuesToLayer(MetaGraph::VIEWAXIAL, 0, MetaGraph::VIEWVGA, 0,
-                                      sourceAttrColIdx, vgaAttrColIdx, MetaGraph::PUSH_FUNC_TOT);
+            PushValues::shapeToPoint(sourceMap, attributeName, vgaMap, attributeName,
+                                     PushValues::Func::TOT);
 
             for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
                 PixelRef key(vgaRowIter->getKey().value);

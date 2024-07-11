@@ -86,7 +86,7 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
 
     std::cout << "ok\nSelecting cells... " << std::flush;
 
-    auto graphRegion = mGraph->getRegion();
+    auto graphRegion = mGraph.getRegion();
 
     if (!graphRegion.contains(m_originPoint)) {
         throw depthmapX::RuntimeException("Origin point outside of target region");
@@ -95,29 +95,35 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
         throw depthmapX::RuntimeException("Destination point outside of target region");
     }
     QtRegion r(m_originPoint, m_originPoint);
-    mGraph->setCurSel(r, false);
+    mGraph.setCurSel(r, false);
 
     r = QtRegion(m_destinationPoint, m_destinationPoint);
-    mGraph->setCurSel(r, true);
+    mGraph.setCurSel(r, true);
 
     std::cout << "ok\nCalculating shortest path... " << std::flush;
 
     std::unique_ptr<Communicator> comm(new ICommunicator());
+    int refFrom = *mGraph.getSelSet().begin();
+    int refTo = *mGraph.getSelSet().rbegin();
 
     switch (m_stepType) {
     case SegmentShortestPathParser::StepType::TULIP: {
+        auto &map = mGraph.getDisplayedShapeGraph();
         DO_TIMED("Calculating tulip shortest path",
-                 SegmentTulipShortestPath(mGraph->getDisplayedShapeGraph()).run(comm.get()))
+                 SegmentTulipShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
         break;
     }
     case SegmentShortestPathParser::StepType::METRIC: {
+        auto &map = mGraph.getDisplayedShapeGraph();
         DO_TIMED("Calculating metric shortest path",
-                 SegmentMetricShortestPath(mGraph->getDisplayedShapeGraph()).run(comm.get()))
+                 SegmentMetricShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
         break;
     }
     case SegmentShortestPathParser::StepType::TOPOLOGICAL: {
-        DO_TIMED("Calculating topological shortest path",
-                 SegmentTopologicalShortestPath(mGraph->getDisplayedShapeGraph()).run(comm.get()))
+        auto &map = mGraph.getDisplayedShapeGraph();
+        DO_TIMED(
+            "Calculating topological shortest path",
+            SegmentTopologicalShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
         break;
     }
     default: {
@@ -126,6 +132,6 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
     }
 
     std::cout << " ok\nWriting out result..." << std::flush;
-    DO_TIMED("Writing graph", mGraph->write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
     std::cout << " ok" << std::endl;
 }

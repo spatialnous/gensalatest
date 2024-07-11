@@ -2,7 +2,12 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "salalib/mgraph.h"
+#include "salalib/isovistutils.h"
+#include "salalib/salashape.h"
+#include "salalib/shapemapgroupdata.h"
+
+#include "genlib/comm.h"
+#include "genlib/p2dpoly.h"
 
 #include "catch.hpp"
 
@@ -28,22 +33,30 @@ TEST_CASE("Simple Isovist") {
 
     Point2f isovistOrigin(2.5, 2.5);
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
-    metaGraph->m_drawingFiles.emplace_back("Test SpacePixelGroup");
-    metaGraph->m_drawingFiles.back().m_spacePixels.emplace_back("Test ShapeMap");
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Test SpacePixelGroup";
+    auto &spacePixels = drawingFiles.back().second;
+    spacePixels.emplace_back("Test ShapeMap");
+    auto &newShapeMap = spacePixels.back();
+
     for (Line &line : planLines) {
-        metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(line);
+        newShapeMap.makeLineShape(line);
     }
+
+    ShapeMap isovistMap("Isovists");
 
     SECTION("With a communicator") {
         std::unique_ptr<Communicator> comm(new ICommunicator);
-        metaGraph->makeIsovist(comm.get(), isovistOrigin, 0, 0, false);
+        IsovistUtils::createIsovistInMap(comm.get(), planLines, newShapeMap.getRegion(), isovistMap,
+                                         isovistOrigin, 0, 0);
     }
     SECTION("Without a communicator") {
-        metaGraph->makeIsovist(nullptr, isovistOrigin, 0, 0, false);
+        IsovistUtils::createIsovistInMap(nullptr, planLines, newShapeMap.getRegion(), isovistMap,
+                                         isovistOrigin, 0, 0);
     }
 
-    SalaShape &isovist = metaGraph->getDataMaps().front().getAllShapes().begin()->second;
+    SalaShape &isovist = isovistMap.getAllShapes().begin()->second;
 
     REQUIRE(isovist.isClosed());
     REQUIRE(isovist.isPolygon());

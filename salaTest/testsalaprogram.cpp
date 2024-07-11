@@ -5,9 +5,9 @@
 #include "../salalib/mapconverter.h"
 #include "catch.hpp"
 #include "genlib/p2dpoly.h"
-#include "salalib/mgraph.h"
 #include "salalib/salaprogram.h"
 #include "salalib/shapegraph.h"
+#include "salalib/shapemapgroupdata.h"
 #include <sstream>
 
 // Most of these test cases are adapted from salalib/salascript-tests.txt
@@ -140,19 +140,21 @@ TEST_CASE("Shapemap scripts") {
     Point2f line5Start(5, 3);
     Point2f line5End(3, 1);
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test SuperSpacePixel"));
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
 
-    metaGraph->m_drawingFiles.push_back(SpacePixelFile("Test SpacePixelGroup"));
-    metaGraph->m_drawingFiles.back().m_spacePixels.push_back(ShapeMap("Test ShapeMap"));
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Test SpacePixelGroup";
+    auto &spacePixels = drawingFiles.back().second;
+    spacePixels.emplace_back("Test ShapeMap");
 
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line1Start, line1End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line2Start, line2End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line3Start, line3End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line4Start, line4End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line5Start, line5End));
+    spacePixels.back().makeLineShape(Line(line1Start, line1End));
+    spacePixels.back().makeLineShape(Line(line2Start, line2End));
+    spacePixels.back().makeLineShape(Line(line3Start, line3End));
+    spacePixels.back().makeLineShape(Line(line4Start, line4End));
+    spacePixels.back().makeLineShape(Line(line5Start, line5End));
 
-    auto shapeGraph =
-        MapConverter::convertDrawingToAxial(0, "Test axial", metaGraph->m_drawingFiles);
+    auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
+    auto shapeGraph = MapConverter::convertDrawingToAxial(0, "Test axial", drawingMapRefs);
 
     std::stringstream script;
     std::vector<double> expectedColVals;
@@ -241,19 +243,21 @@ TEST_CASE("Shapemap scripts with unexpected results") {
     Point2f line5Start(5, 3);
     Point2f line5End(3, 1);
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test SuperSpacePixel"));
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
 
-    metaGraph->m_drawingFiles.push_back(SpacePixelFile("Test SpacePixelGroup"));
-    metaGraph->m_drawingFiles.back().m_spacePixels.push_back(ShapeMap("Test ShapeMap"));
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Test SpacePixelGroup";
+    auto &spacePixels = drawingFiles.back().second;
+    spacePixels.emplace_back("Test ShapeMap");
 
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line1Start, line1End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line2Start, line2End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line3Start, line3End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line4Start, line4End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line5Start, line5End));
+    spacePixels.back().makeLineShape(Line(line1Start, line1End));
+    spacePixels.back().makeLineShape(Line(line2Start, line2End));
+    spacePixels.back().makeLineShape(Line(line3Start, line3End));
+    spacePixels.back().makeLineShape(Line(line4Start, line4End));
+    spacePixels.back().makeLineShape(Line(line5Start, line5End));
 
-    auto shapeGraph =
-        MapConverter::convertDrawingToAxial(0, "Test axial", metaGraph->m_drawingFiles);
+    auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
+    auto shapeGraph = MapConverter::convertDrawingToAxial(0, "Test axial", drawingMapRefs);
 
     std::stringstream script;
     std::vector<double> expectedColVals;

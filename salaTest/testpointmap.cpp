@@ -2,7 +2,8 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "salalib/mgraph.h"
+#include "salalib/metagraph.h"
+#include "salalib/shapemapgroupdata.h"
 #include "salalib/vgamodules/vgametricdepth.h"
 
 #include "catch.hpp"
@@ -15,20 +16,20 @@ TEST_CASE("Test MetaGraph construction", "") {
     // create a new MetaGraph
     // The PointMap needs the m_region variable from this
     // object as a definition of the area the grid needs to cover
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
+    MetaGraph metaGraph("Test MetaGraph");
 
     SECTION("Construct a plain MetaGraph without underlying geometry") {
         Point2f bottomLeft(0, 0);
         Point2f topRight(2, 4);
 
         // set m_region to the bounds
-        metaGraph->setRegion(bottomLeft, topRight);
+        metaGraph.region = QtRegion(bottomLeft, topRight);
 
         // check if the bounds are set correctly
-        REQUIRE(metaGraph->getRegion().bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->getRegion().bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph->getRegion().top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->getRegion().top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.x == Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.y == Approx(topRight.y).epsilon(EPSILON));
     }
 
     SECTION("Construct a MetaGraph using underlying geometry") {
@@ -38,54 +39,51 @@ TEST_CASE("Test MetaGraph construction", "") {
         Point2f bottomLeft(std::min(lineStart.x, lineEnd.x), std::min(lineStart.y, lineEnd.y));
         Point2f topRight(std::max(lineStart.x, lineEnd.x), std::max(lineStart.y, lineEnd.y));
 
-        // push a SpacePixelFile in the MetaGraph
-        metaGraph->m_drawingFiles.emplace_back("Test MetaGraph");
+        // sala does not bundle the maps in the MetaGraph anymore,
+        // except when reading a file (in a temporary container).
+        // instead rely on the same vector of pairs construct
+        std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
+
+        auto &spacePixelFileData = drawingFiles.back().first;
+        spacePixelFileData.name = "Test MetaGraph";
+        auto &spacePixels = drawingFiles.back().second;
 
         // push a ShapeMap in the SpacePixelFile
-        metaGraph->m_drawingFiles.back().m_spacePixels.emplace_back("Test ShapeMap");
+        spacePixels.emplace_back("Test ShapeMap");
 
+        auto &newShapeMap = spacePixels.back();
         // add a line to the ShapeMap
-        metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(
-            Line(lineStart, lineEnd));
+        newShapeMap.makeLineShape(Line(lineStart, lineEnd));
 
         // check if the ShapeMap bounds are set correctly
-        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().bottom_left.x ==
-                Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().bottom_left.y ==
-                Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().top_right.x ==
-                Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion().top_right.y ==
-                Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().top_right.x == Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().top_right.y == Approx(topRight.y).epsilon(EPSILON));
 
         // MetaGraph and SpacePixelFile do not automatically grow
         // their region when new shapemaps/files are added to them
         // therefore we have to do this externally
-        metaGraph->m_drawingFiles.back().m_region =
-            metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion();
+        spacePixelFileData.region = newShapeMap.getRegion();
 
         // check if the SpacePixelFile bounds are set correctly
-        REQUIRE(metaGraph->m_drawingFiles.back().m_region.bottom_left.x ==
-                Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_region.bottom_left.y ==
-                Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_region.top_right.x ==
-                Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->m_drawingFiles.back().m_region.top_right.y ==
-                Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.top_right.x == Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.top_right.y == Approx(topRight.y).epsilon(EPSILON));
 
-        metaGraph->setRegion(metaGraph->m_drawingFiles.back().m_region.bottom_left,
-                             metaGraph->m_drawingFiles.back().m_region.top_right);
+        metaGraph.region =
+            QtRegion(spacePixelFileData.region.bottom_left, spacePixelFileData.region.top_right);
 
         // check if the MetaGraph bounds are set correctly
-        REQUIRE(metaGraph->getRegion().bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->getRegion().bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph->getRegion().top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->getRegion().top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.x == Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.y == Approx(topRight.y).epsilon(EPSILON));
     }
 
     // construct a sample pointMap
-    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
+    PointMap pointMap(metaGraph.region, "Test PointMap");
 }
 
 TEST_CASE("Test grid filling", "") {
@@ -96,7 +94,7 @@ TEST_CASE("Test grid filling", "") {
     // create a new MetaGraph
     // The PointMap needs the m_region variable from this
     // object as a definition of the area the grid needs to cover
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
+    MetaGraph metaGraph("Test MetaGraph");
 
     // Construct a plain MetaGraph without underlying geometry
     {
@@ -104,17 +102,17 @@ TEST_CASE("Test grid filling", "") {
         Point2f topRight(2, 4);
 
         // set m_region to the bounds
-        metaGraph->setRegion(bottomLeft, topRight);
+        metaGraph.region = QtRegion(bottomLeft, topRight);
 
         // check if the bounds are set correctly
-        REQUIRE(metaGraph->getRegion().bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->getRegion().bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph->getRegion().top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph->getRegion().top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.x == Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.y == Approx(topRight.y).epsilon(EPSILON));
     }
 
     // construct a sample pointMap
-    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
+    PointMap pointMap(metaGraph.region, "Test PointMap");
 
     // set the grid
 
@@ -146,7 +144,7 @@ TEST_CASE("Test grid filling", "") {
                          gridBottomLeft.y +
                              spacing *
                                  (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));
-        std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+        std::vector<Line> lines;
         pointMap.blockLines(lines);
         bool pointsMade = pointMap.makePoints(midPoint, fill_type);
         REQUIRE(pointsMade);
@@ -160,7 +158,7 @@ TEST_CASE("Test grid filling", "") {
         Point2f midPoint(
             gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5)),
             gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5)));
-        std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+        std::vector<Line> lines;
         pointMap.blockLines(lines);
         bool pointsMade = pointMap.makePoints(midPoint, fill_type);
         REQUIRE(pointsMade);
@@ -264,9 +262,9 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
         topRight.y = 4.4;
     }
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
-    metaGraph->setRegion(bottomLeft, topRight);
-    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
+    MetaGraph metaGraph("Test MetaGraph");
+    metaGraph.region = QtRegion(bottomLeft, topRight);
+    PointMap pointMap(metaGraph.region, "Test PointMap");
     bool gridIsSet = pointMap.setGrid(spacing, offset);
 
     REQUIRE(gridIsSet);
@@ -295,7 +293,7 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
                      gridBottomLeft.y + spacing * (floor(numCellsY * 0.5) + 0.5));
 
     int fill_type = 0; // = QDepthmapView::FULLFILL
-    std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+    std::vector<Line> lines;
     pointMap.blockLines(lines);
     bool pointsMade = pointMap.makePoints(midPoint, fill_type);
 
@@ -308,7 +306,7 @@ TEST_CASE("Test PointMap connections output", "") {
     double spacing = 0.5;
     Point2f offset(0, 0); // seems that this is always set to 0,0
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
+    MetaGraph metaGraph("Test MetaGraph");
 
     double rectSize = 1.5;
 
@@ -321,17 +319,21 @@ TEST_CASE("Test PointMap connections output", "") {
     Point2f line3Start(rectSize, 0);
     Point2f line3End(0, 0);
 
-    metaGraph->m_drawingFiles.emplace_back("Test SpacePixelGroup");
-    metaGraph->m_drawingFiles.back().m_spacePixels.emplace_back("Test ShapeMap");
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line0Start, line0End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line1Start, line1End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line2Start, line2End));
-    metaGraph->m_drawingFiles.back().m_spacePixels.back().makeLineShape(Line(line3Start, line3End));
-    metaGraph->m_drawingFiles.back().m_region =
-        metaGraph->m_drawingFiles.back().m_spacePixels.back().getRegion();
-    metaGraph->setRegion(metaGraph->m_drawingFiles.back().m_region.bottom_left,
-                         metaGraph->m_drawingFiles.back().m_region.top_right);
-    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
+    std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
+
+    auto &spacePixelFileData = drawingFiles.back().first;
+    spacePixelFileData.name = "Test SpacePixelGroup";
+    auto &spacePixels = drawingFiles.back().second;
+
+    spacePixels.emplace_back("Test ShapeMap");
+    spacePixels.back().makeLineShape(Line(line0Start, line0End));
+    spacePixels.back().makeLineShape(Line(line1Start, line1End));
+    spacePixels.back().makeLineShape(Line(line2Start, line2End));
+    spacePixels.back().makeLineShape(Line(line3Start, line3End));
+    spacePixelFileData.region = spacePixels.back().getRegion();
+    metaGraph.region =
+        QtRegion(spacePixelFileData.region.bottom_left, spacePixelFileData.region.top_right);
+    PointMap pointMap(metaGraph.region, "Test PointMap");
 
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
 
@@ -344,7 +346,7 @@ TEST_CASE("Test PointMap connections output", "") {
 
     REQUIRE(gridIsSet);
 
-    std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+    std::vector<Line> lines = spacePixels.back().getAllShapesAsLines();
     pointMap.blockLines(lines);
     bool pointsMade = pointMap.makePoints(midPoint, fill_type);
 
@@ -452,15 +454,15 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "") {
     Point2f topRight(2, 4);
     int fill_type = 0; // = QDepthmapView::FULLFILL
 
-    std::unique_ptr<MetaGraph> metaGraph(new MetaGraph("Test MetaGraph"));
-    metaGraph->setRegion(bottomLeft, topRight);
-    PointMap pointMap(metaGraph->getRegion(), "Test PointMap");
+    MetaGraph metaGraph("Test MetaGraph");
+    metaGraph.region = QtRegion(bottomLeft, topRight);
+    PointMap pointMap(metaGraph.region, "Test PointMap");
     pointMap.setGrid(spacing, offset);
     Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
     Point2f midPoint(
         gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5) + 0.5),
         gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));
-    std::vector<Line> lines = metaGraph->getShownDrawingFilesAsLines();
+    std::vector<Line> lines;
     pointMap.blockLines(lines);
     pointMap.makePoints(midPoint, fill_type);
 
@@ -568,9 +570,9 @@ TEST_CASE("Pointmap copy()", "") {
     PointMap newPnt(shp.getRegion());
     newPnt.copy(pnt, true, true);
 
-    newPnt.clearSel();
     Point2f p(3.01, 6.7);
     QtRegion region(p, p);
-    newPnt.setCurSel(region, true);
-    auto analysisResult = VGAMetricDepth().run(nullptr, newPnt, false);
+    auto selSet = newPnt.getPointsInRegion(region);
+
+    auto analysisResult = VGAMetricDepth(selSet).run(nullptr, newPnt, false);
 }
