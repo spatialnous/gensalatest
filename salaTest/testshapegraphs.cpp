@@ -90,6 +90,7 @@ TEST_CASE("Testing ShapeGraph::writeSegmentConnections") {
     auto &spacePixels = drawingFiles.back().second;
     spacePixels.emplace_back("Test ShapeMap");
 
+    spacePixels.back().makeLineShape(Line(line1Start, line1End));
     spacePixels.back().makeLineShape(Line(line2Start, line2End));
     spacePixels.back().makeLineShape(Line(line3Start, line3End));
 

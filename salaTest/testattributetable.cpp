@@ -392,7 +392,7 @@ TEST_CASE("Attribute Table - serialisation") {
     row2.setValue(0, 11.0f);
     row2.setValue(1, 12.0f);
 
-    std::set<int> selSet = {1};
+    std::set<int> selSet = {10};
 
     dXreimpl::pushSelectionToLayer(newTable, layerManager, "sel layer", selSet);
     REQUIRE(isObjectVisible(layerManager, row2));
