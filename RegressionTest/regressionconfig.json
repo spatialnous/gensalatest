@@ -75,7 +75,7 @@
             }
         }],
         "visibility_local": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -84,7 +84,7 @@
             }
         }],
         "visibility_local_only_map": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -110,7 +110,7 @@
             }
         }],
         "visibility_global_3": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -120,7 +120,7 @@
             }
         }],
         "visibility_global_3_only_map": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -169,7 +169,7 @@
             }
         }],
         "visibility_global_n": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -179,7 +179,7 @@
             }
         }],
         "visibility_global_n_only_map": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -196,7 +196,7 @@
             }
         }],
         "vga_isovist": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -204,7 +204,7 @@
             }
         }],
         "vga_isovist_only_map": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -227,7 +227,7 @@
             }
         }],
         "vga_angular_only_map": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -251,7 +251,7 @@
             }
         }],
         "vga_metric_only_map": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -267,7 +267,7 @@
             }
         }],
         "vga_thru_vision": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -275,7 +275,7 @@
             }
         }],
         "vga_thru_vision_only_map": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "VGA",
             "extraArgs": {
@@ -290,7 +290,7 @@
             }
         }],
         "vga_visual_step_depth": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "STEPDEPTH",
             "extraArgs":{
@@ -299,7 +299,7 @@
             }
         }],
         "vga_metric_step_depth": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "STEPDEPTH",
             "extraArgs":{
@@ -308,7 +308,7 @@
             }
         }],
         "vga_angular_step_depth": [{
-            "infile": "../../../testdata/gallery_connected.graph",
+            "infile": "../../../testdata/gallery_0_6.graph",
             "outfile": "out.graph",
             "mode": "STEPDEPTH",
             "extraArgs":{
