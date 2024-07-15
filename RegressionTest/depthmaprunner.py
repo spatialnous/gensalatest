@@ -21,23 +21,24 @@ class DepthmapRunner():
         args.extend(cmdWrapper.toCmdArray())
         args.extend(extraArgs);
         return self.__runFunc(runDir, args)
-    
-    def getWorkingDirBinary(self, workingDir):
-        return os.path.join(*(os.path.normpath(self.__binary).split(os.path.sep)[1:]))
         
-    def getVersion(self, workingDir):
-        workingDirBinary = self.getWorkingDirBinary(workingDir)
-        return self.__runFunc(workingDir, [workingDirBinary, "-v"])[1]
+    def getVersion(self, runDir):
+        if (os.path.isfile(os.path.join(runDir, self.__binary))):
+            return runhelpers.runExecutable(runDir, [self.__binary, "-v"])[1]
+        else:
+            return ""
         
-    def getHelpText(self, workingDir):
-        workingDirBinary = self.getWorkingDirBinary(workingDir)
-        return self.__runFunc(workingDir, [workingDirBinary, "-h"])[1]
+    def getHelpText(self, runDir):
+        if (os.path.isfile(os.path.join(runDir, self.__binary))):
+            return runhelpers.runExecutable(runDir, [self.__binary, "-h"])[1]
+        else:
+            return ""
         
-    def canIgnoreDisplayData(self, workingDir):
-        return "-idd" in self.getHelpText(workingDir)
+    def canIgnoreDisplayData(self, runDir):
+        return "-idd" in self.getHelpText(runDir)
         
-    def canMimicVersion(self, workingDir):
-        return "-mmv" in self.getHelpText(workingDir)
+    def canMimicVersion(self, runDir):
+        return "-mmv" in self.getHelpText(runDir)
 
 def diffBinaryFiles(file1, file2):
     with open(file1, "rb") as f:
@@ -51,19 +52,9 @@ class DepthmapRegressionRunner():
     def __init__(self, runFunc, baseBinary, testBinary, workingDir):
         self.__baseRunner = DepthmapRunner(runFunc, baseBinary)
         self.__testRunner = DepthmapRunner(runFunc, testBinary)
-        self.__baseCanIDD = self.__baseRunner.canIgnoreDisplayData(workingDir)
-        self.__testCanIDD = self.__testRunner.canIgnoreDisplayData(workingDir)
-        self.__extraBaseArgs = []
-        self.__extraTestArgs = []
-        if self.__baseCanIDD and self.__testCanIDD:
-            self.__extraBaseArgs = ["-idd"]
-            self.__extraTestArgs = ["-idd"]
-            print("Both test and base binaries can drop display data. Dropping");
-        elif self.__testRunner.canMimicVersion(workingDir):
-            self.__baseVersion = self.__baseRunner.getVersion(workingDir).strip()
-            self.__extraTestArgs = ["-mmv", self.__baseVersion]
-            print("Test binary can mimic older versions. Mimicking base's \"" + self.__baseVersion + "\"");
         self.__workingDir = workingDir
+        self.__extraArgsSet = False
+        self.__extraTestArgs = []
 
     def makeBaseDir(self, name):
         return os.path.join(self.__workingDir, name + "_base")
@@ -76,10 +67,27 @@ class DepthmapRegressionRunner():
         runhelpers.prepareDirectory(self.makeTestDir(name))
         return self.runTestCaseImpl(name, cmds)
 
+    def defExtraArgs(self, rundir):
+        self.__baseCanIDD = self.__baseRunner.canIgnoreDisplayData(rundir)
+        self.__testCanIDD = self.__testRunner.canIgnoreDisplayData(rundir)
+        self.__extraBaseArgs = []
+        self.__extraTestArgs = []
+        if self.__baseCanIDD and self.__testCanIDD:
+            self.__extraBaseArgs = ["-idd"]
+            self.__extraTestArgs = ["-idd"]
+            print("Both test and base binaries can drop display data. Dropping");
+        elif self.__testRunner.canMimicVersion(rundir):
+            self.__baseVersion = self.__baseRunner.getVersion(rundir).strip()
+            self.__extraTestArgs = ["-mmv", self.__baseVersion]
+            print("Test binary can mimic older versions. Mimicking base's \"" + self.__baseVersion + "\"");
+            
     def runTestCaseImpl(self, name, cmds):
         baseDir = self.makeBaseDir(name)
+        if not self.__extraArgsSet:
+            self.defExtraArgs(baseDir)
+            self.__extraArgsSet = True
         for step,cmd in enumerate(cmds):
-            (baseSuccess, baseOut) = self.__baseRunner.runDepthmap(cmd, baseDir, self.__extraBaseArgs)
+            (baseSuccess, baseOut) = self.__baseRunner.runDepthmap(cmd, baseDir)
             if not baseSuccess:
                 print("Baseline run failed at step " + str(step) + " with arguments " + pprint.pformat(cmd.toCmdArray()))
                 print(baseOut)
