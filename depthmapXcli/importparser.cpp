@@ -49,7 +49,7 @@ void ImportParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrite
     MetaGraphDX mGraph("Test mgraph");
     DO_TIMED("Load graph file", mGraph.readFromFile(clp.getFileName());)
 
-    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+    std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
     if (mGraph.getReadStatus() == MetaGraphReadWrite::ReadStatus::NOT_A_GRAPH) {
         // not a graph, try to import the file
@@ -68,7 +68,7 @@ void ImportParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrite
         if (asDrawingLines) {
             auto newDrawingFile = mGraph.loadLineData(dm_runmethods::getCommunicator(clp).get(),
                                                       clp.getFileName(), importFileType, false);
-            if (mimickVersion.has_value() && *mimickVersion == "depthmapX 0.8.0") {
+            if (mimicVersion.has_value() && *mimicVersion == "depthmapX 0.8.0") {
                 // this version does not actually set the map type of the space pixels
                 for (auto &map : mGraph.getDrawingFiles()[newDrawingFile].maps) {
                     map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
@@ -90,7 +90,7 @@ void ImportParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrite
             } else {
                 auto newDrawingFile = mGraph.addDrawingFile(clp.getFileName(), std::move(newMaps));
                 mGraph.setState(mGraph.getState() | MetaGraphDX::LINEDATA);
-                if (mimickVersion.has_value() && *mimickVersion == "depthmapX 0.8.0") {
+                if (mimicVersion.has_value() && *mimicVersion == "depthmapX 0.8.0") {
                     // this version does not actually set the map type of the space pixels
                     for (auto &map : mGraph.getDrawingFiles()[newDrawingFile].maps) {
                         map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
@@ -120,5 +120,6 @@ void ImportParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrite
             }
         }
     }
-    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false);)
+    DO_TIMED("Writing graph",
+             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
 }

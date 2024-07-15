@@ -121,7 +121,7 @@ void SegmentParser::parse(size_t argc, char **argv) {
 void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
     auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
-    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+    std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
     std::cout << "Running segment analysis... " << std::flush;
     Options options;
@@ -166,7 +166,7 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
         DO_TIMED("Segment tulip analysis",
                  mGraph.analyseSegmentsTulip(
                      dm_runmethods::getCommunicator(clp).get(), options,
-                     (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0")))
+                     (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0")))
         break;
     }
     case InAnalysisType::ANGULAR_FULL: {
@@ -191,7 +191,7 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
     }
     std::cout << "ok\n" << std::flush;
 
-    if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+    if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
         /* legacy mode where the columns are sorted before stored */
         auto &map = mGraph.getDisplayedShapeGraph();
         auto displayedAttribute = map.getDisplayedAttribute();
@@ -202,6 +202,7 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
     }
 
     std::cout << "Writing out result..." << std::flush;
-    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    DO_TIMED("Writing graph",
+             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

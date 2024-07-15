@@ -68,7 +68,7 @@ void MapConvertParser::parse(size_t argc, char **argv) {
 void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
     auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
-    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+    std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
     int currentMapType = mGraph.getDisplayedMapType();
 
@@ -113,7 +113,7 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
                  mGraph.convertToDrawing(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
                                          currentMapType == ShapeMap::DATAMAP));
 
-        if (mimickVersion.has_value() && *mimickVersion == "depthmapX 0.8.0") {
+        if (mimicVersion.has_value() && *mimicVersion == "depthmapX 0.8.0") {
             // this version does not actually set the map type of the space pixels
             for (auto &map : mGraph.getDrawingFiles().back().maps) {
                 map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
@@ -140,7 +140,7 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
             throw depthmapX::RuntimeException("Unsupported conversion to axial");
         }
         }
-        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
             auto &map = mGraph.getShapeGraphs().back();
             auto displayedAttribute = map.getDisplayedAttribute();
@@ -178,7 +178,7 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
             throw depthmapX::RuntimeException("Unsupported conversion to segment");
         }
         }
-        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
             auto &map = mGraph.getShapeGraphs().back();
             auto displayedAttribute = map.getDisplayedAttribute();
@@ -194,7 +194,7 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
         DO_TIMED("Converting to data",
                  mGraph.convertToData(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
                                       !removeInputMap(), currentMapType, copyAttributes()));
-        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
             auto &map = mGraph.getDataMaps().back();
             auto displayedAttribute = map.getDisplayedAttribute();
@@ -210,7 +210,7 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
         DO_TIMED("Converting to convex",
                  mGraph.convertToConvex(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
                                         !removeInputMap(), currentMapType, copyAttributes()));
-        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
             auto &map = mGraph.getShapeGraphs().back();
             auto displayedAttribute = map.getDisplayedAttribute();
@@ -228,6 +228,7 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
     }
 
     std::cout << " ok\nWriting out result..." << std::flush;
-    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    DO_TIMED("Writing graph",
+             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

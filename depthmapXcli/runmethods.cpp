@@ -34,4 +34,8 @@ namespace dm_runmethods {
         }
         return nullptr;
     }
+    void writeGraph(const CommandLineParser &clp, MetaGraphDX &metaGraph,
+                    const std::string &filename, bool currentlayer) {
+        metaGraph.write(filename, METAGRAPH_VERSION, currentlayer, clp.ignoreDisplayData());
+    }
 } // namespace dm_runmethods

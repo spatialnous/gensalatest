@@ -84,7 +84,7 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
                                     IPerformanceSink &perfWriter) const {
     auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
-    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+    std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
     std::cout << "ok\nSelecting cells... " << std::flush;
 
@@ -122,10 +122,10 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
         DO_TIMED("Calculating metric shortest path",
                  SegmentMetricShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
         map.overrideDisplayedAttribute(-2);
-        if (!mimickVersion.has_value()) {
+        if (!mimicVersion.has_value()) {
             map.setDisplayedAttribute(
                 SegmentMetricShortestPath::Column::METRIC_SHORTEST_PATH_DISTANCE);
-        } else if (mimickVersion == "depthmapX 0.8.0") {
+        } else if (mimicVersion == "depthmapX 0.8.0") {
             map.setDisplayedAttribute(
                 SegmentMetricShortestPath::Column::METRIC_SHORTEST_PATH_ORDER);
         }
@@ -146,7 +146,7 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
     }
     }
 
-    if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+    if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
         /* legacy mode where the columns are sorted before stored */
         auto &map = mGraph.getDisplayedShapeGraph();
         auto displayedAttribute = map.getDisplayedAttribute();
@@ -157,6 +157,7 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
     }
 
     std::cout << " ok\nWriting out result..." << std::flush;
-    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    DO_TIMED("Writing graph",
+             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

@@ -25,4 +25,6 @@ class Point2f;
 namespace dm_runmethods {
     MetaGraphDX loadGraph(const std::string &filename, IPerformanceSink &perfWriter);
     std::unique_ptr<Communicator> getCommunicator(const CommandLineParser &clp);
+    void writeGraph(const CommandLineParser &clp, MetaGraphDX &metaGraph,
+                    const std::string &filename, bool currentlayer);
 } // namespace dm_runmethods

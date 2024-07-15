@@ -81,9 +81,9 @@ void IsovistParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
                            }))
     std::cout << " ok\nWriting out result..." << std::flush;
 
-    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+    std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
-    if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+    if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
         /* legacy mode where the columns are sorted before stored */
 
         auto &map = mGraph.getDataMaps().back();
@@ -94,6 +94,7 @@ void IsovistParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
         map.setDisplayedAttribute(sortedDisplayedAttribute);
     }
 
-    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    DO_TIMED("Writing graph",
+             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

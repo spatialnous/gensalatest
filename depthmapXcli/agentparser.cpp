@@ -265,7 +265,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
 
     auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
-    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+    std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
     auto &currentMap = mGraph.getDisplayedPointMap();
 
@@ -319,7 +319,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
                                .getInternalMap())})
             : std::nullopt;
 
-    if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+    if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
         // older versions of depthmapX limited the maximum number of trails to 50
         if (recordTrails.has_value()) {
             if ((recordTrails->limit.has_value() && recordTrails->limit > 50) ||
@@ -350,9 +350,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
         // if no choice was made for an output type assume the user just
         // wants a graph file
 
-        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
-
-        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
             auto &map = mGraph.getDisplayedPointMap();
             auto displayedAttribute = map.getDisplayedAttribute();
@@ -364,7 +362,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
         }
 
         DO_TIMED("Writing graph",
-                 mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+                 dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
     } else if (resultTypes.size() == 1) {
         // if only one type of output is given, assume that the user has
         // correctly entered a name with the correct extension and export
@@ -373,9 +371,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
         switch (resultTypes[0]) {
         case AgentParser::OutputType::GRAPH: {
 
-            std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
-
-            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
                 /* legacy mode where the columns are sorted before stored */
                 auto &map = mGraph.getDisplayedPointMap();
                 auto displayedAttribute = map.getDisplayedAttribute();
@@ -387,7 +383,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
             }
 
             DO_TIMED("Writing graph",
-                     mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+                     dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
             break;
         }
         case AgentParser::OutputType::GATECOUNTS: {
@@ -414,9 +410,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
         if (std::find(resultTypes.begin(), resultTypes.end(), AgentParser::OutputType::GRAPH) !=
             resultTypes.end()) {
 
-            std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
-
-            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
                 /* legacy mode where the columns are sorted before stored */
                 for (auto &map : mGraph.getShapeGraphs()) {
                     auto displayedAttribute = map.getDisplayedAttribute();
@@ -436,7 +430,8 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
             }
 
             std::string outFile = clp.getOuputFile() + ".graph";
-            DO_TIMED("Writing graph", mGraph.write(outFile.c_str(), METAGRAPH_VERSION, false))
+            DO_TIMED("Writing graph",
+                     dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
         }
         if (std::find(resultTypes.begin(), resultTypes.end(),
                       AgentParser::OutputType::GATECOUNTS) != resultTypes.end()) {

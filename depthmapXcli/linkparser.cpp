@@ -76,11 +76,11 @@ void LinkParser::parse(size_t argc, char *argv[]) {
 }
 
 void LinkParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    auto mgraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     if (getLinkMode() == LinkParser::LinkMode::UNLINK &&
         getMapTypeGroup() == LinkParser::MapTypeGroup::SHAPEGRAPHS &&
-        mgraph.getDisplayedShapeGraph().getMapType() != ShapeMap::AXIALMAP) {
+        mGraph.getDisplayedShapeGraph().getMapType() != ShapeMap::AXIALMAP) {
         throw depthmapX::RuntimeException(
             "Unlinking is only available for axial maps and pointmaps");
     }
@@ -114,7 +114,7 @@ void LinkParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter)
     SimpleTimer t;
     if (getLinkMode() == LinkParser::LinkMode::LINK) {
         if (getMapTypeGroup() == LinkParser::MapTypeGroup::SHAPEGRAPHS) {
-            auto &shapeGraph = mgraph.getDisplayedShapeGraph();
+            auto &shapeGraph = mGraph.getDisplayedShapeGraph();
             if (getLinkType() == LinkParser::LinkType::COORDS) {
                 std::vector<Line> mergeLines = EntityParsing::parseLines(linksStream, delimiter);
                 for (const auto &line : mergeLines) {
@@ -131,7 +131,7 @@ void LinkParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter)
             }
         } else {
             std::vector<PixelRefPair> newLinks;
-            auto &currentMap = mgraph.getDisplayedPointMap();
+            auto &currentMap = mGraph.getDisplayedPointMap();
             if (getLinkType() == LinkParser::LinkType::COORDS) {
                 std::vector<Line> mergeLines = EntityParsing::parseLines(linksStream, delimiter);
                 std::vector<PixelRefPair> linkPairsFromCoords =
@@ -148,7 +148,7 @@ void LinkParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter)
         }
     } else {
         if (getMapTypeGroup() == LinkParser::MapTypeGroup::SHAPEGRAPHS) {
-            auto &shapeGraph = mgraph.getDisplayedShapeGraph();
+            auto &shapeGraph = mGraph.getDisplayedShapeGraph();
             if (getLinkType() == LinkParser::LinkType::COORDS) {
                 auto mergePoints = EntityParsing::parsePoints(linksStream, delimiter);
                 for (auto point : mergePoints) {
@@ -162,7 +162,7 @@ void LinkParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter)
             }
         } else {
             std::vector<PixelRefPair> newLinks;
-            auto &currentMap = mgraph.getDisplayedPointMap();
+            auto &currentMap = mGraph.getDisplayedPointMap();
             if (getLinkType() == LinkParser::LinkType::COORDS) {
                 std::vector<Line> mergeLines = EntityParsing::parseLines(linksStream, delimiter);
                 std::vector<PixelRefPair> linkPairsFromCoords =
@@ -180,5 +180,6 @@ void LinkParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter)
     }
 
     perfWriter.addData("Linking graph", t.getTimeInSeconds());
-    DO_TIMED("Writing graph", mgraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false);)
+    DO_TIMED("Writing graph",
+             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
 }

@@ -23,6 +23,8 @@ void CommandLineParser::printHelp() {
               << "-s enables simple mode\n"
               << "-t <times.csv> enables output of runtimes as csv file\n"
               << "-p enables text progress printing\n"
+              << "-idd ignore display data in metagraph files\n"
+              << "-mmv mimic a previous version's quirks\n"
 
               << "Possible modes are:\n";
     std::for_each(_parserFactory.getModeParsers().begin(), _parserFactory.getModeParsers().end(),
@@ -84,6 +86,11 @@ void CommandLineParser::parse(size_t argc, char *argv[]) {
             m_simpleMode = true;
         } else if (std::strcmp("-p", argv[i]) == 0) {
             m_printProgress = true;
+        } else if (std::strcmp("-idd", argv[i]) == 0) {
+            m_ignoreDisplayData = true;
+        } else if (std::strcmp("-mmv", argv[i]) == 0) {
+            ENFORCE_ARGUMENT("-t", i)
+            m_mimicVersion = argv[i];
         }
         ++i;
     }

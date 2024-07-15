@@ -72,7 +72,7 @@ void VgaParser::parse(size_t argc, char *argv[]) {
 
 void VgaParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
     RadiusConverter converter;
-    auto mgraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::unique_ptr<Options> options(new Options());
 
@@ -104,30 +104,30 @@ void VgaParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) 
     }
     std::cout << " ok\nAnalysing graph..." << std::flush;
 
-    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+    std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
-    if (!mimickVersion.has_value()) {
+    if (!mimicVersion.has_value()) {
         // current version
-        DO_TIMED("Run VGA", mgraph.analyseGraph(dm_runmethods::getCommunicator(clp).get(), *options,
+        DO_TIMED("Run VGA", mGraph.analyseGraph(dm_runmethods::getCommunicator(clp).get(), *options,
                                                 clp.simpleMode());)
 
-    } else if (*mimickVersion == "depthmapX 0.8.0") {
+    } else if (*mimicVersion == "depthmapX 0.8.0") {
         int currentDisplayedAttribute = -1;
         if (getVgaMode() == VgaParser::VgaMode::ISOVIST) {
             // in this version vga isovist analysis does not change the
             // displayed attribute, so we have to reset it back to what
             // it was before the analysis
-            currentDisplayedAttribute = mgraph.getDisplayedPointMap().getDisplayedAttribute();
+            currentDisplayedAttribute = mGraph.getDisplayedPointMap().getDisplayedAttribute();
         }
 
-        DO_TIMED("Run VGA", mgraph.analyseGraph(dm_runmethods::getCommunicator(clp).get(), *options,
+        DO_TIMED("Run VGA", mGraph.analyseGraph(dm_runmethods::getCommunicator(clp).get(), *options,
                                                 clp.simpleMode());)
 
         if (getVgaMode() == VgaParser::VgaMode::ISOVIST) {
-            mgraph.getDisplayedPointMap().setDisplayedAttribute(currentDisplayedAttribute);
+            mGraph.getDisplayedPointMap().setDisplayedAttribute(currentDisplayedAttribute);
         }
         /* legacy mode where the columns are sorted before stored */
-        for (auto &map : mgraph.getPointMaps()) {
+        for (auto &map : mGraph.getPointMaps()) {
             auto displayedAttribute = map.getDisplayedAttribute();
 
             auto sortedDisplayedAttribute =
@@ -138,6 +138,7 @@ void VgaParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) 
     }
 
     std::cout << " ok\nWriting out result..." << std::flush;
-    DO_TIMED("Writing graph", mgraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    DO_TIMED("Writing graph",
+             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

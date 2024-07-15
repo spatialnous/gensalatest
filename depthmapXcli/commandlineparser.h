@@ -5,6 +5,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -24,6 +25,8 @@ class CommandLineParser {
     bool printVersionMode() const { return m_printVersionMode; }
     bool simpleMode() const { return m_simpleMode; }
     bool printProgress() const { return m_printProgress; }
+    bool ignoreDisplayData() const { return m_ignoreDisplayData; }
+    const std::optional<std::string> &getMimickVersion() const { return m_mimicVersion; }
     const IModeParser &modeOptions() const { return *_modeParser; };
 
     void printHelp();
@@ -38,6 +41,8 @@ class CommandLineParser {
     bool m_printVersionMode;
     bool m_simpleMode;
     bool m_printProgress;
+    bool m_ignoreDisplayData = false;
+    std::optional<std::string> m_mimicVersion = std::nullopt;
 
     const IModeParserFactory &_parserFactory;
     IModeParser *_modeParser;
