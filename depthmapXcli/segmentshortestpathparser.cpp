@@ -84,6 +84,8 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
                                     IPerformanceSink &perfWriter) const {
     auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
+    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
     std::cout << "ok\nSelecting cells... " << std::flush;
 
     auto graphRegion = mGraph.getRegion();
@@ -111,12 +113,22 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
         auto &map = mGraph.getDisplayedShapeGraph();
         DO_TIMED("Calculating tulip shortest path",
                  SegmentTulipShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
+        map.overrideDisplayedAttribute(-2); // <- override if it's already showing
+        map.setDisplayedAttribute(SegmentTulipShortestPath::Column::ANGULAR_SHORTEST_PATH_ANGLE);
         break;
     }
     case SegmentShortestPathParser::StepType::METRIC: {
         auto &map = mGraph.getDisplayedShapeGraph();
         DO_TIMED("Calculating metric shortest path",
                  SegmentMetricShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
+        map.overrideDisplayedAttribute(-2);
+        if (!mimickVersion.has_value()) {
+            map.setDisplayedAttribute(
+                SegmentMetricShortestPath::Column::METRIC_SHORTEST_PATH_DISTANCE);
+        } else if (mimickVersion == "depthmapX 0.8.0") {
+            map.setDisplayedAttribute(
+                SegmentMetricShortestPath::Column::METRIC_SHORTEST_PATH_ORDER);
+        }
         break;
     }
     case SegmentShortestPathParser::StepType::TOPOLOGICAL: {
@@ -124,11 +136,24 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
         DO_TIMED(
             "Calculating topological shortest path",
             SegmentTopologicalShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
+        map.overrideDisplayedAttribute(-2); // <- override if it's already showing
+        map.setDisplayedAttribute(
+            SegmentTopologicalShortestPath::Column::TOPOLOGICAL_SHORTEST_PATH_DEPTH);
         break;
     }
     default: {
         throw depthmapX::SetupCheckException("Error, unsupported step type");
     }
+    }
+
+    if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        /* legacy mode where the columns are sorted before stored */
+        auto &map = mGraph.getDisplayedShapeGraph();
+        auto displayedAttribute = map.getDisplayedAttribute();
+
+        auto sortedDisplayedAttribute = static_cast<int>(
+            map.getAttributeTable().getColumnSortedIndex(static_cast<size_t>(displayedAttribute)));
+        map.setDisplayedAttribute(sortedDisplayedAttribute);
     }
 
     std::cout << " ok\nWriting out result..." << std::flush;

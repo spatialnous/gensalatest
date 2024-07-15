@@ -22,9 +22,9 @@
 #include <vector>
 
 namespace dm_runmethods {
-    MetaGraphCLI loadGraph(const std::string &filename, IPerformanceSink &perfWriter) {
+    MetaGraphDX loadGraph(const std::string &filename, IPerformanceSink &perfWriter) {
         std::cout << "Loading graph " << filename << std::flush;
-        MetaGraphCLI mgraph("Test mgraph");
+        MetaGraphDX mgraph("Test mgraph");
         DO_TIMED("Load graph file", mgraph.readFromFile(filename);)
 
         if (mgraph.getReadStatus() != MetaGraphReadWrite::ReadStatus::OK) {
@@ -53,7 +53,10 @@ namespace dm_runmethods {
             throw depthmapX::RuntimeException(message.str().c_str());
         }
 
-        DO_TIMED("Load graph file", auto mGraph = loadGraph(cmdP.getFileName(), perfWriter);)
+        MetaGraphDX mGraph("Test mgraph");
+        DO_TIMED("Load graph file", mGraph.readFromFile(cmdP.getFileName());)
+
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
 
         if (mGraph.getReadStatus() == MetaGraphReadWrite::ReadStatus::NOT_A_GRAPH) {
             // not a graph, try to import the file
@@ -61,15 +64,49 @@ namespace dm_runmethods {
                                                         cmdP.getFileName().length() - 1);
             std::ifstream file(cmdP.getFileName());
 
+            bool asDrawingLines = false;
             depthmapX::ImportFileType importFileType = depthmapX::ImportFileType::TSV;
             if (dXstring::toLower(ext) == ".csv") {
                 importFileType = depthmapX::ImportFileType::CSV;
             } else if (dXstring::toLower(ext) == ".dxf") {
                 importFileType = depthmapX::ImportFileType::DXF;
+                asDrawingLines = true;
             }
-
-            depthmapX::importFile(file, getCommunicator(cmdP).get(), cmdP.getFileName(),
-                                  parser.getImportMapType(), importFileType);
+            if (asDrawingLines) {
+                auto newDrawingFile = mGraph.loadLineData(
+                    getCommunicator(cmdP).get(), cmdP.getFileName(), importFileType, false);
+                if (mimickVersion.has_value() && *mimickVersion == "depthmapX 0.8.0") {
+                    // this version does not actually set the map type of the space pixels
+                    for (auto &map : mGraph.getDrawingFiles()[newDrawingFile].maps) {
+                        map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
+                    }
+                }
+            } else {
+                auto newMaps =
+                    depthmapX::importFile(file, getCommunicator(cmdP).get(), cmdP.getFileName(),
+                                          parser.getImportMapType(), importFileType);
+                if (parser.getImportMapType() == depthmapX::ImportType::DATAMAP) {
+                    for (auto &&map : newMaps) {
+                        mGraph.getDataMaps().emplace_back(
+                            std::make_unique<ShapeMap>(std::move(map)));
+                    }
+                    if (!mGraph.getDataMaps().empty()) {
+                        mGraph.setDisplayedDataMapRef(mGraph.getDataMaps().size() - 1);
+                        mGraph.setState(mGraph.getState() | MetaGraphDX::DATAMAPS);
+                        mGraph.setViewClass(MetaGraphDX::SHOWHIDESHAPE);
+                    }
+                } else {
+                    auto newDrawingFile =
+                        mGraph.addDrawingFile(cmdP.getFileName(), std::move(newMaps));
+                    mGraph.setState(mGraph.getState() | MetaGraphDX::LINEDATA);
+                    if (mimickVersion.has_value() && *mimickVersion == "depthmapX 0.8.0") {
+                        // this version does not actually set the map type of the space pixels
+                        for (auto &map : mGraph.getDrawingFiles()[newDrawingFile].maps) {
+                            map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
+                        }
+                    }
+                }
+            }
         } else if (mGraph.getReadStatus() == MetaGraphReadWrite::ReadStatus::OK) {
             if (parser.toImportAsAttrbiutes()) {
 
@@ -245,15 +282,46 @@ namespace dm_runmethods {
         }
         std::cout << " ok\nAnalysing graph..." << std::flush;
 
-        DO_TIMED("Run VGA",
-                 mgraph.analyseGraph(getCommunicator(cmdP).get(), *options, cmdP.simpleMode()))
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+        if (!mimickVersion.has_value()) {
+            // current version
+            DO_TIMED("Run VGA",
+                     mgraph.analyseGraph(getCommunicator(cmdP).get(), *options, cmdP.simpleMode());)
+
+        } else if (*mimickVersion == "depthmapX 0.8.0") {
+            int currentDisplayedAttribute = -1;
+            if (vgaP.getVgaMode() == VgaParser::VgaMode::ISOVIST) {
+                // in this version vga isovist analysis does not change the
+                // displayed attribute, so we have to reset it back to what
+                // it was before the analysis
+                currentDisplayedAttribute = mgraph.getDisplayedPointMap().getDisplayedAttribute();
+            }
+
+            DO_TIMED("Run VGA",
+                     mgraph.analyseGraph(getCommunicator(cmdP).get(), *options, cmdP.simpleMode());)
+
+            if (vgaP.getVgaMode() == VgaParser::VgaMode::ISOVIST) {
+                mgraph.getDisplayedPointMap().setDisplayedAttribute(currentDisplayedAttribute);
+            }
+            /* legacy mode where the columns are sorted before stored */
+            for (auto &map : mgraph.getPointMaps()) {
+                auto displayedAttribute = map.getDisplayedAttribute();
+
+                auto sortedDisplayedAttribute =
+                    static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                        static_cast<size_t>(displayedAttribute)));
+                map.setDisplayedAttribute(sortedDisplayedAttribute);
+            }
+        }
+
         std::cout << " ok\nWriting out result..." << std::flush;
         DO_TIMED("Writing graph",
                  mgraph.write(cmdP.getOuputFile().c_str(), METAGRAPH_VERSION, false))
         std::cout << " ok" << std::endl;
     }
 
-    void fillGraph(MetaGraphCLI &graph, const Point2f &point) {
+    void fillGraph(MetaGraphDX &graph, const Point2f &point) {
         auto r = graph.getRegion();
         if (!r.contains(point)) {
             throw depthmapX::RuntimeException("Point outside of target region");
@@ -267,9 +335,11 @@ namespace dm_runmethods {
                        bool removeLinksWhenUnmaking, IPerformanceSink &perfWriter) {
         auto mGraph = loadGraph(clp.getFileName().c_str(), perfWriter);
 
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
         std::cout << "Initial checks... " << std::flush;
         auto state = mGraph.getState();
-        if (~state & MetaGraphCLI::LINEDATA) {
+        if (~state & MetaGraphDX::LINEDATA) {
             throw depthmapX::RuntimeException("Graph must have line data before preparing VGA");
         }
         if (gridSize > 0) {
@@ -302,8 +372,7 @@ namespace dm_runmethods {
                         << std::flush;
                 throw depthmapX::RuntimeException(message.str());
             }
-            DO_TIMED("Unmaking graph",
-                     mGraph.getDisplayedPointMap().getInternalMap().unmake(removeLinksWhenUnmaking))
+            DO_TIMED("Unmaking graph", mGraph.unmakeGraph(removeLinksWhenUnmaking))
         } else {
             if (fillPoints.size() > 0) {
                 std::cout << "ok\nFilling grid... " << std::flush;
@@ -316,6 +385,17 @@ namespace dm_runmethods {
                 std::cout << "ok\nMaking graph... " << std::flush;
                 DO_TIMED("Making graph", mGraph.makeGraph(getCommunicator(clp).get(),
                                                           boundaryGraph ? 1 : 0, maxVisibility))
+
+                if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                    /* legacy mode where the columns are sorted before stored */
+                    auto &map = mGraph.getDisplayedPointMap();
+                    auto displayedAttribute = map.getDisplayedAttribute();
+
+                    auto sortedDisplayedAttribute =
+                        static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                            static_cast<size_t>(displayedAttribute)));
+                    map.setDisplayedAttribute(sortedDisplayedAttribute);
+                }
             }
         }
 
@@ -329,9 +409,11 @@ namespace dm_runmethods {
                           IPerformanceSink &perfWriter) {
         auto mGraph = loadGraph(clp.getFileName().c_str(), perfWriter);
 
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
         auto state = mGraph.getState();
         if (ap.runAllLines()) {
-            if (~state & MetaGraphCLI::LINEDATA) {
+            if (~state & MetaGraphDX::LINEDATA) {
                 throw depthmapX::RuntimeException(
                     "Line drawing must be loaded before axial map can be constructed");
             }
@@ -345,7 +427,7 @@ namespace dm_runmethods {
         }
 
         if (ap.runFewestLines()) {
-            if (~state & MetaGraphCLI::LINEDATA) {
+            if (~state & MetaGraphDX::LINEDATA) {
                 throw depthmapX::RuntimeException(
                     "Line drawing must be loaded before fewest line map can be constructed");
             }
@@ -381,10 +463,24 @@ namespace dm_runmethods {
                                                       ") does not exist in currently selected map");
                 }
             }
-            DO_TIMED("Axial analysis",
-                     mGraph.analyseAxial(getCommunicator(clp).get(), options, clp.simpleMode()))
+
+            DO_TIMED("Axial analysis", mGraph.analyseAxial(getCommunicator(clp).get(), options,
+                                                           (mimickVersion.has_value() &&
+                                                            mimickVersion == "depthmapX 0.8.0")))
             std::cout << "ok\n" << std::flush;
         }
+
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            /* legacy mode where the columns are sorted before stored */
+            auto &map = mGraph.getDisplayedShapeGraph();
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+        }
+
         std::cout << "Writing out result..." << std::flush;
         DO_TIMED("Writing graph",
                  mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
@@ -394,6 +490,8 @@ namespace dm_runmethods {
     void runSegmentAnalysis(const CommandLineParser &clp, const SegmentParser &sp,
                             IPerformanceSink &perfWriter) {
         auto mGraph = loadGraph(clp.getFileName().c_str(), perfWriter);
+
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
 
         std::cout << "Running segment analysis... " << std::flush;
         Options options;
@@ -436,7 +534,9 @@ namespace dm_runmethods {
         switch (sp.getAnalysisType()) {
         case SegmentParser::AnalysisType::ANGULAR_TULIP: {
             DO_TIMED("Segment tulip analysis",
-                     mGraph.analyseSegmentsTulip(getCommunicator(clp).get(), options))
+                     mGraph.analyseSegmentsTulip(
+                         getCommunicator(clp).get(), options,
+                         (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0")))
             break;
         }
         case SegmentParser::AnalysisType::ANGULAR_FULL: {
@@ -461,6 +561,17 @@ namespace dm_runmethods {
         }
         std::cout << "ok\n" << std::flush;
 
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            /* legacy mode where the columns are sorted before stored */
+            auto &map = mGraph.getDisplayedShapeGraph();
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+        }
+
         std::cout << "Writing out result..." << std::flush;
         DO_TIMED("Writing graph",
                  mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
@@ -471,6 +582,8 @@ namespace dm_runmethods {
                           IPerformanceSink &perfWriter) {
 
         auto mGraph = loadGraph(cmdP.getFileName().c_str(), perfWriter);
+
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
 
         auto &currentMap = mGraph.getDisplayedPointMap();
 
@@ -513,35 +626,62 @@ namespace dm_runmethods {
             break;
         }
 
-        std::optional<std::pair<size_t, std::reference_wrapper<ShapeMap>>> m_recordTrails =
-            agentP.recordTrailsForAgents() > 0
-                ? std::make_optional(
-                      std::make_pair(static_cast<size_t>(agentP.recordTrailsForAgents()),
-                                     std::ref(mGraph.getDataMaps()
-                                                  .emplace_back("Agent Trails", ShapeMap::DATAMAP)
-                                                  .getInternalMap())))
+        std::optional<AgentAnalysis::TrailRecordOptions> recordTrails =
+            agentP.recordTrailsForAgents() >= 0
+                ? std::make_optional(AgentAnalysis::TrailRecordOptions{
+                      agentP.recordTrailsForAgents() == 0
+                          ? std::nullopt
+                          : std::make_optional(static_cast<size_t>(agentP.recordTrailsForAgents())),
+                      std::ref(mGraph.getDataMaps()
+                                   .emplace_back("Agent Trails", ShapeMap::DATAMAP)
+                                   .getInternalMap())})
                 : std::nullopt;
+
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            // older versions of depthmapX limited the maximum number of trails to 50
+            if (recordTrails.has_value()) {
+                if ((recordTrails->limit.has_value() && recordTrails->limit > 50) ||
+                    !recordTrails->limit.has_value()) {
+                    recordTrails->limit = 50;
+                }
+            }
+        }
 
         // the ui and code suggest that the results can be put on a separate
         // 'data map', but the functionality does not seem to actually be
         // there thus it is skipped for now
         std::optional<std::reference_wrapper<ShapeMap>> gateLayer = std::nullopt;
 
-        auto analysis =
-            AgentAnalysis(currentMap.getInternalMap(), agentP.totalSystemTimestemps(),
-                          agentP.releaseRate(), static_cast<size_t>(agentP.agentLifeTimesteps()),
-                          static_cast<unsigned short>(agentP.agentFOV()),
-                          static_cast<size_t>(agentP.agentStepsBeforeTurnDecision()),
-                          agentViewAlgorithm, agentP.randomReleaseLocationSeed(),
-                          agentP.getReleasePoints(), gateLayer, m_recordTrails);
+        auto analysis = std::unique_ptr<IAnalysis>(new AgentAnalysis(
+            currentMap.getInternalMap(), agentP.totalSystemTimestemps(), agentP.releaseRate(),
+            static_cast<size_t>(agentP.agentLifeTimesteps()),
+            static_cast<unsigned short>(agentP.agentFOV()),
+            static_cast<size_t>(agentP.agentStepsBeforeTurnDecision()), agentViewAlgorithm,
+            agentP.randomReleaseLocationSeed(), agentP.getReleasePoints(), gateLayer,
+            recordTrails));
 
         std::cout << "ok\nRunning agent analysis... " << std::flush;
-        DO_TIMED("Running agent analysis", analysis.run(getCommunicator(cmdP).get());)
+        DO_TIMED("Running agent analysis",
+                 mGraph.runAgentEngine(getCommunicator(cmdP).get(), analysis);)
+
         std::cout << " ok\nWriting out result..." << std::flush;
         std::vector<AgentParser::OutputType> resultTypes = agentP.outputTypes();
         if (resultTypes.size() == 0) {
             // if no choice was made for an output type assume the user just
             // wants a graph file
+
+            std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                /* legacy mode where the columns are sorted before stored */
+                auto &map = mGraph.getDisplayedPointMap();
+                auto displayedAttribute = map.getDisplayedAttribute();
+
+                auto sortedDisplayedAttribute =
+                    static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                        static_cast<size_t>(displayedAttribute)));
+                map.setDisplayedAttribute(sortedDisplayedAttribute);
+            }
 
             DO_TIMED("Writing graph",
                      mGraph.write(cmdP.getOuputFile().c_str(), METAGRAPH_VERSION, false))
@@ -552,6 +692,20 @@ namespace dm_runmethods {
 
             switch (resultTypes[0]) {
             case AgentParser::OutputType::GRAPH: {
+
+                std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+                if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                    /* legacy mode where the columns are sorted before stored */
+                    auto &map = mGraph.getDisplayedPointMap();
+                    auto displayedAttribute = map.getDisplayedAttribute();
+
+                    auto sortedDisplayedAttribute =
+                        static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                            static_cast<size_t>(displayedAttribute)));
+                    map.setDisplayedAttribute(sortedDisplayedAttribute);
+                }
+
                 DO_TIMED("Writing graph",
                          mGraph.write(cmdP.getOuputFile().c_str(), METAGRAPH_VERSION, false))
                 break;
@@ -564,8 +718,9 @@ namespace dm_runmethods {
             }
             case AgentParser::OutputType::TRAILS: {
                 std::ofstream trailStream(cmdP.getOuputFile().c_str());
-                DO_TIMED("Writing trails", exportUtils::writeMapShapesAsCat(
-                                               m_recordTrails.value().second, trailStream))
+                DO_TIMED("Writing trails",
+                         exportUtils::writeMapShapesAsCat(recordTrails->map, trailStream))
+
                 break;
             }
             }
@@ -578,6 +733,28 @@ namespace dm_runmethods {
 
             if (std::find(resultTypes.begin(), resultTypes.end(), AgentParser::OutputType::GRAPH) !=
                 resultTypes.end()) {
+
+                std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+                if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                    /* legacy mode where the columns are sorted before stored */
+                    for (auto &map : mGraph.getShapeGraphs()) {
+                        auto displayedAttribute = map.getDisplayedAttribute();
+
+                        auto sortedDisplayedAttribute =
+                            static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                                static_cast<size_t>(displayedAttribute)));
+                        map.setDisplayedAttribute(sortedDisplayedAttribute);
+                    }
+                    auto &map = mGraph.getDisplayedPointMap();
+                    auto displayedAttribute = map.getDisplayedAttribute();
+
+                    auto sortedDisplayedAttribute =
+                        static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                            static_cast<size_t>(displayedAttribute)));
+                    map.setDisplayedAttribute(sortedDisplayedAttribute);
+                }
+
                 std::string outFile = cmdP.getOuputFile() + ".graph";
                 DO_TIMED("Writing graph", mGraph.write(outFile.c_str(), METAGRAPH_VERSION, false))
             }
@@ -592,8 +769,8 @@ namespace dm_runmethods {
                           AgentParser::OutputType::TRAILS) != resultTypes.end()) {
                 std::string outFile = cmdP.getOuputFile() + "_trails.cat";
                 std::ofstream trailStream(outFile.c_str());
-                DO_TIMED("Writing trails", exportUtils::writeMapShapesAsCat(
-                                               m_recordTrails.value().second, trailStream))
+                DO_TIMED("Writing trails",
+                         exportUtils::writeMapShapesAsCat(recordTrails->map, trailStream))
             }
         }
     }
@@ -611,6 +788,21 @@ namespace dm_runmethods {
                                                       isovist.getRightAngle(), clp.simpleMode());
                                }))
         std::cout << " ok\nWriting out result..." << std::flush;
+
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            /* legacy mode where the columns are sorted before stored */
+
+            auto &map = mGraph.getDataMaps().back();
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+        }
+
         DO_TIMED("Writing graph",
                  mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
         std::cout << " ok" << std::endl;
@@ -737,7 +929,30 @@ namespace dm_runmethods {
         }
 
         DO_TIMED("Calculating step-depth",
-                 mGraph.analyseGraph(getCommunicator(clp).get(), options, false))
+                 mGraph.analyseGraph(getCommunicator(clp).get(), options, false);)
+
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            /* legacy mode where the columns are sorted before stored */
+
+            auto &map = mGraph.getDisplayedPointMap();
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+
+            // sala no longer stores points as "selected", but previous
+            // versions do. Fake-select the origin point
+            int selState = 0x0010;
+            auto &selSet = map.getSelSet();
+            for (auto &sel : selSet) {
+                auto &point = map.getPoint(sel);
+                point.set(point.getState() | selState);
+            }
+        }
 
         std::cout << " ok\nWriting out result..." << std::flush;
         DO_TIMED("Writing graph",
@@ -748,6 +963,8 @@ namespace dm_runmethods {
     void runMapConversion(const CommandLineParser &clp, const MapConvertParser &mcp,
                           IPerformanceSink &perfWriter) {
         auto mGraph = loadGraph(clp.getFileName().c_str(), perfWriter);
+
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
 
         int currentMapType = mGraph.getDisplayedMapType();
 
@@ -793,6 +1010,13 @@ namespace dm_runmethods {
             DO_TIMED("Converting to drawing",
                      mGraph.convertToDrawing(getCommunicator(clp).get(), mcp.outputMapName(),
                                              currentMapType == ShapeMap::DATAMAP));
+
+            if (mimickVersion.has_value() && *mimickVersion == "depthmapX 0.8.0") {
+                // this version does not actually set the map type of the space pixels
+                for (auto &map : mGraph.getDrawingFiles().back().maps) {
+                    map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
+                }
+            }
             break;
         }
         case ShapeMap::AXIALMAP: {
@@ -812,6 +1036,16 @@ namespace dm_runmethods {
             default: {
                 throw depthmapX::RuntimeException("Unsupported conversion to axial");
             }
+            }
+            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                /* legacy mode where the columns are sorted before stored */
+                auto &map = mGraph.getShapeGraphs().back();
+                auto displayedAttribute = map.getDisplayedAttribute();
+
+                auto sortedDisplayedAttribute =
+                    static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                        static_cast<size_t>(displayedAttribute)));
+                map.setDisplayedAttribute(sortedDisplayedAttribute);
             }
             break;
         }
@@ -841,6 +1075,16 @@ namespace dm_runmethods {
                 throw depthmapX::RuntimeException("Unsupported conversion to segment");
             }
             }
+            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                /* legacy mode where the columns are sorted before stored */
+                auto &map = mGraph.getShapeGraphs().back();
+                auto displayedAttribute = map.getDisplayedAttribute();
+
+                auto sortedDisplayedAttribute =
+                    static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                        static_cast<size_t>(displayedAttribute)));
+                map.setDisplayedAttribute(sortedDisplayedAttribute);
+            }
             break;
         }
         case ShapeMap::DATAMAP: {
@@ -848,6 +1092,16 @@ namespace dm_runmethods {
                      mGraph.convertToData(getCommunicator(clp).get(), mcp.outputMapName(),
                                           !mcp.removeInputMap(), currentMapType,
                                           mcp.copyAttributes()));
+            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                /* legacy mode where the columns are sorted before stored */
+                auto &map = mGraph.getDataMaps().back();
+                auto displayedAttribute = map.getDisplayedAttribute();
+
+                auto sortedDisplayedAttribute =
+                    static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                        static_cast<size_t>(displayedAttribute)));
+                map.setDisplayedAttribute(sortedDisplayedAttribute);
+            }
             break;
         }
         case ShapeMap::CONVEXMAP: {
@@ -855,6 +1109,16 @@ namespace dm_runmethods {
                      mGraph.convertToConvex(getCommunicator(clp).get(), mcp.outputMapName(),
                                             !mcp.removeInputMap(), currentMapType,
                                             mcp.copyAttributes()));
+            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                /* legacy mode where the columns are sorted before stored */
+                auto &map = mGraph.getShapeGraphs().back();
+                auto displayedAttribute = map.getDisplayedAttribute();
+
+                auto sortedDisplayedAttribute =
+                    static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                        static_cast<size_t>(displayedAttribute)));
+                map.setDisplayedAttribute(sortedDisplayedAttribute);
+            }
             break;
         }
         default: {

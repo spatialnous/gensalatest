@@ -8,13 +8,13 @@
 #include "agentparser.h"
 #include "axialparser.h"
 #include "commandlineparser.h"
+#include "dxinterface/metagraphdx.h"
 #include "exportparser.h"
 #include "importparser.h"
 #include "linkparser.h"
 #include "mapconvertparser.h"
 #include "performancesink.h"
 #include "radiusconverter.h"
-#include "salaobj/metagraphcli.h"
 #include "segmentparser.h"
 #include "stepdepthparser.h"
 #include "vgaparser.h"
@@ -35,7 +35,7 @@ class Line;
 class Point2f;
 
 namespace dm_runmethods {
-    MetaGraphCLI loadGraph(const std::string &filename, IPerformanceSink &perfWriter);
+    MetaGraphDX loadGraph(const std::string &filename, IPerformanceSink &perfWriter);
     void importFiles(const CommandLineParser &cmdP, const ImportParser &parser,
                      IPerformanceSink &perfWriter);
     void linkGraph(const CommandLineParser &cmdP, const LinkParser &parser,

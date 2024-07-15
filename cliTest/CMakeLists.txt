@@ -12,10 +12,10 @@ set(cliTest_HDRS
 
 set(cliTest_SRCS
     main.cpp
-    ../depthmapXcli/salaobj/shapemapcli.cpp
-    ../depthmapXcli/salaobj/pointmapcli.cpp
-    ../depthmapXcli/salaobj/shapegraphcli.cpp
-    ../depthmapXcli/salaobj/metagraphcli.cpp
+    ../depthmapXcli/dxinterface/shapemapdx.cpp
+    ../depthmapXcli/dxinterface/pointmapdx.cpp
+    ../depthmapXcli/dxinterface/shapegraphdx.cpp
+    ../depthmapXcli/dxinterface/metagraphdx.cpp
     ../depthmapXcli/printcommunicator.cpp
     ../depthmapXcli/commandlineparser.cpp
     testcommandlineparser.cpp
