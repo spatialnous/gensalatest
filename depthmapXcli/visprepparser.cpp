@@ -6,11 +6,23 @@
 #include "exceptions.h"
 #include "parsingutils.h"
 #include "runmethods.h"
+#include "simpletimer.h"
 
 #include "salalib/entityparsing.h"
+#include "salalib/gridproperties.h"
 
 #include <cstring>
 #include <sstream>
+
+namespace {
+    void fillGraph(MetaGraphDX &graph, const Point2f &point) {
+        auto r = graph.getRegion();
+        if (!r.contains(point)) {
+            throw depthmapX::RuntimeException("Point outside of target region");
+        }
+        graph.makePoints(point, 0, nullptr);
+    }
+} // namespace
 
 using namespace depthmapX;
 
@@ -131,6 +143,73 @@ void VisPrepParser::parse(size_t argc, char **argv) {
 }
 
 void VisPrepParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    dm_runmethods::runVisualPrep(clp, m_grid, m_fillPoints, m_maxVisibility, m_boundaryGraph,
-                                 m_makeGraph, m_unmakeGraph, m_removeLinksWhenUnmaking, perfWriter);
+    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+
+    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+    std::cout << "Initial checks... " << std::flush;
+    auto state = mGraph.getState();
+    if (~state & MetaGraphDX::LINEDATA) {
+        throw depthmapX::RuntimeException("Graph must have line data before preparing VGA");
+    }
+    if (m_grid > 0) {
+        // Create a new pointmap and set tha grid
+        QtRegion r = mGraph.getRegion();
+
+        GridProperties gp(__max(r.width(), r.height()));
+        if (m_grid > gp.getMax() || m_grid < gp.getMin()) {
+            std::stringstream message;
+            message << "Chosen grid spacing " << m_grid
+                    << " is outside of the expected interval of " << gp.getMin()
+                    << " <= spacing <= " << gp.getMax() << std::flush;
+            throw depthmapX::RuntimeException(message.str());
+        }
+
+        std::cout << "ok\nSetting up grid... " << std::flush;
+        mGraph.addNewPointMap();
+        DO_TIMED("Setting grid", mGraph.setGrid(m_grid, Point2f(0.0, 0.0)))
+    } else if (mGraph.getPointMaps().empty()) {
+        std::stringstream message;
+        message << "No map exists to use. Please create a new one by providing a grid size"
+                << std::flush;
+        throw depthmapX::RuntimeException(message.str());
+    }
+
+    if (m_unmakeGraph) {
+        if (!mGraph.getDisplayedPointMap().getInternalMap().isProcessed()) {
+            std::stringstream message;
+            message << "Current map has not had its graph made so there's nothing to unmake"
+                    << std::flush;
+            throw depthmapX::RuntimeException(message.str());
+        }
+        DO_TIMED("Unmaking graph", mGraph.unmakeGraph(m_removeLinksWhenUnmaking))
+    } else {
+        if (m_fillPoints.size() > 0) {
+            std::cout << "ok\nFilling grid... " << std::flush;
+            DO_TIMED("Filling grid", for_each(m_fillPoints.begin(), m_fillPoints.end(),
+                                              [&mGraph](const Point2f &point) -> void {
+                                                  fillGraph(mGraph, point);
+                                              }))
+        }
+        if (m_makeGraph) {
+            std::cout << "ok\nMaking graph... " << std::flush;
+            DO_TIMED("Making graph", mGraph.makeGraph(dm_runmethods::getCommunicator(clp).get(),
+                                                      m_boundaryGraph ? 1 : 0, m_maxVisibility))
+
+            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                /* legacy mode where the columns are sorted before stored */
+                auto &map = mGraph.getDisplayedPointMap();
+                auto displayedAttribute = map.getDisplayedAttribute();
+
+                auto sortedDisplayedAttribute =
+                    static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                        static_cast<size_t>(displayedAttribute)));
+                map.setDisplayedAttribute(sortedDisplayedAttribute);
+            }
+        }
+    }
+
+    std::cout << " ok\nWriting out result..." << std::flush;
+    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    std::cout << " ok" << std::endl;
 }

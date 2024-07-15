@@ -17,13 +17,13 @@ class SegmentParser : public IModeParser {
     void parse(size_t argc, char **argv);
     void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
 
-    enum class AnalysisType { NONE, ANGULAR_TULIP, ANGULAR_FULL, TOPOLOGICAL, METRIC };
+    enum class InAnalysisType { NONE, ANGULAR_TULIP, ANGULAR_FULL, TOPOLOGICAL, METRIC };
 
-    enum class RadiusType { NONE, SEGMENT_STEPS, ANGULAR, METRIC };
+    enum class InRadiusType { NONE, SEGMENT_STEPS, ANGULAR, METRIC };
 
-    AnalysisType getAnalysisType() const { return m_analysisType; }
+    InAnalysisType getAnalysisType() const { return m_analysisType; }
 
-    RadiusType getRadiusType() const { return m_radiusType; }
+    InRadiusType getRadiusType() const { return m_radiusType; }
 
     bool includeChoice() const { return m_includeChoice; }
 
@@ -34,8 +34,8 @@ class SegmentParser : public IModeParser {
     const std::string getAttribute() const { return m_attribute; }
 
   private:
-    AnalysisType m_analysisType;
-    RadiusType m_radiusType;
+    InAnalysisType m_analysisType;
+    InRadiusType m_radiusType;
     bool m_includeChoice;
     int m_tulipBins;
     std::vector<double> m_radii;

@@ -7,8 +7,11 @@
 #include "exceptions.h"
 #include "parsingutils.h"
 #include "runmethods.h"
+#include "simpletimer.h"
 
+#include "salalib/agents/agentanalysis.h"
 #include "salalib/entityparsing.h"
+#include "salalib/exportutils.h"
 
 #include <cstring>
 #include <sstream>
@@ -259,5 +262,195 @@ void AgentParser::parse(size_t argc, char *argv[]) {
 }
 
 void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    dm_runmethods::runAgentAnalysis(clp, *this, perfWriter);
+
+    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+
+    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+    auto &currentMap = mGraph.getDisplayedPointMap();
+
+    int agentViewAlgorithm = AgentProgram::SEL_STANDARD;
+
+    switch (getAgentMode()) {
+    case AgentParser::NONE:
+    case AgentParser::STANDARD:
+        agentViewAlgorithm = AgentProgram::SEL_STANDARD;
+        break;
+    case AgentParser::LOS_LENGTH:
+        agentViewAlgorithm = AgentProgram::SEL_LOS;
+        break;
+    case AgentParser::OCC_LENGTH:
+        agentViewAlgorithm = AgentProgram::SEL_LOS_OCC;
+        break;
+    case AgentParser::OCC_ANY:
+        agentViewAlgorithm = AgentProgram::SEL_OCC_ALL;
+        break;
+    case AgentParser::OCC_GROUP_45:
+        agentViewAlgorithm = AgentProgram::SEL_OCC_BIN45;
+        break;
+    case AgentParser::OCC_GROUP_60:
+        agentViewAlgorithm = AgentProgram::SEL_OCC_BIN60;
+        break;
+    case AgentParser::OCC_FURTHEST:
+        agentViewAlgorithm = AgentProgram::SEL_OCC_STANDARD;
+        break;
+    case AgentParser::BIN_FAR_DIST:
+        agentViewAlgorithm = AgentProgram::SEL_OCC_WEIGHT_DIST;
+        break;
+    case AgentParser::BIN_ANGLE:
+        agentViewAlgorithm = AgentProgram::SEL_OCC_WEIGHT_ANG;
+        break;
+    case AgentParser::BIN_FAR_DIST_ANGLE:
+        agentViewAlgorithm = AgentProgram::SEL_OCC_WEIGHT_DIST_ANG;
+        break;
+    case AgentParser::BIN_MEMORY:
+        agentViewAlgorithm = AgentProgram::SEL_OCC_MEMORY;
+        break;
+    }
+
+    std::optional<AgentAnalysis::TrailRecordOptions> recordTrails =
+        recordTrailsForAgents() >= 0
+            ? std::make_optional(AgentAnalysis::TrailRecordOptions{
+                  recordTrailsForAgents() == 0
+                      ? std::nullopt
+                      : std::make_optional(static_cast<size_t>(recordTrailsForAgents())),
+                  std::ref(mGraph.getDataMaps()
+                               .emplace_back("Agent Trails", ShapeMap::DATAMAP)
+                               .getInternalMap())})
+            : std::nullopt;
+
+    if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        // older versions of depthmapX limited the maximum number of trails to 50
+        if (recordTrails.has_value()) {
+            if ((recordTrails->limit.has_value() && recordTrails->limit > 50) ||
+                !recordTrails->limit.has_value()) {
+                recordTrails->limit = 50;
+            }
+        }
+    }
+
+    // the ui and code suggest that the results can be put on a separate
+    // 'data map', but the functionality does not seem to actually be
+    // there thus it is skipped for now
+    std::optional<std::reference_wrapper<ShapeMap>> gateLayer = std::nullopt;
+
+    auto analysis = std::unique_ptr<IAnalysis>(new AgentAnalysis(
+        currentMap.getInternalMap(), totalSystemTimestemps(), releaseRate(),
+        static_cast<size_t>(agentLifeTimesteps()), static_cast<unsigned short>(agentFOV()),
+        static_cast<size_t>(agentStepsBeforeTurnDecision()), agentViewAlgorithm,
+        randomReleaseLocationSeed(), getReleasePoints(), gateLayer, recordTrails));
+
+    std::cout << "ok\nRunning agent analysis... " << std::flush;
+    DO_TIMED("Running agent analysis",
+             mGraph.runAgentEngine(dm_runmethods::getCommunicator(clp).get(), analysis);)
+
+    std::cout << " ok\nWriting out result..." << std::flush;
+    std::vector<AgentParser::OutputType> resultTypes = outputTypes();
+    if (resultTypes.size() == 0) {
+        // if no choice was made for an output type assume the user just
+        // wants a graph file
+
+        std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            /* legacy mode where the columns are sorted before stored */
+            auto &map = mGraph.getDisplayedPointMap();
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+        }
+
+        DO_TIMED("Writing graph",
+                 mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    } else if (resultTypes.size() == 1) {
+        // if only one type of output is given, assume that the user has
+        // correctly entered a name with the correct extension and export
+        // exactly with that name and extension
+
+        switch (resultTypes[0]) {
+        case AgentParser::OutputType::GRAPH: {
+
+            std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                /* legacy mode where the columns are sorted before stored */
+                auto &map = mGraph.getDisplayedPointMap();
+                auto displayedAttribute = map.getDisplayedAttribute();
+
+                auto sortedDisplayedAttribute =
+                    static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                        static_cast<size_t>(displayedAttribute)));
+                map.setDisplayedAttribute(sortedDisplayedAttribute);
+            }
+
+            DO_TIMED("Writing graph",
+                     mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+            break;
+        }
+        case AgentParser::OutputType::GATECOUNTS: {
+            std::ofstream gatecountStream(clp.getOuputFile().c_str());
+            DO_TIMED("Writing gatecounts",
+                     currentMap.getInternalMap().outputSummary(gatecountStream, ','))
+            break;
+        }
+        case AgentParser::OutputType::TRAILS: {
+            std::ofstream trailStream(clp.getOuputFile().c_str());
+            DO_TIMED("Writing trails",
+                     exportUtils::writeMapShapesAsCat(recordTrails->map, trailStream))
+
+            break;
+        }
+        }
+    } else {
+        // if more than one output type is given assume the user has given
+        // a filename without an extension and thus the new file must have
+        // an extension. Also to avoid name clashes in cases where the user
+        // asked for outputs that would yield the same extension also add
+        // a related suffix
+
+        if (std::find(resultTypes.begin(), resultTypes.end(), AgentParser::OutputType::GRAPH) !=
+            resultTypes.end()) {
+
+            std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+            if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+                /* legacy mode where the columns are sorted before stored */
+                for (auto &map : mGraph.getShapeGraphs()) {
+                    auto displayedAttribute = map.getDisplayedAttribute();
+
+                    auto sortedDisplayedAttribute =
+                        static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                            static_cast<size_t>(displayedAttribute)));
+                    map.setDisplayedAttribute(sortedDisplayedAttribute);
+                }
+                auto &map = mGraph.getDisplayedPointMap();
+                auto displayedAttribute = map.getDisplayedAttribute();
+
+                auto sortedDisplayedAttribute =
+                    static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                        static_cast<size_t>(displayedAttribute)));
+                map.setDisplayedAttribute(sortedDisplayedAttribute);
+            }
+
+            std::string outFile = clp.getOuputFile() + ".graph";
+            DO_TIMED("Writing graph", mGraph.write(outFile.c_str(), METAGRAPH_VERSION, false))
+        }
+        if (std::find(resultTypes.begin(), resultTypes.end(),
+                      AgentParser::OutputType::GATECOUNTS) != resultTypes.end()) {
+            std::string outFile = clp.getOuputFile() + "_gatecounts.csv";
+            std::ofstream gatecountStream(outFile.c_str());
+            DO_TIMED("Writing gatecounts",
+                     currentMap.getInternalMap().outputSummary(gatecountStream, ','))
+        }
+        if (std::find(resultTypes.begin(), resultTypes.end(), AgentParser::OutputType::TRAILS) !=
+            resultTypes.end()) {
+            std::string outFile = clp.getOuputFile() + "_trails.cat";
+            std::ofstream trailStream(outFile.c_str());
+            DO_TIMED("Writing trails",
+                     exportUtils::writeMapShapesAsCat(recordTrails->map, trailStream))
+        }
+    }
 }

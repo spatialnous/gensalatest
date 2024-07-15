@@ -121,8 +121,8 @@ TEST_CASE("Test segment mode parsing", "") {
         parser.parse(ah.argc(), ah.argv());
         REQUIRE_FALSE(parser.includeChoice());
         REQUIRE(parser.getTulipBins() == 0);
-        REQUIRE(parser.getAnalysisType() == SegmentParser::AnalysisType::METRIC);
-        REQUIRE(parser.getRadiusType() == SegmentParser::RadiusType::NONE);
+        REQUIRE(parser.getAnalysisType() == SegmentParser::InAnalysisType::METRIC);
+        REQUIRE(parser.getRadiusType() == SegmentParser::InRadiusType::NONE);
         REQUIRE(parser.getRadii().size() == 1);
         REQUIRE(int(parser.getRadii()[0]) == -1);
     }
@@ -131,8 +131,8 @@ TEST_CASE("Test segment mode parsing", "") {
         parser.parse(ah.argc(), ah.argv());
         REQUIRE_FALSE(parser.includeChoice());
         REQUIRE(parser.getTulipBins() == 0);
-        REQUIRE(parser.getAnalysisType() == SegmentParser::AnalysisType::ANGULAR_FULL);
-        REQUIRE(parser.getRadiusType() == SegmentParser::RadiusType::NONE);
+        REQUIRE(parser.getAnalysisType() == SegmentParser::InAnalysisType::ANGULAR_FULL);
+        REQUIRE(parser.getRadiusType() == SegmentParser::InRadiusType::NONE);
         REQUIRE(parser.getRadii().size() == 1);
         REQUIRE(int(parser.getRadii()[0]) == -1);
     }
@@ -141,8 +141,8 @@ TEST_CASE("Test segment mode parsing", "") {
         parser.parse(ah.argc(), ah.argv());
         REQUIRE_FALSE(parser.includeChoice());
         REQUIRE(parser.getTulipBins() == 0);
-        REQUIRE(parser.getAnalysisType() == SegmentParser::AnalysisType::TOPOLOGICAL);
-        REQUIRE(parser.getRadiusType() == SegmentParser::RadiusType::NONE);
+        REQUIRE(parser.getAnalysisType() == SegmentParser::InAnalysisType::TOPOLOGICAL);
+        REQUIRE(parser.getRadiusType() == SegmentParser::InRadiusType::NONE);
         REQUIRE(parser.getRadii().size() == 1);
         REQUIRE(int(parser.getRadii()[0]) == -1);
     }
@@ -152,8 +152,8 @@ TEST_CASE("Test segment mode parsing", "") {
         parser.parse(ah.argc(), ah.argv());
         REQUIRE(parser.includeChoice());
         REQUIRE(parser.getTulipBins() == 1024);
-        REQUIRE(parser.getAnalysisType() == SegmentParser::AnalysisType::ANGULAR_TULIP);
-        REQUIRE(parser.getRadiusType() == SegmentParser::RadiusType::SEGMENT_STEPS);
+        REQUIRE(parser.getAnalysisType() == SegmentParser::InAnalysisType::ANGULAR_TULIP);
+        REQUIRE(parser.getRadiusType() == SegmentParser::InRadiusType::SEGMENT_STEPS);
         REQUIRE(parser.getRadii().size() == 1);
         REQUIRE(int(parser.getRadii()[0]) == -1);
     }

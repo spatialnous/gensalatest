@@ -7,6 +7,7 @@
 #include "parsingutils.h"
 #include "radiusconverter.h"
 #include "runmethods.h"
+#include "simpletimer.h"
 
 #include <cstring>
 
@@ -70,6 +71,73 @@ void VgaParser::parse(size_t argc, char *argv[]) {
 }
 
 void VgaParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    RadiusConverter radiusConverter;
-    dm_runmethods::runVga(clp, *this, radiusConverter, perfWriter);
+    RadiusConverter converter;
+    auto mgraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+
+    std::unique_ptr<Options> options(new Options());
+
+    std::cout << "Getting options..." << std::flush;
+    switch (getVgaMode()) {
+    case VgaParser::VgaMode::VISBILITY:
+        options->output_type = AnalysisType::VISUAL;
+        options->local = localMeasures();
+        options->global = globalMeasures();
+        if (options->global) {
+            options->radius = converter.ConvertForVisibility(getRadius());
+        }
+        break;
+    case VgaParser::VgaMode::METRIC:
+        options->output_type = AnalysisType::METRIC;
+        options->radius = converter.ConvertForMetric(getRadius());
+        break;
+    case VgaParser::VgaMode::ANGULAR:
+        options->output_type = AnalysisType::ANGULAR;
+        break;
+    case VgaParser::VgaMode::ISOVIST:
+        options->output_type = AnalysisType::ISOVIST;
+        break;
+    case VgaParser::VgaMode::THRU_VISION:
+        options->output_type = AnalysisType::THRU_VISION;
+        break;
+    default:
+        throw depthmapX::SetupCheckException("Unsupported VGA mode");
+    }
+    std::cout << " ok\nAnalysing graph..." << std::flush;
+
+    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+    if (!mimickVersion.has_value()) {
+        // current version
+        DO_TIMED("Run VGA", mgraph.analyseGraph(dm_runmethods::getCommunicator(clp).get(), *options,
+                                                clp.simpleMode());)
+
+    } else if (*mimickVersion == "depthmapX 0.8.0") {
+        int currentDisplayedAttribute = -1;
+        if (getVgaMode() == VgaParser::VgaMode::ISOVIST) {
+            // in this version vga isovist analysis does not change the
+            // displayed attribute, so we have to reset it back to what
+            // it was before the analysis
+            currentDisplayedAttribute = mgraph.getDisplayedPointMap().getDisplayedAttribute();
+        }
+
+        DO_TIMED("Run VGA", mgraph.analyseGraph(dm_runmethods::getCommunicator(clp).get(), *options,
+                                                clp.simpleMode());)
+
+        if (getVgaMode() == VgaParser::VgaMode::ISOVIST) {
+            mgraph.getDisplayedPointMap().setDisplayedAttribute(currentDisplayedAttribute);
+        }
+        /* legacy mode where the columns are sorted before stored */
+        for (auto &map : mgraph.getPointMaps()) {
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+        }
+    }
+
+    std::cout << " ok\nWriting out result..." << std::flush;
+    DO_TIMED("Writing graph", mgraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    std::cout << " ok" << std::endl;
 }

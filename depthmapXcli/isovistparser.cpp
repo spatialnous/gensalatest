@@ -7,6 +7,7 @@
 #include "exceptions.h"
 #include "parsingutils.h"
 #include "runmethods.h"
+#include "simpletimer.h"
 
 #include "salalib/entityparsing.h"
 
@@ -68,5 +69,31 @@ void IsovistParser::parse(size_t argc, char **argv) {
 }
 
 void IsovistParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    dm_runmethods::runIsovists(clp, m_isovists, perfWriter);
+    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+
+    std::cout << "Making " << m_isovists.size() << " isovists... " << std::flush;
+    DO_TIMED("Make isovists",
+             std::for_each(m_isovists.begin(), m_isovists.end(),
+                           [&mGraph, &clp](const IsovistDefinition &isovist) -> void {
+                               mGraph.makeIsovist(dm_runmethods::getCommunicator(clp).get(),
+                                                  isovist.getLocation(), isovist.getLeftAngle(),
+                                                  isovist.getRightAngle(), clp.simpleMode());
+                           }))
+    std::cout << " ok\nWriting out result..." << std::flush;
+
+    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+    if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        /* legacy mode where the columns are sorted before stored */
+
+        auto &map = mGraph.getDataMaps().back();
+        auto displayedAttribute = map.getDisplayedAttribute();
+
+        auto sortedDisplayedAttribute = static_cast<int>(
+            map.getAttributeTable().getColumnSortedIndex(static_cast<size_t>(displayedAttribute)));
+        map.setDisplayedAttribute(sortedDisplayedAttribute);
+    }
+
+    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    std::cout << " ok" << std::endl;
 }

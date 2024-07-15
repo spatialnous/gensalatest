@@ -7,6 +7,7 @@
 #include "exceptions.h"
 #include "parsingutils.h"
 #include "runmethods.h"
+#include "simpletimer.h"
 
 #include <cstring>
 
@@ -65,5 +66,168 @@ void MapConvertParser::parse(size_t argc, char **argv) {
 }
 
 void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    dm_runmethods::runMapConversion(clp, *this, perfWriter);
+    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+
+    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+    int currentMapType = mGraph.getDisplayedMapType();
+
+    if (currentMapType == ShapeMap::EMPTYMAP) {
+        if (mGraph.hasVisibleDrawingLayers()) {
+            currentMapType = ShapeMap::DRAWINGMAP;
+        } else {
+            throw depthmapX::RuntimeException("No currently available map to convert from");
+        }
+    }
+
+    if (copyAttributes()) {
+        if (currentMapType != ShapeMap::DATAMAP && currentMapType != ShapeMap::AXIALMAP &&
+            currentMapType != ShapeMap::SEGMENTMAP) {
+            throw depthmapX::RuntimeException("Copying attributes is only available when "
+                                              "converting between Data, Axial and Segment maps "
+                                              "(current map type is not of those types)");
+        }
+        if (outputMapType() != ShapeMap::DATAMAP && outputMapType() != ShapeMap::AXIALMAP &&
+            outputMapType() != ShapeMap::SEGMENTMAP) {
+            throw depthmapX::RuntimeException("Copying attributes is only available when "
+                                              "converting between Data, Axial and Segment maps "
+                                              "(selected output map type is not of those types)");
+        }
+    }
+    if (removeStubLength() > 0) {
+        if (currentMapType != ShapeMap::AXIALMAP) {
+            throw depthmapX::RuntimeException("Removing stubs (-crsl) is only available when"
+                                              "converting from Axial to Segment maps"
+                                              "(current map type is not Axial)");
+        }
+        if (outputMapType() != ShapeMap::SEGMENTMAP) {
+            throw depthmapX::RuntimeException("Removing stubs (-crsl) is only available when"
+                                              "converting from Axial to Segment maps"
+                                              "(selected output map type is not Segment)");
+        }
+    }
+
+    switch (outputMapType()) {
+    case ShapeMap::DRAWINGMAP: {
+        DO_TIMED("Converting to drawing",
+                 mGraph.convertToDrawing(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
+                                         currentMapType == ShapeMap::DATAMAP));
+
+        if (mimickVersion.has_value() && *mimickVersion == "depthmapX 0.8.0") {
+            // this version does not actually set the map type of the space pixels
+            for (auto &map : mGraph.getDrawingFiles().back().maps) {
+                map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
+            }
+        }
+        break;
+    }
+    case ShapeMap::AXIALMAP: {
+        switch (currentMapType) {
+        case ShapeMap::DRAWINGMAP: {
+            DO_TIMED("Converting from drawing to axial",
+                     mGraph.convertDrawingToAxial(dm_runmethods::getCommunicator(clp).get(),
+                                                  outputMapName()));
+            break;
+        }
+        case ShapeMap::DATAMAP: {
+            DO_TIMED("Converting from data to axial",
+                     mGraph.convertDataToAxial(dm_runmethods::getCommunicator(clp).get(),
+                                               outputMapName(), !removeInputMap(),
+                                               copyAttributes()));
+            break;
+        }
+        default: {
+            throw depthmapX::RuntimeException("Unsupported conversion to axial");
+        }
+        }
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            /* legacy mode where the columns are sorted before stored */
+            auto &map = mGraph.getShapeGraphs().back();
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+        }
+        break;
+    }
+    case ShapeMap::SEGMENTMAP: {
+        switch (currentMapType) {
+        case ShapeMap::DRAWINGMAP: {
+            DO_TIMED("Converting from drawing to segment",
+                     mGraph.convertDrawingToSegment(dm_runmethods::getCommunicator(clp).get(),
+                                                    outputMapName()));
+            break;
+        }
+        case ShapeMap::AXIALMAP: {
+            DO_TIMED("Converting from axial to segment",
+                     mGraph.convertAxialToSegment(dm_runmethods::getCommunicator(clp).get(),
+                                                  outputMapName(), !removeInputMap(),
+                                                  copyAttributes(), removeStubLength() / 100.0));
+            break;
+        }
+        case ShapeMap::DATAMAP: {
+            DO_TIMED("Converting from data to segment",
+                     mGraph.convertDataToSegment(dm_runmethods::getCommunicator(clp).get(),
+                                                 outputMapName(), !removeInputMap(),
+                                                 copyAttributes()));
+            break;
+        }
+        default: {
+            throw depthmapX::RuntimeException("Unsupported conversion to segment");
+        }
+        }
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            /* legacy mode where the columns are sorted before stored */
+            auto &map = mGraph.getShapeGraphs().back();
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+        }
+        break;
+    }
+    case ShapeMap::DATAMAP: {
+        DO_TIMED("Converting to data",
+                 mGraph.convertToData(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
+                                      !removeInputMap(), currentMapType, copyAttributes()));
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            /* legacy mode where the columns are sorted before stored */
+            auto &map = mGraph.getDataMaps().back();
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+        }
+        break;
+    }
+    case ShapeMap::CONVEXMAP: {
+        DO_TIMED("Converting to convex",
+                 mGraph.convertToConvex(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
+                                        !removeInputMap(), currentMapType, copyAttributes()));
+        if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+            /* legacy mode where the columns are sorted before stored */
+            auto &map = mGraph.getShapeGraphs().back();
+            auto displayedAttribute = map.getDisplayedAttribute();
+
+            auto sortedDisplayedAttribute =
+                static_cast<int>(map.getAttributeTable().getColumnSortedIndex(
+                    static_cast<size_t>(displayedAttribute)));
+            map.setDisplayedAttribute(sortedDisplayedAttribute);
+        }
+        break;
+    }
+    default: {
+        throw depthmapX::RuntimeException("Unsupported conversion");
+    }
+    }
+
+    std::cout << " ok\nWriting out result..." << std::flush;
+    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    std::cout << " ok" << std::endl;
 }

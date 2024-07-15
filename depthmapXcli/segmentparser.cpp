@@ -6,14 +6,17 @@
 #include "exceptions.h"
 #include "parsingutils.h"
 #include "runmethods.h"
+#include "simpletimer.h"
+
+#include "salalib/analysistype.h"
 
 #include <cstring>
 
 using namespace depthmapX;
 
 SegmentParser::SegmentParser()
-    : m_analysisType(AnalysisType::NONE), m_radiusType(RadiusType::NONE), m_includeChoice(false),
-      m_tulipBins(0) {}
+    : m_analysisType(InAnalysisType::NONE), m_radiusType(InRadiusType::NONE),
+      m_includeChoice(false), m_tulipBins(0) {}
 
 std::string SegmentParser::getModeName() const { return "SEGMENT"; }
 
@@ -38,34 +41,34 @@ std::string SegmentParser::getHelp() const {
 void SegmentParser::parse(size_t argc, char **argv) {
     for (size_t i = 1; i < argc; ++i) {
         if (std::strcmp("-st", argv[i]) == 0) {
-            if (m_analysisType != AnalysisType::NONE) {
+            if (m_analysisType != InAnalysisType::NONE) {
                 throw CommandLineException(
                     "-st can only be used once, modes are mutually exclusive");
             }
             ENFORCE_ARGUMENT("-st", i)
             if (std::strcmp(argv[i], "tulip") == 0) {
-                m_analysisType = AnalysisType::ANGULAR_TULIP;
+                m_analysisType = InAnalysisType::ANGULAR_TULIP;
             } else if (std::strcmp(argv[i], "angular") == 0) {
-                m_analysisType = AnalysisType::ANGULAR_FULL;
+                m_analysisType = InAnalysisType::ANGULAR_FULL;
             } else if (std::strcmp(argv[i], "topological") == 0) {
-                m_analysisType = AnalysisType::TOPOLOGICAL;
+                m_analysisType = InAnalysisType::TOPOLOGICAL;
             } else if (std::strcmp(argv[i], "metric") == 0) {
-                m_analysisType = AnalysisType::METRIC;
+                m_analysisType = InAnalysisType::METRIC;
             } else {
                 throw CommandLineException(std::string("Invalid SEGMENT mode: ") + argv[i]);
             }
         } else if (std::strcmp(argv[i], "-srt") == 0) {
-            if (m_radiusType != RadiusType::NONE) {
+            if (m_radiusType != InRadiusType::NONE) {
                 throw CommandLineException(
                     "-srt can only be used once, modes are mutually exclusive");
             }
             ENFORCE_ARGUMENT("-srt", i)
             if (std::strcmp(argv[i], "steps") == 0) {
-                m_radiusType = RadiusType::SEGMENT_STEPS;
+                m_radiusType = InRadiusType::SEGMENT_STEPS;
             } else if (std::strcmp(argv[i], "angular") == 0) {
-                m_radiusType = RadiusType::ANGULAR;
+                m_radiusType = InRadiusType::ANGULAR;
             } else if (std::strcmp(argv[i], "metric") == 0) {
-                m_radiusType = RadiusType::METRIC;
+                m_radiusType = InRadiusType::METRIC;
             } else {
                 throw CommandLineException(std::string("Invalid SEGMENT radius type: ") + argv[i]);
             }
@@ -92,7 +95,7 @@ void SegmentParser::parse(size_t argc, char **argv) {
         }
     }
 
-    if (getAnalysisType() == AnalysisType::NONE) {
+    if (getAnalysisType() == InAnalysisType::NONE) {
         throw CommandLineException("No analysis type given");
     }
 
@@ -100,20 +103,105 @@ void SegmentParser::parse(size_t argc, char **argv) {
         throw CommandLineException("At least one radius must be provided");
     }
 
-    if (getAnalysisType() == AnalysisType::ANGULAR_TULIP && getRadiusType() == RadiusType::NONE) {
+    if (getAnalysisType() == InAnalysisType::ANGULAR_TULIP &&
+        getRadiusType() == InRadiusType::NONE) {
         throw CommandLineException("Radius type is required for tulip analysis");
     }
 
-    if (getAnalysisType() == AnalysisType::ANGULAR_TULIP && getTulipBins() == 0) {
+    if (getAnalysisType() == InAnalysisType::ANGULAR_TULIP && getTulipBins() == 0) {
         throw CommandLineException("Tulip bins are required for tulip analysis");
     }
 
-    if (getAnalysisType() != AnalysisType::ANGULAR_TULIP &&
-        (getTulipBins() != 0 || getRadiusType() != RadiusType::NONE || m_includeChoice)) {
+    if (getAnalysisType() != InAnalysisType::ANGULAR_TULIP &&
+        (getTulipBins() != 0 || getRadiusType() != InRadiusType::NONE || m_includeChoice)) {
         throw CommandLineException("-stb, -srt and -sic can only be used with tulip analysis");
     }
 }
 
 void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    dm_runmethods::runSegmentAnalysis(clp, *this, perfWriter);
+    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+
+    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+    std::cout << "Running segment analysis... " << std::flush;
+    Options options;
+    const std::vector<double> &radii = getRadii();
+    options.radius_set.insert(radii.begin(), radii.end());
+    options.choice = includeChoice();
+    options.tulip_bins = getTulipBins();
+    options.weighted_measure_col = -1;
+
+    if (!getAttribute().empty()) {
+        const auto &map = mGraph.getDisplayedShapeGraph();
+        const AttributeTable &table = map.getAttributeTable();
+        for (size_t i = 0; i < table.getNumColumns(); i++) {
+            if (getAttribute() == table.getColumnName(i).c_str()) {
+                options.weighted_measure_col = static_cast<int>(i);
+            }
+        }
+        if (options.weighted_measure_col == -1) {
+            throw depthmapX::RuntimeException("Given attribute (" + getAttribute() +
+                                              ") does not exist in currently selected map");
+        }
+    }
+
+    switch (getRadiusType()) {
+    case InRadiusType::SEGMENT_STEPS: {
+        options.radius_type = RadiusType::TOPOLOGICAL;
+        break;
+    }
+    case InRadiusType::METRIC: {
+        options.radius_type = RadiusType::METRIC;
+        break;
+    }
+    case InRadiusType::ANGULAR: {
+        options.radius_type = RadiusType::ANGULAR;
+        break;
+    }
+    case InRadiusType::NONE:
+        break;
+    }
+    switch (getAnalysisType()) {
+    case InAnalysisType::ANGULAR_TULIP: {
+        DO_TIMED("Segment tulip analysis",
+                 mGraph.analyseSegmentsTulip(
+                     dm_runmethods::getCommunicator(clp).get(), options,
+                     (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0")))
+        break;
+    }
+    case InAnalysisType::ANGULAR_FULL: {
+        DO_TIMED("Segment angular analysis",
+                 mGraph.analyseSegmentsAngular(dm_runmethods::getCommunicator(clp).get(), options))
+        break;
+    }
+    case InAnalysisType::TOPOLOGICAL: {
+        options.output_type = AnalysisType::ISOVIST;
+        DO_TIMED("Segment topological", mGraph.analyseTopoMetMultipleRadii(
+                                            dm_runmethods::getCommunicator(clp).get(), options))
+        break;
+    }
+    case InAnalysisType::METRIC: {
+        options.output_type = AnalysisType::VISUAL;
+        DO_TIMED("Segment metric", mGraph.analyseTopoMetMultipleRadii(
+                                       dm_runmethods::getCommunicator(clp).get(), options))
+        break;
+    }
+    case InAnalysisType::NONE:
+        throw depthmapX::RuntimeException("No segment analysis type given");
+    }
+    std::cout << "ok\n" << std::flush;
+
+    if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        /* legacy mode where the columns are sorted before stored */
+        auto &map = mGraph.getDisplayedShapeGraph();
+        auto displayedAttribute = map.getDisplayedAttribute();
+
+        auto sortedDisplayedAttribute = static_cast<int>(
+            map.getAttributeTable().getColumnSortedIndex(static_cast<size_t>(displayedAttribute)));
+        map.setDisplayedAttribute(sortedDisplayedAttribute);
+    }
+
+    std::cout << "Writing out result..." << std::flush;
+    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    std::cout << " ok" << std::endl;
 }

@@ -6,6 +6,7 @@
 #include "exceptions.h"
 #include "parsingutils.h"
 #include "runmethods.h"
+#include "simpletimer.h"
 
 #include "salalib/entityparsing.h"
 
@@ -82,5 +83,65 @@ void StepDepthParser::parse(size_t argc, char **argv) {
 }
 
 void StepDepthParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    dm_runmethods::runStepDepth(clp, m_stepType, m_stepDepthPoints, perfWriter);
+    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+
+    std::cout << "ok\nSelecting cells... " << std::flush;
+
+    for (auto &point : m_stepDepthPoints) {
+        auto graphRegion = mGraph.getRegion();
+        if (!graphRegion.contains(point)) {
+            throw depthmapX::RuntimeException("Point outside of target region");
+        }
+        QtRegion r(point, point);
+        mGraph.setCurSel(r, true);
+    }
+
+    std::cout << "ok\nCalculating step-depth... " << std::flush;
+
+    Options options;
+    options.global = 0;
+
+    switch (m_stepType) {
+    case StepDepthParser::StepType::ANGULAR:
+        options.point_depth_selection = 3;
+        break;
+    case StepDepthParser::StepType::METRIC:
+        options.point_depth_selection = 2;
+        break;
+    case StepDepthParser::StepType::VISUAL:
+        options.point_depth_selection = 1;
+        break;
+    default: {
+        throw depthmapX::SetupCheckException("Error, unsupported step type");
+    }
+    }
+
+    DO_TIMED("Calculating step-depth",
+             mGraph.analyseGraph(dm_runmethods::getCommunicator(clp).get(), options, false);)
+
+    std::optional<std::string> mimickVersion = "depthmapX 0.8.0";
+
+    if (mimickVersion.has_value() && mimickVersion == "depthmapX 0.8.0") {
+        /* legacy mode where the columns are sorted before stored */
+
+        auto &map = mGraph.getDisplayedPointMap();
+        auto displayedAttribute = map.getDisplayedAttribute();
+
+        auto sortedDisplayedAttribute = static_cast<int>(
+            map.getAttributeTable().getColumnSortedIndex(static_cast<size_t>(displayedAttribute)));
+        map.setDisplayedAttribute(sortedDisplayedAttribute);
+
+        // sala no longer stores points as "selected", but previous
+        // versions do. Fake-select the origin point
+        int selState = 0x0010;
+        auto &selSet = map.getSelSet();
+        for (auto &sel : selSet) {
+            auto &point = map.getPoint(sel);
+            point.set(point.getState() | selState);
+        }
+    }
+
+    std::cout << " ok\nWriting out result..." << std::flush;
+    DO_TIMED("Writing graph", mGraph.write(clp.getOuputFile().c_str(), METAGRAPH_VERSION, false))
+    std::cout << " ok" << std::endl;
 }
