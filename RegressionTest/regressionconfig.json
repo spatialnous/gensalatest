@@ -890,7 +890,7 @@
                "-pm": ""
             }
         }],
-        "dense_pointmap_create_fill_make":[{
+        "dense_pointmap_create_fill":[{
             "infile": "../../../testdata/rect1x1.graph",
             "outfile": "out.graph",
             "mode": "VISPREP",
