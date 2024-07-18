@@ -31,8 +31,10 @@ TEST_CASE("Test disk triangles generation", "") {
 
     REQUIRE(diskTriangles.size() == expected.size());
     for (size_t i = 0; i < diskTriangles.size(); i++) {
-        REQUIRE(diskTriangles[i].x == Catch::Approx(expected[i].x).epsilon(EPSILON));
-        REQUIRE(diskTriangles[i].y == Catch::Approx(expected[i].y).epsilon(EPSILON));
+        REQUIRE_THAT(diskTriangles[i].x,
+                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].x), EPSILON));
+        REQUIRE_THAT(diskTriangles[i].y,
+                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].y), EPSILON));
     }
 
     std::vector<Point2f> offsets{Point2f(1, 2), Point2f(3, -4), Point2f(-5, -6), Point2f(-7, 8)};
@@ -70,10 +72,16 @@ TEST_CASE("Test circle perimeter line generation", "") {
 
     REQUIRE(circleLines.size() == expected.size());
     for (size_t i = 0; i < circleLines.size(); i++) {
-        REQUIRE(circleLines[i].start().x == Catch::Approx(expected[i].start().x).epsilon(EPSILON));
-        REQUIRE(circleLines[i].start().y == Catch::Approx(expected[i].start().y).epsilon(EPSILON));
-        REQUIRE(circleLines[i].end().x == Catch::Approx(expected[i].end().x).epsilon(EPSILON));
-        REQUIRE(circleLines[i].end().y == Catch::Approx(expected[i].end().y).epsilon(EPSILON));
+        REQUIRE_THAT(
+            circleLines[i].start().x,
+            Catch::Matchers::WithinAbs(static_cast<float>(expected[i].start().x), EPSILON));
+        REQUIRE_THAT(
+            circleLines[i].start().y,
+            Catch::Matchers::WithinAbs(static_cast<float>(expected[i].start().y), EPSILON));
+        REQUIRE_THAT(circleLines[i].end().x,
+                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].end().x), EPSILON));
+        REQUIRE_THAT(circleLines[i].end().y,
+                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].end().y), EPSILON));
     }
 
     std::vector<Point2f> offsets{Point2f(1, 2), Point2f(3, -4), Point2f(-5, -6), Point2f(-7, 8)};

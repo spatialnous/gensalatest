@@ -103,7 +103,7 @@ TEST_CASE("Trivial errors") {
     SalaObj context = SalaObj(SalaObj::S_POINTMAPOBJ, graph);
     SalaProgram program(context);
     program.parse(script);
-    REQUIRE_THROWS_WITH(program.evaluate(), "");
+    REQUIRE_THROWS_WITH(program.evaluate(), "Unknown exception");
 }
 
 TEST_CASE("Variables from outer scope are accessible in inner scope") {
