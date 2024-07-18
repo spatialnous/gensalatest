@@ -27,6 +27,9 @@ cmake_policy(SET CMP0076 NEW)
 
 include_directories(".")
 
+# Allows enabling M_PI for MSVC
+add_compile_definitions(_USE_MATH_DEFINES)
+
 # Get the current working branch
 execute_process(
   COMMAND git rev-parse --abbrev-ref HEAD
