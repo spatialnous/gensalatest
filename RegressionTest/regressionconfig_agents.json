@@ -1,7 +1,7 @@
 {
     "rundir": "rundir",
     "basebinlocation": "../../BaselineBinaries",
-    "testbinlocation": "../../../build",
+    "testbinlocation": "../../../build-RegressionTest",
     "testcases": {
         "agents_defaults": [{
             "infile": "../../../testdata/gallery_connected.graph",

@@ -9,6 +9,7 @@ echo Running unit tests
 ./cliTest/cliTest && ./salaTest/salaTest && ./genlibTest/genlibTest && ./moduleTest/moduleTest || exit 1
 # if that succeeds, run regression tests
 echo testing regression test framework
+ln -s build/ build-RegressionTest
 cd ../RegressionTest/test && echo pwd && python3 -u test_main.py || exit 1
 echo running standard regression tests
 cd .. && pwd && python3 -u RegressionTestRunner.py || exit 1

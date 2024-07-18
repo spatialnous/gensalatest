@@ -1,8 +1,8 @@
 .idea
 .DS_Store
 depthmapX-build
-build
-build-*
+build-RegressionTest
+build-*/
 RegressionTest/rundir
 __pycache__
 CMakeLists.txt.u*

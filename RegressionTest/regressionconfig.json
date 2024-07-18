@@ -1,7 +1,7 @@
 {
     "rundir": "rundir",
     "basebinlocation": "../../BaselineBinaries",
-    "testbinlocation": "../../../build",
+    "testbinlocation": "../../../build-RegressionTest",
     "testcases": {
         "links_pointmap_manual": [{
             "infile": "../../../testdata/gallery_connected.graph",
