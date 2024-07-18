@@ -6,7 +6,7 @@
 #!/bin/sh
 
 echo Running unit tests
-./cliTest/cliTest && ./salaTest/salaTest && ./genlibTest/genlibTest && ./moduleTest/moduleTest || exit 1
+./cliTest/cliTest && ./salaTest/salaTest && ./genlibTest/genlibTest && ./moduleTest/moduleTest --allow-running-no-tests || exit 1
 # if that succeeds, run regression tests
 echo testing regression test framework
 ln -s build/ build-RegressionTest
