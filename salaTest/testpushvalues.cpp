@@ -8,7 +8,7 @@
 #include "salalib/shapemap.h"
 #include "salalib/shapemapgroupdata.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("Push values from shapemaps to VGA", "") {
 

@@ -7,7 +7,7 @@
 
 #include "genlib/readwritehelpers.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <fstream>
 

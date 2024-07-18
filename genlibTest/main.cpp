@@ -3,4 +3,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"

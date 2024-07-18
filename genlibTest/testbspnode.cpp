@@ -6,7 +6,7 @@
 #include "genlib/comm.h"
 #include "genlib/p2dpoly.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("BSPTree::pickMidpointLine") {
     std::vector<Line> lines;
@@ -45,10 +45,10 @@ TEST_CASE("BSPTree::pickMidpointLine") {
 }
 
 void compareLines(const Line &l1, const Line &l2, float EPSILON) {
-    REQUIRE(l1.start().x == Approx(l2.start().x).epsilon(EPSILON));
-    REQUIRE(l1.start().y == Approx(l2.start().y).epsilon(EPSILON));
-    REQUIRE(l1.end().x == Approx(l2.end().x).epsilon(EPSILON));
-    REQUIRE(l1.end().y == Approx(l2.end().y).epsilon(EPSILON));
+    REQUIRE(l1.start().x == Catch::Approx(l2.start().x).epsilon(EPSILON));
+    REQUIRE(l1.start().y == Catch::Approx(l2.start().y).epsilon(EPSILON));
+    REQUIRE(l1.end().x == Catch::Approx(l2.end().x).epsilon(EPSILON));
+    REQUIRE(l1.end().y == Catch::Approx(l2.end().y).epsilon(EPSILON));
 }
 
 TEST_CASE("BSPTree::makeLines") {

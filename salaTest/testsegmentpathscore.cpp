@@ -8,7 +8,7 @@
 #include "salalib/segmmodules/segmtulipshortestpath.h"
 #include "salalib/shapegraph.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("Shortest paths working examples", "") {
     const double EPSILON = 0.001;
@@ -72,8 +72,9 @@ TEST_CASE("Shortest paths working examples", "") {
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
                 static_cast<size_t>(segmentMap->getShapesInRegion(selRegion).begin()->first));
 
-            REQUIRE(shapeRow.getValue(angleColIdx) == Approx(expectedAngles[i]).epsilon(EPSILON));
-            REQUIRE(shapeRow.getValue(orderColIdx) == expectedOrder[i]);
+            REQUIRE(shapeRow.getValue(angleColIdx) ==
+                    Catch::Approx(expectedAngles[i]).epsilon(EPSILON));
+            REQUIRE(shapeRow.getValue(orderColIdx) == static_cast<double>(expectedOrder[i]));
         }
     }
 
@@ -97,8 +98,8 @@ TEST_CASE("Shortest paths working examples", "") {
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
                 static_cast<size_t>(segmentMap->getShapesInRegion(selRegion).begin()->first));
             REQUIRE(shapeRow.getValue(distanceColIdx) ==
-                    Approx(expectedDistances[i]).epsilon(EPSILON));
-            REQUIRE(shapeRow.getValue(orderColIdx) == expectedOrder[i]);
+                    Catch::Approx(expectedDistances[i]).epsilon(EPSILON));
+            REQUIRE(shapeRow.getValue(orderColIdx) == static_cast<double>(expectedOrder[i]));
         }
     }
 
@@ -120,8 +121,9 @@ TEST_CASE("Shortest paths working examples", "") {
             QtRegion selRegion(lines[i].midpoint(), lines[i].midpoint());
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
                 static_cast<size_t>(segmentMap->getShapesInRegion(selRegion).begin()->first));
-            REQUIRE(shapeRow.getValue(depthColIdx) == Approx(expectedDepths[i]).epsilon(EPSILON));
-            REQUIRE(shapeRow.getValue(orderColIdx) == expectedOrder[i]);
+            REQUIRE(shapeRow.getValue(depthColIdx) ==
+                    Catch::Approx(expectedDepths[i]).epsilon(EPSILON));
+            REQUIRE(shapeRow.getValue(orderColIdx) == static_cast<double>(expectedOrder[i]));
         }
     }
 }

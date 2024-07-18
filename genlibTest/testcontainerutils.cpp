@@ -4,7 +4,7 @@
 
 #include "genlib/containerutils.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <vector>
 

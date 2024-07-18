@@ -8,7 +8,7 @@
 
 #include "genlib/p2dpoly.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include "salalib/shapemapgroupdata.h"
 
 #include <iostream>
@@ -145,10 +145,14 @@ TEST_CASE("Testing ShapeMap::getAllLinkLines and ShapeMap::getAllUnlinkPoints()"
 
     REQUIRE(linkLines.size() == 1);
 
-    REQUIRE(linkLines[0].start().x == Approx((line0Start.x + line0End.x) * 0.5).epsilon(EPSILON));
-    REQUIRE(linkLines[0].start().y == Approx((line0Start.y + line0End.y) * 0.5).epsilon(EPSILON));
-    REQUIRE(linkLines[0].end().x == Approx((line1Start.x + line1End.x) * 0.5).epsilon(EPSILON));
-    REQUIRE(linkLines[0].end().y == Approx((line1Start.y + line1End.y) * 0.5).epsilon(EPSILON));
+    REQUIRE(linkLines[0].start().x ==
+            Catch::Approx((line0Start.x + line0End.x) * 0.5).epsilon(EPSILON));
+    REQUIRE(linkLines[0].start().y ==
+            Catch::Approx((line0Start.y + line0End.y) * 0.5).epsilon(EPSILON));
+    REQUIRE(linkLines[0].end().x ==
+            Catch::Approx((line1Start.x + line1End.x) * 0.5).epsilon(EPSILON));
+    REQUIRE(linkLines[0].end().y ==
+            Catch::Approx((line1Start.y + line1End.y) * 0.5).epsilon(EPSILON));
 
     std::vector<Point2f> unlinkPoints = shapeGraph->getAllUnlinkPoints();
 
@@ -157,6 +161,6 @@ TEST_CASE("Testing ShapeMap::getAllLinkLines and ShapeMap::getAllUnlinkPoints()"
     Point2f intersection =
         intersection_point(Line(line1Start, line1End), Line(line2Start, line2End), TOLERANCE_A);
 
-    REQUIRE(unlinkPoints[0].x == Approx(intersection.x).epsilon(EPSILON));
-    REQUIRE(unlinkPoints[0].y == Approx(intersection.y).epsilon(EPSILON));
+    REQUIRE(unlinkPoints[0].x == Catch::Approx(intersection.x).epsilon(EPSILON));
+    REQUIRE(unlinkPoints[0].y == Catch::Approx(intersection.y).epsilon(EPSILON));
 }

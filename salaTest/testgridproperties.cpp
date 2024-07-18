@@ -4,12 +4,12 @@
 
 #include "salalib/gridproperties.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("TestGridProperties", "Test the calculations of grid properties") {
     double maxDimension = 4.583;
     GridProperties gp(maxDimension);
-    REQUIRE(gp.getDefault() == Approx(0.04));
-    REQUIRE(gp.getMax() == Approx(0.8));
-    REQUIRE(gp.getMin() == Approx(0.004));
+    REQUIRE(gp.getDefault() == Catch::Approx(0.04));
+    REQUIRE(gp.getMax() == Catch::Approx(0.8));
+    REQUIRE(gp.getMin() == Catch::Approx(0.004));
 }

@@ -6,7 +6,7 @@
 
 #include "depthmapXcli/importparser.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("Import args valid", "valid") {
     {

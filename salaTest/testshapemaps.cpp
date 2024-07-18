@@ -7,13 +7,12 @@
 
 #include "genlib/p2dpoly.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <iostream>
 #include <sstream>
 
 TEST_CASE("Test ShapeMap::copy()") {
-    const float EPSILON = 0.001f;
 
     std::unique_ptr<ShapeMap> shapeMap(new ShapeMap("Test ShapeMap"));
 
@@ -130,30 +129,30 @@ TEST_CASE("Testing ShapeMap::getAllShapes variants") {
 
         REQUIRE(lines.size() == 5);
 
-        REQUIRE(lines[0].start().x == Approx(line0Start.x).epsilon(EPSILON));
-        REQUIRE(lines[0].start().y == Approx(line0Start.y).epsilon(EPSILON));
-        REQUIRE(lines[0].end().x == Approx(line0End.x).epsilon(EPSILON));
-        REQUIRE(lines[0].end().y == Approx(line0End.y).epsilon(EPSILON));
+        REQUIRE(lines[0].start().x == Catch::Approx(line0Start.x).epsilon(EPSILON));
+        REQUIRE(lines[0].start().y == Catch::Approx(line0Start.y).epsilon(EPSILON));
+        REQUIRE(lines[0].end().x == Catch::Approx(line0End.x).epsilon(EPSILON));
+        REQUIRE(lines[0].end().y == Catch::Approx(line0End.y).epsilon(EPSILON));
 
-        REQUIRE(lines[1].start().x == Approx(line1Start.x).epsilon(EPSILON));
-        REQUIRE(lines[1].start().y == Approx(line1Start.y).epsilon(EPSILON));
-        REQUIRE(lines[1].end().x == Approx(line1End.x).epsilon(EPSILON));
-        REQUIRE(lines[1].end().y == Approx(line1End.y).epsilon(EPSILON));
+        REQUIRE(lines[1].start().x == Catch::Approx(line1Start.x).epsilon(EPSILON));
+        REQUIRE(lines[1].start().y == Catch::Approx(line1Start.y).epsilon(EPSILON));
+        REQUIRE(lines[1].end().x == Catch::Approx(line1End.x).epsilon(EPSILON));
+        REQUIRE(lines[1].end().y == Catch::Approx(line1End.y).epsilon(EPSILON));
 
-        REQUIRE(lines[2].start().x == Approx(polyVertices[0].x).epsilon(EPSILON));
-        REQUIRE(lines[2].start().y == Approx(polyVertices[0].y).epsilon(EPSILON));
-        REQUIRE(lines[2].end().x == Approx(polyVertices[1].x).epsilon(EPSILON));
-        REQUIRE(lines[2].end().y == Approx(polyVertices[1].y).epsilon(EPSILON));
+        REQUIRE(lines[2].start().x == Catch::Approx(polyVertices[0].x).epsilon(EPSILON));
+        REQUIRE(lines[2].start().y == Catch::Approx(polyVertices[0].y).epsilon(EPSILON));
+        REQUIRE(lines[2].end().x == Catch::Approx(polyVertices[1].x).epsilon(EPSILON));
+        REQUIRE(lines[2].end().y == Catch::Approx(polyVertices[1].y).epsilon(EPSILON));
 
-        REQUIRE(lines[3].start().x == Approx(polyVertices[1].x).epsilon(EPSILON));
-        REQUIRE(lines[3].start().y == Approx(polyVertices[1].y).epsilon(EPSILON));
-        REQUIRE(lines[3].end().x == Approx(polyVertices[2].x).epsilon(EPSILON));
-        REQUIRE(lines[3].end().y == Approx(polyVertices[2].y).epsilon(EPSILON));
+        REQUIRE(lines[3].start().x == Catch::Approx(polyVertices[1].x).epsilon(EPSILON));
+        REQUIRE(lines[3].start().y == Catch::Approx(polyVertices[1].y).epsilon(EPSILON));
+        REQUIRE(lines[3].end().x == Catch::Approx(polyVertices[2].x).epsilon(EPSILON));
+        REQUIRE(lines[3].end().y == Catch::Approx(polyVertices[2].y).epsilon(EPSILON));
 
-        REQUIRE(lines[4].start().x == Approx(polyVertices[2].x).epsilon(EPSILON));
-        REQUIRE(lines[4].start().y == Approx(polyVertices[2].y).epsilon(EPSILON));
-        REQUIRE(lines[4].end().x == Approx(polyVertices[0].x).epsilon(EPSILON));
-        REQUIRE(lines[4].end().y == Approx(polyVertices[0].y).epsilon(EPSILON));
+        REQUIRE(lines[4].start().x == Catch::Approx(polyVertices[2].x).epsilon(EPSILON));
+        REQUIRE(lines[4].start().y == Catch::Approx(polyVertices[2].y).epsilon(EPSILON));
+        REQUIRE(lines[4].end().x == Catch::Approx(polyVertices[0].x).epsilon(EPSILON));
+        REQUIRE(lines[4].end().y == Catch::Approx(polyVertices[0].y).epsilon(EPSILON));
     }
     SECTION("ShapeMap::getAllLinesWithColour") {
         std::vector<std::pair<SimpleLine, PafColor>> colouredLines =
@@ -162,24 +161,24 @@ TEST_CASE("Testing ShapeMap::getAllShapes variants") {
         REQUIRE(colouredLines.size() == 2);
 
         REQUIRE(colouredLines[0].first.start().x ==
-                Approx(std::min(line0Start.x, line0End.x)).epsilon(EPSILON));
+                Catch::Approx(std::min(line0Start.x, line0End.x)).epsilon(EPSILON));
         REQUIRE(colouredLines[0].first.start().y ==
-                Approx(std::min(line0Start.y, line0End.y)).epsilon(EPSILON));
+                Catch::Approx(std::min(line0Start.y, line0End.y)).epsilon(EPSILON));
         REQUIRE(colouredLines[0].first.end().x ==
-                Approx(std::max(line0Start.x, line0End.x)).epsilon(EPSILON));
+                Catch::Approx(std::max(line0Start.x, line0End.x)).epsilon(EPSILON));
         REQUIRE(colouredLines[0].first.end().y ==
-                Approx(std::max(line0Start.y, line0End.y)).epsilon(EPSILON));
-        REQUIRE(colouredLines[0].second.redf() == Approx(0.2f).epsilon(EPSILON));
-        REQUIRE(colouredLines[0].second.greenf() == Approx(0.2f).epsilon(EPSILON));
-        REQUIRE(colouredLines[0].second.bluef() == Approx(0.86667f).epsilon(EPSILON));
+                Catch::Approx(std::max(line0Start.y, line0End.y)).epsilon(EPSILON));
+        REQUIRE(colouredLines[0].second.redf() == Catch::Approx(0.2f).epsilon(EPSILON));
+        REQUIRE(colouredLines[0].second.greenf() == Catch::Approx(0.2f).epsilon(EPSILON));
+        REQUIRE(colouredLines[0].second.bluef() == Catch::Approx(0.86667f).epsilon(EPSILON));
 
-        REQUIRE(colouredLines[1].first.start().x == Approx(line1Start.x).epsilon(EPSILON));
-        REQUIRE(colouredLines[1].first.start().y == Approx(line1Start.y).epsilon(EPSILON));
-        REQUIRE(colouredLines[1].first.end().x == Approx(line1End.x).epsilon(EPSILON));
-        REQUIRE(colouredLines[1].first.end().y == Approx(line1End.y).epsilon(EPSILON));
-        REQUIRE(colouredLines[1].second.redf() == Approx(0.13333f).epsilon(EPSILON));
-        REQUIRE(colouredLines[1].second.greenf() == Approx(0.86667f).epsilon(EPSILON));
-        REQUIRE(colouredLines[1].second.bluef() == Approx(0.53333f).epsilon(EPSILON));
+        REQUIRE(colouredLines[1].first.start().x == Catch::Approx(line1Start.x).epsilon(EPSILON));
+        REQUIRE(colouredLines[1].first.start().y == Catch::Approx(line1Start.y).epsilon(EPSILON));
+        REQUIRE(colouredLines[1].first.end().x == Catch::Approx(line1End.x).epsilon(EPSILON));
+        REQUIRE(colouredLines[1].first.end().y == Catch::Approx(line1End.y).epsilon(EPSILON));
+        REQUIRE(colouredLines[1].second.redf() == Catch::Approx(0.13333f).epsilon(EPSILON));
+        REQUIRE(colouredLines[1].second.greenf() == Catch::Approx(0.86667f).epsilon(EPSILON));
+        REQUIRE(colouredLines[1].second.bluef() == Catch::Approx(0.53333f).epsilon(EPSILON));
     }
     SECTION("ShapeMap::getAllPolygonsWithColour") {
         std::vector<std::pair<std::vector<Point2f>, PafColor>> colouredPolygons =
@@ -191,14 +190,14 @@ TEST_CASE("Testing ShapeMap::getAllShapes variants") {
         const std::vector<Point2f> vertices = iter->first;
         const PafColor colour = iter->second;
 
-        REQUIRE(vertices[0].x == Approx(polyVertices[0].x).epsilon(EPSILON));
-        REQUIRE(vertices[0].y == Approx(polyVertices[0].y).epsilon(EPSILON));
-        REQUIRE(vertices[1].x == Approx(polyVertices[1].x).epsilon(EPSILON));
-        REQUIRE(vertices[1].y == Approx(polyVertices[1].y).epsilon(EPSILON));
-        REQUIRE(vertices[2].x == Approx(polyVertices[2].x).epsilon(EPSILON));
-        REQUIRE(vertices[2].y == Approx(polyVertices[2].y).epsilon(EPSILON));
-        REQUIRE(colour.redf() == Approx(0.86667f).epsilon(EPSILON));
-        REQUIRE(colour.greenf() == Approx(0.2f).epsilon(EPSILON));
-        REQUIRE(colour.bluef() == Approx(0.2f).epsilon(EPSILON));
+        REQUIRE(vertices[0].x == Catch::Approx(polyVertices[0].x).epsilon(EPSILON));
+        REQUIRE(vertices[0].y == Catch::Approx(polyVertices[0].y).epsilon(EPSILON));
+        REQUIRE(vertices[1].x == Catch::Approx(polyVertices[1].x).epsilon(EPSILON));
+        REQUIRE(vertices[1].y == Catch::Approx(polyVertices[1].y).epsilon(EPSILON));
+        REQUIRE(vertices[2].x == Catch::Approx(polyVertices[2].x).epsilon(EPSILON));
+        REQUIRE(vertices[2].y == Catch::Approx(polyVertices[2].y).epsilon(EPSILON));
+        REQUIRE(colour.redf() == Catch::Approx(0.86667f).epsilon(EPSILON));
+        REQUIRE(colour.greenf() == Catch::Approx(0.2f).epsilon(EPSILON));
+        REQUIRE(colour.bluef() == Catch::Approx(0.2f).epsilon(EPSILON));
     }
 }

@@ -4,7 +4,7 @@
 
 #include "salalib/axialpolygons.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 /**
  * This seems a bit silly, but this is a list of structs that are serialised by just dumping the

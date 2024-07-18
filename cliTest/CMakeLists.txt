@@ -55,6 +55,10 @@ set(cliTest_SRCS
     ../depthmapXcli/segmentshortestpathparser.cpp
     testsegmentshortestpathparser.cpp)
 
+set(external_SRCS
+    ../ThirdParty/Catch/catch_amalgamated.cpp
+) # external_SRCS
+
 include_directories(SYSTEM "../ThirdParty/Catch" "../ThirdParty/FakeIt")
 
 set(LINK_LIBS salalib genlib)
@@ -70,6 +74,14 @@ add_subdirectory(../modules modules)
 # The headers are added to the target primarily so that they appear as part
 # of this particular project to IDEs that open it
 add_executable(${cliTest} ${cliTest_HDRS} ${cliTest_SRCS})
+
+target_sources(${cliTest} PRIVATE ${external_SRCS})
+
+set_source_files_properties(
+  ${external_SRCS}
+  PROPERTIES
+  COMPILE_FLAGS "-w"
+)
 
 target_compile_options(${cliTest} PRIVATE ${COMPILE_WARNINGS})
 

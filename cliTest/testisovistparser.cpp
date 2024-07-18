@@ -7,7 +7,7 @@
 
 #include "depthmapXcli/isovistparser.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <fstream>
 
@@ -32,11 +32,11 @@ TEST_CASE("Parse isovist on the command line") {
     parser.parse(ah.argc(), ah.argv());
 
     REQUIRE(parser.getIsovists().size() == 2);
-    REQUIRE(parser.getIsovists()[0].getLocation().y == Approx(2.0));
+    REQUIRE(parser.getIsovists()[0].getLocation().y == Catch::Approx(2.0));
     REQUIRE(parser.getIsovists()[0].getViewAngle() == 0.0);
 
-    REQUIRE(parser.getIsovists()[1].getLocation().y == Approx(5.0));
-    REQUIRE(parser.getIsovists()[1].getViewAngle() == Approx(3.141592));
+    REQUIRE(parser.getIsovists()[1].getLocation().y == Catch::Approx(5.0));
+    REQUIRE(parser.getIsovists()[1].getViewAngle() == Catch::Approx(3.141592));
 }
 
 TEST_CASE("Parse isovists from file") {
@@ -53,11 +53,11 @@ TEST_CASE("Parse isovists from file") {
         parser.parse(ah.argc(), ah.argv());
 
         REQUIRE(parser.getIsovists().size() == 2);
-        REQUIRE(parser.getIsovists()[0].getLocation().y == Approx(1.0));
+        REQUIRE(parser.getIsovists()[0].getLocation().y == Catch::Approx(1.0));
         REQUIRE(parser.getIsovists()[0].getAngle() == 0.0);
         REQUIRE(parser.getIsovists()[0].getViewAngle() == 0.0);
 
-        REQUIRE(parser.getIsovists()[1].getLocation().y == Approx(1.1));
+        REQUIRE(parser.getIsovists()[1].getLocation().y == Catch::Approx(1.1));
         REQUIRE(parser.getIsovists()[1].getAngle() == 0.0);
         REQUIRE(parser.getIsovists()[1].getViewAngle() == 0.0);
     }
@@ -74,13 +74,13 @@ TEST_CASE("Parse isovists from file") {
         parser.parse(ah.argc(), ah.argv());
 
         REQUIRE(parser.getIsovists().size() == 2);
-        REQUIRE(parser.getIsovists()[0].getLocation().y == Approx(1.0));
-        REQUIRE(parser.getIsovists()[0].getAngle() == Approx(0.4712388));
-        REQUIRE(parser.getIsovists()[0].getViewAngle() == Approx(3.141592));
+        REQUIRE(parser.getIsovists()[0].getLocation().y == Catch::Approx(1.0));
+        REQUIRE(parser.getIsovists()[0].getAngle() == Catch::Approx(0.4712388));
+        REQUIRE(parser.getIsovists()[0].getViewAngle() == Catch::Approx(3.141592));
 
-        REQUIRE(parser.getIsovists()[1].getLocation().y == Approx(1.1));
-        REQUIRE(parser.getIsovists()[1].getAngle() == Approx(3.141592));
-        REQUIRE(parser.getIsovists()[1].getViewAngle() == Approx(1.57079));
+        REQUIRE(parser.getIsovists()[1].getLocation().y == Catch::Approx(1.1));
+        REQUIRE(parser.getIsovists()[1].getAngle() == Catch::Approx(3.141592));
+        REQUIRE(parser.getIsovists()[1].getViewAngle() == Catch::Approx(1.57079));
     }
 }
 
@@ -90,36 +90,39 @@ TEST_CASE("Command line failures") {
     SECTION("Missing arguments for -ii") {
         ArgumentHolder ah{"prog", "-ii"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-ii requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-ii requires an argument"));
     }
 
     SECTION("Missing arguments for -if") {
         ArgumentHolder ah{"prog", "-if"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-if requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-if requires an argument"));
     }
 
     SECTION("Using -if twice") {
         ArgumentHolder ah{"prog", "-if", "foo.csv", "-if", "bar.csv"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-if can only be used once"));
+                            Catch::Matchers::ContainsSubstring("-if can only be used once"));
     }
 
     SECTION("Using -ii and -if") {
         ArgumentHolder ah{"prog", "-ii", "1,1", "-if", "bar.csv"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-if cannot be used together with -ii"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-if cannot be used together with -ii"));
     }
 
     SECTION("Using -if and -ii") {
         ArgumentHolder ah{"prog", "-if", "foo.csv", "-ii", "1,1"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-ii cannot be used together with -if"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-ii cannot be used together with -if"));
     }
 
     SECTION("Nothing to do") {
         ArgumentHolder ah{"prog"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("No isovists defined. Use -ii or -if"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("No isovists defined. Use -ii or -if"));
     }
 }

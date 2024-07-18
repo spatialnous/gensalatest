@@ -5,7 +5,7 @@
 
 #include "salalib/attributetableview.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("Test Attribute view") {
     AttributeTable table;
@@ -21,7 +21,7 @@ TEST_CASE("Test Attribute view") {
     REQUIRE(view.getConstTableIndex().front().key.value == 7);
 
     REQUIRE(view.getNormalisedValue(view.getConstTableIndex().front().key,
-                                    *view.getConstTableIndex().front().row) == Approx(0.0f));
+                                    *view.getConstTableIndex().front().row) == Catch::Approx(0.0f));
 
     REQUIRE(&view.getDisplayParams() != &table.getDisplayParams());
     REQUIRE(&view.getDisplayParams() == &table.getColumn(0).getDisplayParams());
@@ -29,14 +29,14 @@ TEST_CASE("Test Attribute view") {
     table.addRow(AttributeKey(3));
     view.setDisplayColIndex(-1);
     REQUIRE(view.getNormalisedValue(AttributeKey(3), table.getRow(AttributeKey(3))) ==
-            Approx(3.0 / 7));
+            Catch::Approx(3.0 / 7));
     REQUIRE(view.getConstTableIndex().size() == 3);
 
     REQUIRE(&table.getDisplayParams() == &view.getDisplayParams());
 
     view.setDisplayColIndex(-2);
     REQUIRE(view.getNormalisedValue(AttributeKey(3), table.getRow(AttributeKey(3))) ==
-            Approx(3.0 / 7));
+            Catch::Approx(3.0 / 7));
     REQUIRE(view.getConstTableIndex().empty());
 
     REQUIRE(&table.getDisplayParams() == &view.getDisplayParams());
@@ -58,7 +58,7 @@ TEST_CASE("Test attribute table handle") {
 
     handle.getTableIndex().front().mutable_row->setValue(0, 0.8f);
 
-    REQUIRE(table.getRow(AttributeKey(7)).getValue(0) == Approx(0.8));
+    REQUIRE(table.getRow(AttributeKey(7)).getValue(0) == Catch::Approx(0.8));
 
     handle.setDisplayColIndex(-1);
     REQUIRE(handle.getTableIndex().size() == 2);

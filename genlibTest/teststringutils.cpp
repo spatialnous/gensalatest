@@ -6,7 +6,7 @@
 #include "../genlib/stringutils.h"
 
 #include "../cliTest/selfcleaningfile.h"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <fstream>
 

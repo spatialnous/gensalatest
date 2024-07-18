@@ -6,7 +6,7 @@
 
 #include "depthmapXcli/exportparser.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("ExportParser Fail", "Parsing errors") {
     // missing arguments
@@ -15,7 +15,7 @@ TEST_CASE("ExportParser Fail", "Parsing errors") {
         ExportParser parser;
         ArgumentHolder ah{"prog", "-em"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-em requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-em requires an argument"));
     }
 }
 

@@ -5,7 +5,7 @@
 
 #include "salalib/attributetableindex.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("Check index creation") {
     AttributeTable table;
@@ -30,5 +30,5 @@ TEST_CASE("Check index creation") {
     REQUIRE(index[3].key.value == 2);
 
     index[3].mutable_row->setValue(1, 1.5);
-    REQUIRE(table.getRow(AttributeKey(2)).getValue(1) == Approx(1.5));
+    REQUIRE(table.getRow(AttributeKey(2)).getValue(1) == Catch::Approx(1.5));
 }

@@ -4,7 +4,7 @@
 
 #include "argumentholder.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <cstring>
 

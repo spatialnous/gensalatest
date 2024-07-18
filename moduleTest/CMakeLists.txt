@@ -5,9 +5,14 @@
 set(moduleTest moduleTest)
 
 set(moduleTest_SRCS
-    main.cpp)
+    main.cpp
+) # moduleTest_SRCS
 
-include_directories("../ThirdParty/Catch" "../ThirdParty/FakeIt")
+set(external_SRCS
+    ../ThirdParty/Catch/catch_amalgamated.cpp
+) # external_SRCS
+
+include_directories(SYSTEM "../ThirdParty/Catch" "../ThirdParty/FakeIt")
 
 set(modules_coreTest "" CACHE INTERNAL "modules_coreTest" FORCE)
 set(MODULES_GUI FALSE)
@@ -19,6 +24,13 @@ add_subdirectory(../modules modules)
 
 add_executable(${moduleTest} ${moduleTest_SRCS})
 
+target_sources(${moduleTest} PRIVATE ${external_SRCS})
+
+set_source_files_properties(
+  ${external_SRCS}
+  PROPERTIES
+  COMPILE_FLAGS "-w"
+)
 target_compile_options(${moduleTest} PRIVATE ${COMPILE_WARNINGS})
 
 target_link_libraries(${moduleTest} salalib genlib ${modules_coreTest} ${modules_core})

@@ -5,7 +5,7 @@
 #include "salalib/parsers/mapinfodata.h"
 #include "salalib/shapemap.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("MapInfo failing header", "") {
     std::string mifdata = "Version 300\n";
@@ -128,9 +128,9 @@ TEST_CASE("MapInfo MID file with empty column", "") {
     REQUIRE(row0.getValue("Id") == 1);
     REQUIRE(row1.getValue("Id") == 2);
     REQUIRE(row2.getValue("Id") == 3);
-    REQUIRE(row0.getValue("Length_M") == Approx(1017.81).epsilon(EPSILON));
-    REQUIRE(row1.getValue("Length_M") == Approx(568.795).epsilon(EPSILON));
-    REQUIRE(row2.getValue("Length_M") == Approx(216.026).epsilon(EPSILON));
+    REQUIRE(row0.getValue("Length_M") == Catch::Approx(1017.81).epsilon(EPSILON));
+    REQUIRE(row1.getValue("Length_M") == Catch::Approx(568.795).epsilon(EPSILON));
+    REQUIRE(row2.getValue("Length_M") == Catch::Approx(216.026).epsilon(EPSILON));
     REQUIRE(row0.getValue("Height_M") == -1);
     REQUIRE(row1.getValue("Height_M") == -1);
     REQUIRE(row2.getValue("Height_M") == -1);
@@ -192,18 +192,18 @@ TEST_CASE("Complete proper MapInfo file", "") {
     auto &shape2 = shapeRef2->second;
     REQUIRE(shapes.size() == 3);
     REQUIRE(shape0.isLine());
-    REQUIRE(shape0.getLine().ax() == Approx(534014.29).epsilon(EPSILON));
-    REQUIRE(shape0.getLine().ay() == Approx(182533.33).epsilon(EPSILON));
-    REQUIRE(shape0.getLine().bx() == Approx(535008.52).epsilon(EPSILON));
-    REQUIRE(shape0.getLine().by() == Approx(182764.11).epsilon(EPSILON));
+    REQUIRE(shape0.getLine().ax() == Catch::Approx(534014.29).epsilon(EPSILON));
+    REQUIRE(shape0.getLine().ay() == Catch::Approx(182533.33).epsilon(EPSILON));
+    REQUIRE(shape0.getLine().bx() == Catch::Approx(535008.52).epsilon(EPSILON));
+    REQUIRE(shape0.getLine().by() == Catch::Approx(182764.11).epsilon(EPSILON));
     REQUIRE(shape1.isLine());
-    REQUIRE(shape1.getLine().ax() == Approx(533798.68).epsilon(EPSILON));
-    REQUIRE(shape1.getLine().ay() == Approx(183094.69).epsilon(EPSILON));
-    REQUIRE(shape1.getLine().bx() == Approx(534365.48).epsilon(EPSILON));
-    REQUIRE(shape1.getLine().by() == Approx(183159.01).epsilon(EPSILON));
+    REQUIRE(shape1.getLine().ax() == Catch::Approx(533798.68).epsilon(EPSILON));
+    REQUIRE(shape1.getLine().ay() == Catch::Approx(183094.69).epsilon(EPSILON));
+    REQUIRE(shape1.getLine().bx() == Catch::Approx(534365.48).epsilon(EPSILON));
+    REQUIRE(shape1.getLine().by() == Catch::Approx(183159.01).epsilon(EPSILON));
     REQUIRE(shape2.isPoint());
-    REQUIRE(shape2.getPoint().x == Approx(534014.29).epsilon(EPSILON));
-    REQUIRE(shape2.getPoint().y == Approx(182533.33).epsilon(EPSILON));
+    REQUIRE(shape2.getPoint().x == Catch::Approx(534014.29).epsilon(EPSILON));
+    REQUIRE(shape2.getPoint().y == Catch::Approx(182533.33).epsilon(EPSILON));
 
     AttributeTable &att = shapeMap.getAttributeTable();
     REQUIRE(att.getNumColumns() == 2);
@@ -217,7 +217,7 @@ TEST_CASE("Complete proper MapInfo file", "") {
     REQUIRE(row0.getValue("Id") == 1);
     REQUIRE(row1.getValue("Id") == 2);
     REQUIRE(row2.getValue("Id") == 3);
-    REQUIRE(row0.getValue("Length_M") == Approx(1017.81).epsilon(EPSILON));
-    REQUIRE(row1.getValue("Length_M") == Approx(568.795).epsilon(EPSILON));
-    REQUIRE(row2.getValue("Length_M") == Approx(216.026).epsilon(EPSILON));
+    REQUIRE(row0.getValue("Length_M") == Catch::Approx(1017.81).epsilon(EPSILON));
+    REQUIRE(row1.getValue("Length_M") == Catch::Approx(568.795).epsilon(EPSILON));
+    REQUIRE(row2.getValue("Length_M") == Catch::Approx(216.026).epsilon(EPSILON));
 }

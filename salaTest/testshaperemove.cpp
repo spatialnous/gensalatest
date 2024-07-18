@@ -4,7 +4,7 @@
 
 #include "salalib/mapconverter.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <iostream>
 #include <sstream>
@@ -85,7 +85,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
     // connections
     for (const auto &shape : axialMap->getAllShapes()) {
         REQUIRE(axialTable.getRow(AttributeKey(shape.first)).getValue(axialConnectivityColIdx) ==
-                axialConnections[shape.first].size());
+                static_cast<double>(axialConnections[shape.first].size()));
     }
 
     // check if the shape connectors have the expected internal sizes and are connected to the
@@ -128,7 +128,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
 
                 REQUIRE(
                     axialTable.getRow(AttributeKey(it->first)).getValue(axialConnectivityColIdx) ==
-                    connectivitiesAfterRemoval[it->first]);
+                    static_cast<double>(connectivitiesAfterRemoval[it->first]));
             }
         }
     }
@@ -160,7 +160,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
 
                 REQUIRE(
                     axialTable.getRow(AttributeKey(it->first)).getValue(axialConnectivityColIdx) ==
-                    connectivitiesAfterRemoval[it->first]);
+                    static_cast<double>(connectivitiesAfterRemoval[it->first]));
             }
         }
     }
@@ -194,7 +194,7 @@ TEST_CASE("Testing deleting shapes from axial maps") {
 
                 REQUIRE(
                     axialTable.getRow(AttributeKey(it->first)).getValue(axialConnectivityColIdx) ==
-                    connectivitiesAfterRemoval[it->first]);
+                    static_cast<double>(connectivitiesAfterRemoval[it->first]));
             }
         }
     }
@@ -275,7 +275,8 @@ TEST_CASE("Testing deleting shapes from segment maps") {
          iter++) {
         REQUIRE(
             segmentTable.getRow(AttributeKey(iter->first)).getValue(segmentConnectivityColIdx) ==
-            segmentForConnections[iter->first].size() + segmentBackConnections[iter->first].size());
+            static_cast<double>(segmentForConnections[iter->first].size() +
+                                segmentBackConnections[iter->first].size()));
     }
 
     // check if the shape connectors have the expected internal sizes and are connected to the

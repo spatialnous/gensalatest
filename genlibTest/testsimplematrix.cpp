@@ -4,7 +4,7 @@
 
 #include "genlib/simplematrix.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -62,8 +62,8 @@ TEST_CASE("Row matrix test exceptions") {
 
     compareMatrixContent(matrix, std::vector<int>{1, 2, 3, -23, 0, -1});
 
-    REQUIRE_THROWS_WITH(matrix(5, 0), Catch::Contains("row out of range"));
-    REQUIRE_THROWS_WITH(matrix(0, 5), Catch::Contains("column out of range"));
+    REQUIRE_THROWS_WITH(matrix(5, 0), Catch::Matchers::ContainsSubstring("row out of range"));
+    REQUIRE_THROWS_WITH(matrix(0, 5), Catch::Matchers::ContainsSubstring("column out of range"));
 }
 
 TEST_CASE("Column matrix test assignemnt copy and move") {
@@ -111,8 +111,8 @@ TEST_CASE("Column matrix test exceptions") {
 
     compareMatrixContent(matrix, std::vector<int>{1, -23, 2, 0, 3, -1});
 
-    REQUIRE_THROWS_WITH(matrix(5, 0), Catch::Contains("row out of range"));
-    REQUIRE_THROWS_WITH(matrix(0, 5), Catch::Contains("column out of range"));
+    REQUIRE_THROWS_WITH(matrix(5, 0), Catch::Matchers::ContainsSubstring("row out of range"));
+    REQUIRE_THROWS_WITH(matrix(0, 5), Catch::Matchers::ContainsSubstring("column out of range"));
 }
 
 TEST_CASE("Fill and reset") {

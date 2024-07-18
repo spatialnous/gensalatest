@@ -4,7 +4,7 @@
 
 #include "salalib/attributetablehelpers.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include "Catch/fakeit.hpp"
 

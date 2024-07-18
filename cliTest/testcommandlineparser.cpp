@@ -8,7 +8,7 @@
 #include "depthmapXcli/imodeparser.h"
 #include "depthmapXcli/imodeparserfactory.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include "Catch/fakeit.hpp"
 
@@ -53,9 +53,9 @@ TEST_CASE("Invalid Parser", "Constructor") {
 
     {
         CommandLineParser cmdP(factoryMock.get());
-        REQUIRE_THROWS_WITH(
-            cmdP.parse(0, 0),
-            Catch::Contains("No commandline parameters provided - don't know what to do"));
+        REQUIRE_THROWS_WITH(cmdP.parse(0, 0),
+                            Catch::Matchers::ContainsSubstring(
+                                "No commandline parameters provided - don't know what to do"));
     }
 
     {
@@ -97,26 +97,26 @@ TEST_CASE("Invalid Parser", "Constructor") {
         CommandLineParser cmdP(factoryMock.get());
         ArgumentHolder ah{"prog", "-f", "inputfile.graph", "-o", "outputfile.graph"};
         REQUIRE_THROWS_WITH(cmdP.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-m for mode is required"));
+                            Catch::Matchers::ContainsSubstring("-m for mode is required"));
     }
     {
         CommandLineParser cmdP(factoryMock.get());
         ArgumentHolder ah{"prog", "-m", "TEST1", "-m", "TEST2", "-f", "inputfile.graph"};
         REQUIRE_THROWS_WITH(cmdP.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-m can only be used once"));
+                            Catch::Matchers::ContainsSubstring("-m can only be used once"));
     }
 
     {
         CommandLineParser cmdP(factoryMock.get());
         ArgumentHolder ah{"prog", "-m", "TEST1", "-o", "outputfile.graph"};
         REQUIRE_THROWS_WITH(cmdP.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-f for input file is required"));
+                            Catch::Matchers::ContainsSubstring("-f for input file is required"));
     }
     {
         CommandLineParser cmdP(factoryMock.get());
         ArgumentHolder ah{"prog", "-m", "TEST1", "-f", "inputfile.graph"};
         REQUIRE_THROWS_WITH(cmdP.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-o for output file is required"));
+                            Catch::Matchers::ContainsSubstring("-o for output file is required"));
     }
 }
 
@@ -183,7 +183,8 @@ TEST_CASE("Run Tests", "Check we only run if it's appropriate") {
     SECTION("Fail - run without parsing") {
         CommandLineParser cmdP(factoryMock.get());
         REQUIRE_THROWS_WITH(cmdP.run(perfSink.get()),
-                            Catch::Contains("Trying to run with invalid command line parameters"));
+                            Catch::Matchers::ContainsSubstring(
+                                "Trying to run with invalid command line parameters"));
     }
 
     SECTION("Fail run with help on the command line") {
@@ -193,7 +194,8 @@ TEST_CASE("Run Tests", "Check we only run if it's appropriate") {
         cmdP.parse(ah.argc(), ah.argv());
         REQUIRE_FALSE(cmdP.isValid());
         REQUIRE_THROWS_WITH(cmdP.run(perfSink.get()),
-                            Catch::Contains("Trying to run with invalid command line parameters"));
+                            Catch::Matchers::ContainsSubstring(
+                                "Trying to run with invalid command line parameters"));
     }
 
     SECTION("Fail run with version on the command line") {
@@ -203,7 +205,8 @@ TEST_CASE("Run Tests", "Check we only run if it's appropriate") {
         cmdP.parse(ah.argc(), ah.argv());
         REQUIRE_FALSE(cmdP.isValid());
         REQUIRE_THROWS_WITH(cmdP.run(perfSink.get()),
-                            Catch::Contains("Trying to run with invalid command line parameters"));
+                            Catch::Matchers::ContainsSubstring(
+                                "Trying to run with invalid command line parameters"));
     }
 
     SECTION("Fail run with version on the command line as last parameter") {
@@ -213,7 +216,8 @@ TEST_CASE("Run Tests", "Check we only run if it's appropriate") {
         cmdP.parse(ah.argc(), ah.argv());
         REQUIRE_FALSE(cmdP.isValid());
         REQUIRE_THROWS_WITH(cmdP.run(perfSink.get()),
-                            Catch::Contains("Trying to run with invalid command line parameters"));
+                            Catch::Matchers::ContainsSubstring(
+                                "Trying to run with invalid command line parameters"));
     }
 
     SECTION("Fail run without sub parser") {
@@ -224,7 +228,8 @@ TEST_CASE("Run Tests", "Check we only run if it's appropriate") {
         REQUIRE_THROWS(cmdP.parse(ah.argc(), ah.argv()));
         REQUIRE_FALSE(cmdP.isValid());
         REQUIRE_THROWS_WITH(cmdP.run(perfSink.get()),
-                            Catch::Contains("Trying to run with invalid command line parameters"));
+                            Catch::Matchers::ContainsSubstring(
+                                "Trying to run with invalid command line parameters"));
     }
 
     SECTION("Parser test1 used, timings file, simple mode") {

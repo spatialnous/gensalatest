@@ -6,7 +6,7 @@
 
 #include "depthmapXcli/segmentparser.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("Test segment mode and help") {
     SegmentParser parser;

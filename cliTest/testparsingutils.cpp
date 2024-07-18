@@ -4,7 +4,7 @@
 
 #include "depthmapXcli/parsingutils.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("AxialRadiusParsing success") {
     std::string testString = "5,1,n";
@@ -15,11 +15,14 @@ TEST_CASE("AxialRadiusParsing success") {
 
 TEST_CASE("AxialRadiusParsing failure") {
     REQUIRE_THROWS_WITH(depthmapX::parseRadiusList("5,1.1"),
-                        Catch::Contains("Found non integer radius 1.1"));
-    REQUIRE_THROWS_WITH(depthmapX::parseRadiusList("5,foo"),
-                        Catch::Contains("Found either 0 or unparsable radius foo"));
-    REQUIRE_THROWS_WITH(depthmapX::parseRadiusList("5,0"),
-                        Catch::Contains("Found either 0 or unparsable radius 0"));
-    REQUIRE_THROWS_WITH(depthmapX::parseRadiusList("5,-1"),
-                        Catch::Contains("Radius must be either n or a positive integer"));
+                        Catch::Matchers::ContainsSubstring("Found non integer radius 1.1"));
+    REQUIRE_THROWS_WITH(
+        depthmapX::parseRadiusList("5,foo"),
+        Catch::Matchers::ContainsSubstring("Found either 0 or unparsable radius foo"));
+    REQUIRE_THROWS_WITH(
+        depthmapX::parseRadiusList("5,0"),
+        Catch::Matchers::ContainsSubstring("Found either 0 or unparsable radius 0"));
+    REQUIRE_THROWS_WITH(
+        depthmapX::parseRadiusList("5,-1"),
+        Catch::Matchers::ContainsSubstring("Radius must be either n or a positive integer"));
 }

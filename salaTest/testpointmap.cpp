@@ -6,11 +6,10 @@
 #include "salalib/shapemapgroupdata.h"
 #include "salalib/vgamodules/vgametricdepth.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("Test MetaGraph construction", "") {
     const float EPSILON = 0.001f;
-    double spacing = 0.5;
     Point2f offset(0, 0); // seems that this is always set to 0,0
 
     // create a new MetaGraph
@@ -26,10 +25,10 @@ TEST_CASE("Test MetaGraph construction", "") {
         metaGraph.region = QtRegion(bottomLeft, topRight);
 
         // check if the bounds are set correctly
-        REQUIRE(metaGraph.region.bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.x == Catch::Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.y == Catch::Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.x == Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.y == Catch::Approx(topRight.y).epsilon(EPSILON));
     }
 
     SECTION("Construct a MetaGraph using underlying geometry") {
@@ -56,10 +55,12 @@ TEST_CASE("Test MetaGraph construction", "") {
         newShapeMap.makeLineShape(Line(lineStart, lineEnd));
 
         // check if the ShapeMap bounds are set correctly
-        REQUIRE(newShapeMap.getRegion().bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(newShapeMap.getRegion().bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(newShapeMap.getRegion().top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(newShapeMap.getRegion().top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().bottom_left.x ==
+                Catch::Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().bottom_left.y ==
+                Catch::Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().top_right.x == Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().top_right.y == Catch::Approx(topRight.y).epsilon(EPSILON));
 
         // MetaGraph and SpacePixelFile do not automatically grow
         // their region when new shapemaps/files are added to them
@@ -67,19 +68,23 @@ TEST_CASE("Test MetaGraph construction", "") {
         spacePixelFileData.region = newShapeMap.getRegion();
 
         // check if the SpacePixelFile bounds are set correctly
-        REQUIRE(spacePixelFileData.region.bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(spacePixelFileData.region.bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(spacePixelFileData.region.top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(spacePixelFileData.region.top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.bottom_left.x ==
+                Catch::Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.bottom_left.y ==
+                Catch::Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.top_right.x ==
+                Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.top_right.y ==
+                Catch::Approx(topRight.y).epsilon(EPSILON));
 
         metaGraph.region =
             QtRegion(spacePixelFileData.region.bottom_left, spacePixelFileData.region.top_right);
 
         // check if the MetaGraph bounds are set correctly
-        REQUIRE(metaGraph.region.bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.x == Catch::Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.y == Catch::Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.x == Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.y == Catch::Approx(topRight.y).epsilon(EPSILON));
     }
 
     // construct a sample pointMap
@@ -105,10 +110,10 @@ TEST_CASE("Test grid filling", "") {
         metaGraph.region = QtRegion(bottomLeft, topRight);
 
         // check if the bounds are set correctly
-        REQUIRE(metaGraph.region.bottom_left.x == Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.bottom_left.y == Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.x == Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.y == Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.x == Catch::Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottom_left.y == Catch::Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.x == Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.top_right.y == Catch::Approx(topRight.y).epsilon(EPSILON));
     }
 
     // construct a sample pointMap
@@ -279,15 +284,15 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
     int numCellsY = topRightPixelIndexY - bottomLeftPixelIndexY + 1;
 
     // check if the size of the grid is as expected
-    REQUIRE(pointMap.getCols() == numCellsX);
-    REQUIRE(pointMap.getRows() == numCellsY);
+    REQUIRE(static_cast<int>(pointMap.getCols()) == numCellsX);
+    REQUIRE(static_cast<int>(pointMap.getRows()) == numCellsY);
 
     Point2f gridBottomLeft(bottomLeftPixelIndexX * spacing - 0.5 * spacing,
                            bottomLeftPixelIndexY * spacing - 0.5 * spacing);
 
     // check if the bottom-left corner of the bottom-left pixel is as expected
-    REQUIRE(pointMap.getRegion().bottom_left.x == Approx(gridBottomLeft.x).epsilon(EPSILON));
-    REQUIRE(pointMap.getRegion().bottom_left.y == Approx(gridBottomLeft.y).epsilon(EPSILON));
+    REQUIRE(pointMap.getRegion().bottom_left.x == Catch::Approx(gridBottomLeft.x).epsilon(EPSILON));
+    REQUIRE(pointMap.getRegion().bottom_left.y == Catch::Approx(gridBottomLeft.y).epsilon(EPSILON));
 
     Point2f midPoint(gridBottomLeft.x + spacing * (floor(numCellsX * 0.5) + 0.5),
                      gridBottomLeft.y + spacing * (floor(numCellsY * 0.5) + 0.5));
@@ -302,7 +307,6 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
 }
 
 TEST_CASE("Test PointMap connections output", "") {
-    const float EPSILON = 0.001f;
     double spacing = 0.5;
     Point2f offset(0, 0); // seems that this is always set to 0,0
 

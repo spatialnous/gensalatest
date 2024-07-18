@@ -6,7 +6,7 @@
 
 #include "depthmapXcli/axialparser.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("Test mode and help") {
     AxialParser parser;
@@ -48,8 +48,8 @@ TEST_CASE("Test mode parsing", "") {
         parser.parse(ah.argc(), ah.argv());
         REQUIRE(parser.runAllLines());
         REQUIRE(parser.getAllAxesRoots().size() == 1);
-        REQUIRE(parser.getAllAxesRoots()[0].x == Approx(1.2));
-        REQUIRE(parser.getAllAxesRoots()[0].y == Approx(1.5));
+        REQUIRE(parser.getAllAxesRoots()[0].x == Catch::Approx(1.2));
+        REQUIRE(parser.getAllAxesRoots()[0].y == Catch::Approx(1.5));
         REQUIRE_FALSE(parser.runFewestLines());
         REQUIRE_FALSE(parser.runUnlink());
         REQUIRE_FALSE(parser.runAnalysis());
@@ -112,10 +112,10 @@ TEST_CASE("Test mode parsing", "") {
         parser.parse(ah.argc(), ah.argv());
         REQUIRE(parser.runAllLines());
         REQUIRE(parser.getAllAxesRoots().size() == 2);
-        REQUIRE(parser.getAllAxesRoots()[0].x == Approx(1.2));
-        REQUIRE(parser.getAllAxesRoots()[0].y == Approx(1.5));
-        REQUIRE(parser.getAllAxesRoots()[1].x == Approx(2.4));
-        REQUIRE(parser.getAllAxesRoots()[1].y == Approx(1.0));
+        REQUIRE(parser.getAllAxesRoots()[0].x == Catch::Approx(1.2));
+        REQUIRE(parser.getAllAxesRoots()[0].y == Catch::Approx(1.5));
+        REQUIRE(parser.getAllAxesRoots()[1].x == Catch::Approx(2.4));
+        REQUIRE(parser.getAllAxesRoots()[1].y == Catch::Approx(1.0));
         REQUIRE_FALSE(parser.runFewestLines());
         REQUIRE_FALSE(parser.runUnlink());
         REQUIRE(parser.runAnalysis());

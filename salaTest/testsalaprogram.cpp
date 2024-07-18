@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 #include "../salalib/mapconverter.h"
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include "genlib/p2dpoly.h"
 #include "salalib/salaprogram.h"
 #include "salalib/shapegraph.h"
@@ -223,7 +223,7 @@ TEST_CASE("Shapemap scripts") {
     auto iter = expectedColVals.begin();
     auto &attributes = shapeGraph->getAttributeTable();
     for (auto rowIter = attributes.begin(); rowIter != attributes.end(); rowIter++) {
-        REQUIRE(rowIter->getRow().getValue(newCol) == Approx(*iter).epsilon(EPSILON));
+        REQUIRE(rowIter->getRow().getValue(newCol) == Catch::Approx(*iter).epsilon(EPSILON));
         iter++;
     }
 }
@@ -356,7 +356,7 @@ TEST_CASE("Shapemap scripts with unexpected results") {
     auto iter = expectedColVals.begin();
     auto &attributes = shapeGraph->getAttributeTable();
     for (auto rowIter = attributes.begin(); rowIter != attributes.end(); rowIter++) {
-        REQUIRE(rowIter->getRow().getValue(newCol) == Approx(*iter).epsilon(EPSILON));
+        REQUIRE(rowIter->getRow().getValue(newCol) == Catch::Approx(*iter).epsilon(EPSILON));
         iter++;
     }
 }

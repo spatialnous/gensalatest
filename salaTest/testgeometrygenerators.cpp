@@ -7,7 +7,7 @@
 
 #include "genlib/p2dpoly.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 TEST_CASE("Test disk triangles generation", "") {
     const float EPSILON = 0.001f;
@@ -31,8 +31,8 @@ TEST_CASE("Test disk triangles generation", "") {
 
     REQUIRE(diskTriangles.size() == expected.size());
     for (size_t i = 0; i < diskTriangles.size(); i++) {
-        REQUIRE(diskTriangles[i].x == Approx(expected[i].x).epsilon(EPSILON));
-        REQUIRE(diskTriangles[i].y == Approx(expected[i].y).epsilon(EPSILON));
+        REQUIRE(diskTriangles[i].x == Catch::Approx(expected[i].x).epsilon(EPSILON));
+        REQUIRE(diskTriangles[i].y == Catch::Approx(expected[i].y).epsilon(EPSILON));
     }
 
     std::vector<Point2f> offsets{Point2f(1, 2), Point2f(3, -4), Point2f(-5, -6), Point2f(-7, 8)};
@@ -44,9 +44,11 @@ TEST_CASE("Test disk triangles generation", "") {
 
     for (size_t i = 0; i < multiDiskTriangles.size(); i++) {
         REQUIRE(multiDiskTriangles[i].x ==
-                Approx(expected[i % (sides * 3)].x + offsets[i / (sides * 3)].x).epsilon(EPSILON));
+                Catch::Approx(expected[i % (sides * 3)].x + offsets[i / (sides * 3)].x)
+                    .epsilon(EPSILON));
         REQUIRE(multiDiskTriangles[i].y ==
-                Approx(expected[i % (sides * 3)].y + offsets[i / (sides * 3)].y).epsilon(EPSILON));
+                Catch::Approx(expected[i % (sides * 3)].y + offsets[i / (sides * 3)].y)
+                    .epsilon(EPSILON));
     }
 }
 
@@ -68,10 +70,10 @@ TEST_CASE("Test circle perimeter line generation", "") {
 
     REQUIRE(circleLines.size() == expected.size());
     for (size_t i = 0; i < circleLines.size(); i++) {
-        REQUIRE(circleLines[i].start().x == Approx(expected[i].start().x).epsilon(EPSILON));
-        REQUIRE(circleLines[i].start().y == Approx(expected[i].start().y).epsilon(EPSILON));
-        REQUIRE(circleLines[i].end().x == Approx(expected[i].end().x).epsilon(EPSILON));
-        REQUIRE(circleLines[i].end().y == Approx(expected[i].end().y).epsilon(EPSILON));
+        REQUIRE(circleLines[i].start().x == Catch::Approx(expected[i].start().x).epsilon(EPSILON));
+        REQUIRE(circleLines[i].start().y == Catch::Approx(expected[i].start().y).epsilon(EPSILON));
+        REQUIRE(circleLines[i].end().x == Catch::Approx(expected[i].end().x).epsilon(EPSILON));
+        REQUIRE(circleLines[i].end().y == Catch::Approx(expected[i].end().y).epsilon(EPSILON));
     }
 
     std::vector<Point2f> offsets{Point2f(1, 2), Point2f(3, -4), Point2f(-5, -6), Point2f(-7, 8)};
@@ -82,13 +84,15 @@ TEST_CASE("Test circle perimeter line generation", "") {
     REQUIRE(multiCircleLines.size() == expected.size() * offsets.size());
 
     for (size_t i = 0; i < multiCircleLines.size(); i++) {
-        REQUIRE(multiCircleLines[i].start().x ==
-                Approx(expected[i % sides].start().x + offsets[i / sides].x).epsilon(EPSILON));
-        REQUIRE(multiCircleLines[i].start().y ==
-                Approx(expected[i % sides].start().y + offsets[i / sides].y).epsilon(EPSILON));
+        REQUIRE(
+            multiCircleLines[i].start().x ==
+            Catch::Approx(expected[i % sides].start().x + offsets[i / sides].x).epsilon(EPSILON));
+        REQUIRE(
+            multiCircleLines[i].start().y ==
+            Catch::Approx(expected[i % sides].start().y + offsets[i / sides].y).epsilon(EPSILON));
         REQUIRE(multiCircleLines[i].end().x ==
-                Approx(expected[i % sides].end().x + offsets[i / sides].x).epsilon(EPSILON));
+                Catch::Approx(expected[i % sides].end().x + offsets[i / sides].x).epsilon(EPSILON));
         REQUIRE(multiCircleLines[i].end().y ==
-                Approx(expected[i % sides].end().y + offsets[i / sides].y).epsilon(EPSILON));
+                Catch::Approx(expected[i % sides].end().y + offsets[i / sides].y).epsilon(EPSILON));
     }
 }

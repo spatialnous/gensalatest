@@ -6,7 +6,7 @@
 
 #include "depthmapXcli/performancewriter.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <fstream>
 

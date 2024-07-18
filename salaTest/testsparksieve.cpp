@@ -4,7 +4,7 @@
 
 #include "salalib/sparksieve2.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <map>
 
@@ -19,7 +19,7 @@ TEST_CASE("One block garbage") {
     sieve.collectgarbage();
     REQUIRE(sieve.m_gaps.size() == 1);
     REQUIRE(sieve.m_gaps.begin()->start == 0);
-    REQUIRE(sieve.m_gaps.begin()->end == Approx(0.625));
+    REQUIRE(sieve.m_gaps.begin()->end == Catch::Approx(0.625));
 }
 
 TEST_CASE("Shift start and end") {
@@ -33,8 +33,8 @@ TEST_CASE("Shift start and end") {
     sieve.block(lines, 4);
     sieve.collectgarbage();
     REQUIRE(sieve.m_gaps.size() == 1);
-    REQUIRE(sieve.m_gaps.begin()->start == Approx(0.55555555555));
-    REQUIRE(sieve.m_gaps.begin()->end == Approx(0.625));
+    REQUIRE(sieve.m_gaps.begin()->start == Catch::Approx(0.55555555555));
+    REQUIRE(sieve.m_gaps.begin()->end == Catch::Approx(0.625));
 }
 
 TEST_CASE("delete gap") {
@@ -61,8 +61,8 @@ TEST_CASE("add gap") {
     REQUIRE(sieve.m_gaps.size() == 2);
     auto iter = sieve.m_gaps.begin();
     REQUIRE(iter->start == 0);
-    REQUIRE(iter->end == Approx(0.55555555555));
+    REQUIRE(iter->end == Catch::Approx(0.55555555555));
     iter++;
-    REQUIRE(iter->start == Approx(0.625));
-    REQUIRE(iter->end == Approx(0.71428571));
+    REQUIRE(iter->start == Catch::Approx(0.625));
+    REQUIRE(iter->end == Catch::Approx(0.71428571));
 }

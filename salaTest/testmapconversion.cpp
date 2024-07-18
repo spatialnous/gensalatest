@@ -4,7 +4,7 @@
 
 #include "salalib/mapconverter.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include "salalib/shapemapgroupdata.h"
 
 TEST_CASE("Failing empty drawing map conversion", "") {
@@ -14,13 +14,13 @@ TEST_CASE("Failing empty drawing map conversion", "") {
 
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToAxial(nullptr, "Axial map", drawingMapRefs),
-            Catch::Contains("Failed to convert lines"));
+            Catch::Matchers::ContainsSubstring("Failed to convert lines"));
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
-            Catch::Contains("No lines found in drawing"));
+            Catch::Matchers::ContainsSubstring("No lines found in drawing"));
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToConvex(nullptr, "Convex map", drawingMapRefs),
-            Catch::Contains("No polygons found in drawing"));
+            Catch::Matchers::ContainsSubstring("No polygons found in drawing"));
     }
     {
         std::vector<std::pair<ShapeMapGroupData, std::vector<ShapeMap>>> drawingFiles(1);
@@ -30,13 +30,13 @@ TEST_CASE("Failing empty drawing map conversion", "") {
 
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToAxial(nullptr, "Axial map", drawingMapRefs),
-            Catch::Contains("Failed to convert lines"));
+            Catch::Matchers::ContainsSubstring("Failed to convert lines"));
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
-            Catch::Contains("No lines found in drawing"));
+            Catch::Matchers::ContainsSubstring("No lines found in drawing"));
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToConvex(nullptr, "Convex map", drawingMapRefs),
-            Catch::Contains("No polygons found in drawing"));
+            Catch::Matchers::ContainsSubstring("No polygons found in drawing"));
     }
 
     {
@@ -48,13 +48,13 @@ TEST_CASE("Failing empty drawing map conversion", "") {
 
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToAxial(nullptr, "Axial map", drawingMapRefs),
-            Catch::Contains("Failed to convert lines"));
+            Catch::Matchers::ContainsSubstring("Failed to convert lines"));
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
-            Catch::Contains("No lines found in drawing"));
+            Catch::Matchers::ContainsSubstring("No lines found in drawing"));
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToConvex(nullptr, "Convex map", drawingMapRefs),
-            Catch::Contains("No polygons found in drawing"));
+            Catch::Matchers::ContainsSubstring("No polygons found in drawing"));
     }
 }
 
@@ -62,17 +62,17 @@ TEST_CASE("Failing empty axial to segment map conversion", "") {
     ShapeGraph segmentMap("Axial map", ShapeMap::AXIALMAP);
     // TODO: Does not throw an exception but maybe it should as the axial map is empty?
     // REQUIRE_THROWS_WITH(MapConverter::convertAxialToSegment(nullptr, segmentMap, "Segment map",
-    // false, false, 0), Catch::Contains("No lines found in drawing"));
+    // false, false, 0), Catch::Matchers::ContainsSubstring("No lines found in drawing"));
 }
 
 TEST_CASE("Failing empty data map conversion", "") {
     ShapeMap dataMap("Data map", ShapeMap::DATAMAP);
     REQUIRE_THROWS_WITH(MapConverter::convertDataToAxial(nullptr, "Axial map", dataMap),
-                        Catch::Contains("No lines found in data map"));
+                        Catch::Matchers::ContainsSubstring("No lines found in data map"));
     REQUIRE_THROWS_WITH(MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap),
-                        Catch::Contains("No lines found in data map"));
+                        Catch::Matchers::ContainsSubstring("No lines found in data map"));
     REQUIRE_THROWS_WITH(MapConverter::convertDataToConvex(nullptr, "Convex map", dataMap),
-                        Catch::Contains("No polygons found in data map"));
+                        Catch::Matchers::ContainsSubstring("No polygons found in data map"));
 }
 
 TEST_CASE("Test drawing to segment conversion", "") {
@@ -99,7 +99,7 @@ TEST_CASE("Test drawing to segment conversion", "") {
         // TODO: This fails with std::bad_alloc because there's only 1 line in the drawing
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
-            Catch::Contains("std::bad_alloc"));
+            Catch::Matchers::ContainsSubstring("std::bad_alloc"));
     }
 
     SECTION("Two lines") {
@@ -109,7 +109,7 @@ TEST_CASE("Test drawing to segment conversion", "") {
         // TODO: This fails with std::bad_alloc because there's only 2 lines in the drawing
         REQUIRE_THROWS_WITH(
             MapConverter::convertDrawingToSegment(nullptr, "Segment map", drawingMapRefs),
-            Catch::Contains("std::bad_alloc"));
+            Catch::Matchers::ContainsSubstring("std::bad_alloc"));
     }
 
     SECTION("Three lines") {
@@ -123,24 +123,24 @@ TEST_CASE("Test drawing to segment conversion", "") {
         auto shapeIter = shapes.begin();
         REQUIRE(shapeIter->first == 0);
         const Line &segmentLine1 = shapeIter->second.getLine();
-        REQUIRE(segmentLine1.ax() == Approx(line1.ax()).epsilon(EPSILON));
-        REQUIRE(segmentLine1.ay() == Approx(line1.ay()).epsilon(EPSILON));
-        REQUIRE(segmentLine1.bx() == Approx(line1.bx()).epsilon(EPSILON));
-        REQUIRE(segmentLine1.by() == Approx(line1.by()).epsilon(EPSILON));
+        REQUIRE(segmentLine1.ax() == Catch::Approx(line1.ax()).epsilon(EPSILON));
+        REQUIRE(segmentLine1.ay() == Catch::Approx(line1.ay()).epsilon(EPSILON));
+        REQUIRE(segmentLine1.bx() == Catch::Approx(line1.bx()).epsilon(EPSILON));
+        REQUIRE(segmentLine1.by() == Catch::Approx(line1.by()).epsilon(EPSILON));
         shapeIter++;
         REQUIRE(shapeIter->first == 1);
         const Line &segmentLine2 = shapeIter->second.getLine();
-        REQUIRE(segmentLine2.ax() == Approx(line2.ax()).epsilon(EPSILON));
-        REQUIRE(segmentLine2.ay() == Approx(line2.ay()).epsilon(EPSILON));
-        REQUIRE(segmentLine2.bx() == Approx(line2.bx()).epsilon(EPSILON));
-        REQUIRE(segmentLine2.by() == Approx(line2.by()).epsilon(EPSILON));
+        REQUIRE(segmentLine2.ax() == Catch::Approx(line2.ax()).epsilon(EPSILON));
+        REQUIRE(segmentLine2.ay() == Catch::Approx(line2.ay()).epsilon(EPSILON));
+        REQUIRE(segmentLine2.bx() == Catch::Approx(line2.bx()).epsilon(EPSILON));
+        REQUIRE(segmentLine2.by() == Catch::Approx(line2.by()).epsilon(EPSILON));
         shapeIter++;
         REQUIRE(shapeIter->first == 2);
         const Line &segmentLine3 = shapeIter->second.getLine();
-        REQUIRE(segmentLine3.ax() == Approx(line3.ax()).epsilon(EPSILON));
-        REQUIRE(segmentLine3.ay() == Approx(line3.ay()).epsilon(EPSILON));
-        REQUIRE(segmentLine3.bx() == Approx(line3.bx()).epsilon(EPSILON));
-        REQUIRE(segmentLine3.by() == Approx(line3.by()).epsilon(EPSILON));
+        REQUIRE(segmentLine3.ax() == Catch::Approx(line3.ax()).epsilon(EPSILON));
+        REQUIRE(segmentLine3.ay() == Catch::Approx(line3.ay()).epsilon(EPSILON));
+        REQUIRE(segmentLine3.bx() == Catch::Approx(line3.bx()).epsilon(EPSILON));
+        REQUIRE(segmentLine3.by() == Catch::Approx(line3.by()).epsilon(EPSILON));
     }
 }
 
@@ -170,7 +170,7 @@ TEST_CASE("Test data to segment conversion", "") {
         // TODO: This fails with std::bad_alloc because there's only 1 line in the data map
         REQUIRE_THROWS_WITH(
             MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true),
-            Catch::Contains("std::bad_alloc"));
+            Catch::Matchers::ContainsSubstring("std::bad_alloc"));
     }
 
     SECTION("Two lines with extra attributes") {
@@ -180,7 +180,7 @@ TEST_CASE("Test data to segment conversion", "") {
         // TODO: This fails with std::bad_alloc because there's only 2 lines in the data map
         REQUIRE_THROWS_WITH(
             MapConverter::convertDataToSegment(nullptr, "Segment map", dataMap, true),
-            Catch::Contains("std::bad_alloc"));
+            Catch::Matchers::ContainsSubstring("std::bad_alloc"));
     }
 
     SECTION("Three lines") {
@@ -195,16 +195,16 @@ TEST_CASE("Test data to segment conversion", "") {
         REQUIRE(shapes.size() == 3);
         auto shapeIter = shapes.begin();
         for (size_t i = 0; i < lines.size(); i++) {
-            REQUIRE(shapeIter->first == i);
-            AttributeRow &row =
-                segmentMap->getAttributeRowFromShapeIndex(static_cast<size_t>(shapeIter->first));
+            auto key = static_cast<size_t>(shapeIter->first);
+            REQUIRE(key == i);
+            AttributeRow &row = segmentMap->getAttributeRowFromShapeIndex(key);
             REQUIRE(row.getValue(segmentNewAttributeID) ==
                     extraAttributes[i][static_cast<int>(newAttributeID)]);
             const Line &segmentLine = shapeIter->second.getLine();
-            REQUIRE(segmentLine.ax() == Approx(lines[i].ax()).epsilon(EPSILON));
-            REQUIRE(segmentLine.ay() == Approx(lines[i].ay()).epsilon(EPSILON));
-            REQUIRE(segmentLine.bx() == Approx(lines[i].bx()).epsilon(EPSILON));
-            REQUIRE(segmentLine.by() == Approx(lines[i].by()).epsilon(EPSILON));
+            REQUIRE(segmentLine.ax() == Catch::Approx(lines[i].ax()).epsilon(EPSILON));
+            REQUIRE(segmentLine.ay() == Catch::Approx(lines[i].ay()).epsilon(EPSILON));
+            REQUIRE(segmentLine.bx() == Catch::Approx(lines[i].bx()).epsilon(EPSILON));
+            REQUIRE(segmentLine.by() == Catch::Approx(lines[i].by()).epsilon(EPSILON));
             shapeIter++;
         }
     }
@@ -223,16 +223,16 @@ TEST_CASE("Test data to segment conversion", "") {
         REQUIRE(shapes.size() == 3);
         auto shapeIter = shapes.begin();
         for (size_t i = 0; i < lines.size(); i++) {
-            REQUIRE(shapeIter->first == i);
-            AttributeRow &row =
-                segmentMap->getAttributeRowFromShapeIndex(static_cast<size_t>(shapeIter->first));
+            auto key = static_cast<size_t>(shapeIter->first);
+            REQUIRE(key == i);
+            AttributeRow &row = segmentMap->getAttributeRowFromShapeIndex(key);
             REQUIRE(row.getValue(segmentNewAttributeID) ==
                     extraAttributes[i][static_cast<int>(newAttributeID)]);
             const Line &segmentLine = shapeIter->second.getLine();
-            REQUIRE(segmentLine.ax() == Approx(lines[i].ax()).epsilon(EPSILON));
-            REQUIRE(segmentLine.ay() == Approx(lines[i].ay()).epsilon(EPSILON));
-            REQUIRE(segmentLine.bx() == Approx(lines[i].bx()).epsilon(EPSILON));
-            REQUIRE(segmentLine.by() == Approx(lines[i].by()).epsilon(EPSILON));
+            REQUIRE(segmentLine.ax() == Catch::Approx(lines[i].ax()).epsilon(EPSILON));
+            REQUIRE(segmentLine.ay() == Catch::Approx(lines[i].ay()).epsilon(EPSILON));
+            REQUIRE(segmentLine.bx() == Catch::Approx(lines[i].bx()).epsilon(EPSILON));
+            REQUIRE(segmentLine.by() == Catch::Approx(lines[i].by()).epsilon(EPSILON));
             shapeIter++;
         }
     }

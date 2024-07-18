@@ -7,7 +7,7 @@
 
 #include "depthmapXcli/agentparser.h"
 
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 
 #include <fstream>
 
@@ -18,70 +18,70 @@ TEST_CASE("AgentParserFail", "Parsing errors") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-am"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-am requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-am requires an argument"));
     }
 
     SECTION("Missing argument to -ats") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-ats"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-ats requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-ats requires an argument"));
     }
 
     SECTION("Missing argument to -arr") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-arr"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-arr requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-arr requires an argument"));
     }
 
     SECTION("Missing argument to -afov") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-afov"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-afov requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-afov requires an argument"));
     }
 
     SECTION("Missing argument to -asteps") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-asteps"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-asteps requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-asteps requires an argument"));
     }
 
     SECTION("Missing argument to -alife") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-alife"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-alife requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-alife requires an argument"));
     }
 
     SECTION("Missing argument to -alife") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-alife"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-alife requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-alife requires an argument"));
     }
 
     SECTION("Missing argument to -alocseed") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-alocseed"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-alocseed requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-alocseed requires an argument"));
     }
 
     SECTION("Missing argument to -alocfile") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-alocfile"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-alocfile requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-alocfile requires an argument"));
     }
 
     SECTION("Missing argument to -aloc") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-aloc"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-aloc requires an argument"));
+                            Catch::Matchers::ContainsSubstring("-aloc requires an argument"));
     }
 
     // rubbish input
@@ -89,15 +89,17 @@ TEST_CASE("AgentParserFail", "Parsing errors") {
     SECTION("Non-numeric input to -ats") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-ats", "foo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-ats must be a number >0, got foo"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-ats must be a number >0, got foo"));
     }
 
     SECTION("Non-numeric input to -arr") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-arr", "foo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-arr must be a number >0, got foo"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-arr must be a number >0, got foo"));
     }
 
     SECTION("Non-numeric input to -atrails") {
@@ -105,43 +107,48 @@ TEST_CASE("AgentParserFail", "Parsing errors") {
         ArgumentHolder ah{"prog", "-atrails", "foo"};
         REQUIRE_THROWS_WITH(
             parser.parse(ah.argc(), ah.argv()),
-            Catch::Contains(
+            Catch::Matchers::ContainsSubstring(
                 "-atrails must be a number >=1 or 0 for all (max possible = 50), got foo"));
     }
 
     SECTION("Non-numeric input to -afov") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-afov", "foo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-afov must be a number between 1 and 32, got foo"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-afov must be a number between 1 and 32, got foo"));
     }
 
     SECTION("Out of range input to -afov (0)") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-afov", "0"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-afov must be a number between 1 and 32, got 0"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-afov must be a number between 1 and 32, got 0"));
     }
 
     SECTION("Out of range input to -afov (33)") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-afov", "33"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-afov must be a number between 1 and 32, got 33"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-afov must be a number between 1 and 32, got 33"));
     }
 
     SECTION("Non-numeric input to -asteps") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-asteps", "foo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-asteps must be a number >0, got foo"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-asteps must be a number >0, got foo"));
     }
 
     SECTION("Non-numeric input to -alife") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-alife", "foo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-alife must be a number >0, got foo"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-alife must be a number >0, got foo"));
     }
 
     SECTION("Rubbish input to -alocseed") {
@@ -149,38 +156,41 @@ TEST_CASE("AgentParserFail", "Parsing errors") {
         ArgumentHolder ah{"prog", "-alocseed", "foo"};
         REQUIRE_THROWS_WITH(
             parser.parse(ah.argc(), ah.argv()),
-            Catch::Contains(
+            Catch::Matchers::ContainsSubstring(
                 "Invalid starting location seed provided (foo). Should only contain digits"));
     }
 
     SECTION("Rubbish input to -aloc") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-aloc", "foo"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("Invalid starting point provided (foo). Should only "
-                                            "contain digits dots and commas"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("Invalid starting point provided (foo). Should only "
+                                               "contain digits dots and commas"));
     }
 
     SECTION("Define graph output twice") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-ot", "graph", "-ot", "graph"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("Same output type argument (graph) provided twice"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("Same output type argument (graph) provided twice"));
     }
 
     SECTION("Define gatecounts output twice") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-ot", "gatecounts", "-ot", "gatecounts"};
-        REQUIRE_THROWS_WITH(
-            parser.parse(ah.argc(), ah.argv()),
-            Catch::Contains("Same output type argument (gatecounts) provided twice"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Matchers::ContainsSubstring(
+                                "Same output type argument (gatecounts) provided twice"));
     }
 
     SECTION("Define trails output twice") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-ot", "trails", "-ot", "trails"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("Same output type argument (trails) provided twice"));
+                            Catch::Matchers::ContainsSubstring(
+                                "Same output type argument (trails) provided twice"));
     }
 }
 TEST_CASE("AgentParserInputFail", "Bad or missing input") {
@@ -188,25 +198,27 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-arr",   "0.1",  "-afov",     "15", "-asteps",
                           "3",    "-alife", "1000", "-alocseed", "0"};
-        REQUIRE_THROWS_WITH(
-            parser.parse(ah.argc(), ah.argv()),
-            Catch::Contains("Total number of timesteps (-ats <timesteps>) is required"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Matchers::ContainsSubstring(
+                                "Total number of timesteps (-ats <timesteps>) is required"));
     }
 
     SECTION("-arr not provided") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-ats",   "5000", "-afov",     "15", "-asteps",
                           "3",    "-alife", "1000", "-alocseed", "0"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("Release rate (-arr <rate>) is required"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("Release rate (-arr <rate>) is required"));
     }
 
     SECTION("-afov not provided") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-ats",   "5000", "-arr",      "0.1", "-asteps",
                           "3",    "-alife", "1000", "-alocseed", "0"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("Agent field-of-view (-afov <bins>) is required"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("Agent field-of-view (-afov <bins>) is required"));
     }
 
     SECTION("-asteps not provided") {
@@ -215,7 +227,7 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
                           "15",   "-alife", "1000", "-alocseed", "0"};
         REQUIRE_THROWS_WITH(
             parser.parse(ah.argc(), ah.argv()),
-            Catch::Contains(
+            Catch::Matchers::ContainsSubstring(
                 "Agent number of steps before turn decision (-asteps <steps>) is required"));
     }
 
@@ -223,9 +235,9 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-ats",    "5000", "-arr",      "0.1", "-afov",
                           "15",   "-asteps", "3",    "-alocseed", "0"};
-        REQUIRE_THROWS_WITH(
-            parser.parse(ah.argc(), ah.argv()),
-            Catch::Contains("Agent life in timesteps (-alife <timesteps>) is required"));
+        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
+                            Catch::Matchers::ContainsSubstring(
+                                "Agent life in timesteps (-alife <timesteps>) is required"));
     }
 
     SECTION("No random starting poins, manual points or point file provided") {
@@ -233,7 +245,8 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
         ArgumentHolder ah{"prog", "-ats",    "5000", "-arr",   "0.1", "-afov",
                           "15",   "-asteps", "3",    "-alife", "1000"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("Either -aloc, -alocfile or -alocseed must be given"));
+                            Catch::Matchers::ContainsSubstring(
+                                "Either -aloc, -alocfile or -alocseed must be given"));
     }
 
     SECTION("Manual points and pointfile provided") {
@@ -246,8 +259,9 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
         ArgumentHolder ah{"prog", "-aloc",   "0.1,5.2", "-alocfile", "testpoints.csv",
                           "-ats", "5000",    "-arr",    "0.1",       "-afov",
                           "15",   "-asteps", "3",       "-alife",    "1000"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-alocfile cannot be used together with -aloc"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-alocfile cannot be used together with -aloc"));
     }
 
     SECTION("Pointfile and manual points provided") {
@@ -261,16 +275,18 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
             "prog", "-alocfile", "testpoints.csv", "-aloc", "0.1,5.2", "-ats", "5000",
             "-arr", "0.1",       "-afov",          "15",    "-asteps", "3",    "-alife",
             "1000"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-aloc cannot be used together with -alocfile"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-aloc cannot be used together with -alocfile"));
     }
 
     SECTION("Manual points and random points provided") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-aloc", "0.1,5.2", "-alocseed", "0", "-ats",   "5000", "-arr",
                           "0.1",  "-afov", "15",      "-asteps",   "3", "-alife", "1000"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-alocseed cannot be used together with -aloc"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-alocseed cannot be used together with -aloc"));
     }
 
     SECTION("Pointfile and random points provided") {
@@ -284,16 +300,18 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
             "prog", "-alocfile", "testpoints.csv", "-alocseed", "0",       "-ats", "5000",
             "-arr", "0.1",       "-afov",          "15",        "-asteps", "3",    "-alife",
             "1000"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-alocseed cannot be used together with -alocfile"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-alocseed cannot be used together with -alocfile"));
     }
 
     SECTION("Random points and manual points provided") {
         AgentParser parser;
         ArgumentHolder ah{"prog", "-alocseed", "0",  "-aloc",   "0.1,5.2", "-ats",   "5000", "-arr",
                           "0.1",  "-afov",     "15", "-asteps", "3",       "-alife", "1000"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-aloc cannot be used together with -alocseed"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-aloc cannot be used together with -alocseed"));
     }
 
     SECTION("Random points and Pointfile provided") {
@@ -306,16 +324,18 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
         ArgumentHolder ah{"prog", "-alocseed", "0",    "-alocfile", "testpoints.csv",
                           "-ats", "5000",      "-arr", "0.1",       "-afov",
                           "15",   "-asteps",   "3",    "-alife",    "1000"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("-alocfile cannot be used together with -alocseed"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("-alocfile cannot be used together with -alocseed"));
     }
 
     SECTION("Non-existing file provided") {
         AgentParser parser;
         ArgumentHolder ah{"prog",  "-alocfile", "foo.csv", "-ats", "5000",   "-arr", "0.1",
                           "-afov", "15",        "-asteps", "3",    "-alife", "1000"};
-        REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("Failed to load file foo.csv, error"));
+        REQUIRE_THROWS_WITH(
+            parser.parse(ah.argc(), ah.argv()),
+            Catch::Matchers::ContainsSubstring("Failed to load file foo.csv, error"));
     }
 
     SECTION("Malformed pointfile") {
@@ -328,7 +348,7 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
         ArgumentHolder ah{"prog",  "-alocfile", "testpoints.csv", "-ats", "5000",   "-arr", "0.1",
                           "-afov", "15",        "-asteps",        "3",    "-alife", "1000"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("Error parsing line: 1"));
+                            Catch::Matchers::ContainsSubstring("Error parsing line: 1"));
     }
 
     SECTION("Malformed point arg") {
@@ -341,7 +361,7 @@ TEST_CASE("AgentParserInputFail", "Bad or missing input") {
         ArgumentHolder ah{"prog",  "-aloc", "0.1",     "-ats", "5000",   "-arr", "0.1",
                           "-afov", "15",    "-asteps", "3",    "-alife", "1000"};
         REQUIRE_THROWS_WITH(parser.parse(ah.argc(), ah.argv()),
-                            Catch::Contains("Error parsing line: 0.1"));
+                            Catch::Matchers::ContainsSubstring("Error parsing line: 0.1"));
     }
 }
 
@@ -352,7 +372,7 @@ TEST_CASE("AgentParserSuccess", "Read successfully") {
     double x2 = 1.1;
     double y2 = 1.2;
 
-    int totalTimeSteps = 5000;
+    size_t totalTimeSteps = 5000;
     std::stringstream ats;
     ats << totalTimeSteps << std::flush;
 
@@ -407,10 +427,10 @@ TEST_CASE("AgentParserSuccess", "Read successfully") {
 
         auto points = parser.getReleasePoints();
         REQUIRE(points.size() == 2);
-        REQUIRE(points[0].x == Approx(x1));
-        REQUIRE(points[0].y == Approx(y1));
-        REQUIRE(points[1].x == Approx(x2));
-        REQUIRE(points[1].y == Approx(y2));
+        REQUIRE(points[0].x == Catch::Approx(x1));
+        REQUIRE(points[0].y == Catch::Approx(y1));
+        REQUIRE(points[1].x == Catch::Approx(x2));
+        REQUIRE(points[1].y == Catch::Approx(y2));
     }
 
     SECTION("Read from file") {
@@ -427,10 +447,10 @@ TEST_CASE("AgentParserSuccess", "Read successfully") {
 
         auto points = parser.getReleasePoints();
         REQUIRE(points.size() == 2);
-        REQUIRE(points[0].x == Approx(x1));
-        REQUIRE(points[0].y == Approx(y1));
-        REQUIRE(points[1].x == Approx(x2));
-        REQUIRE(points[1].y == Approx(y2));
+        REQUIRE(points[0].x == Catch::Approx(x1));
+        REQUIRE(points[0].y == Catch::Approx(y1));
+        REQUIRE(points[1].x == Catch::Approx(x2));
+        REQUIRE(points[1].y == Catch::Approx(y2));
     }
 
     SECTION("Output type not set") {
@@ -492,7 +512,7 @@ TEST_CASE("AgentParserSuccess", "Read successfully") {
     }
 
     REQUIRE(parser.totalSystemTimestemps() == totalTimeSteps);
-    REQUIRE(parser.releaseRate() == Approx(releaseRate));
+    REQUIRE(parser.releaseRate() == Catch::Approx(releaseRate));
     REQUIRE(parser.agentFOV() == agentFOV);
     REQUIRE(parser.agentStepsBeforeTurnDecision() == agentStepsBeforeTurnDecision);
     REQUIRE(parser.agentLifeTimesteps() == agentLifeTimesteps);
