@@ -17,6 +17,11 @@ jobs:
       image: fedora:latest
 
     steps:
+     - name: Install dependencies on container
+       run: |
+          dnf update
+          dnf install -y git
+
     - uses: actions/checkout@v4
       with:
         submodules: recursive
