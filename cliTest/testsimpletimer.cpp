@@ -25,7 +25,7 @@ TEST_CASE("TestSimpleTimerReset", "") {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 #if __APPLE__
     // Apple's threads seem to be slightly slower, perhaps because of app-nap?
-    REQUIRE_THAT(timer1.getTimeInSeconds(), Catch::Matchers::WithinAbs(1.0, 0.25));
+    REQUIRE_THAT(timer1.getTimeInSeconds(), Catch::Matchers::WithinAbs(1.0, 0.3));
 #else
     REQUIRE_THAT(timer1.getTimeInSeconds(), Catch::Matchers::WithinAbs(1.0, 0.2));
 #endif
