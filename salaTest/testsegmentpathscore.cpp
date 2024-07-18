@@ -55,7 +55,7 @@ TEST_CASE("Shortest paths working examples", "") {
     {
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Angle"));
         REQUIRE_FALSE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Order"));
-        SegmentTulipShortestPath(*segmentMap.get(), shapesInRegion.begin()->first,
+        SegmentTulipShortestPath(*segmentMap.get(), 1024, shapesInRegion.begin()->first,
                                  shapesInRegion.rbegin()->first)
             .run(nullptr);
         REQUIRE(segmentMap->getAttributeTable().hasColumn("Angular Shortest Path Angle"));

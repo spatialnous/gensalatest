@@ -111,8 +111,9 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
     switch (m_stepType) {
     case SegmentShortestPathParser::StepType::TULIP: {
         auto &map = mGraph.getDisplayedShapeGraph();
-        DO_TIMED("Calculating tulip shortest path",
-                 SegmentTulipShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
+        DO_TIMED(
+            "Calculating tulip shortest path",
+            SegmentTulipShortestPath(map.getInternalMap(), 1024, refFrom, refTo).run(comm.get()))
         map.overrideDisplayedAttribute(-2); // <- override if it's already showing
         map.setDisplayedAttribute(SegmentTulipShortestPath::Column::ANGULAR_SHORTEST_PATH_ANGLE);
         break;
