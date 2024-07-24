@@ -11,16 +11,19 @@ import os
 def writeConfig(filename, rundir):
     with open(filename, "w") as f:
         f.write('{ "rundir": "'+ rundir +'",\n')
-        f.write('   "basebinlocation": "../baselineBinaries",\n')
-        f.write('   "testbinlocation": "../..",\n')
+        f.write('  "basebinlocation": "../baselineBinaries",\n')
+        f.write('  "testbinlocation": "../..",\n')
+        f.write('  "allowskip": true,\n')
         f.write('  "testcases": {\n')
-        f.write('      "test1": [{\n')
-        f.write('           "infile": "infile.graph",\n')
-        f.write('           "outfile": "outfile.graph",\n')
-        f.write('           "mode": "VGA",\n')
-        f.write('           "extraArgs": {\n')
-        f.write('                 "-vm": "metric",\n')
-        f.write('                  "-vr": "7"}}]}}')
+        f.write('    "test1": {\n')
+        f.write('      "minVersion": "0.8.0",\n')
+        f.write('      "steps":[{\n')
+        f.write('        "infile": "infile.graph",\n')
+        f.write('        "outfile": "outfile.graph",\n')
+        f.write('        "mode": "VGA",\n')
+        f.write('        "extraArgs": {\n')
+        f.write('          "-vm": "metric",\n')
+        f.write('          "-vr": "7"}}]}}}')
     
 
 

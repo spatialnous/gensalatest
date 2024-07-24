@@ -7,9 +7,15 @@ import os
 import shutil
 import subprocess
 import platform
+from enum import Enum
 
 def runTest():
    pass 
+
+class TestResult(Enum):
+    PASS = 1
+    SKIP = 2
+    FAIL = 3
 
 class cd:
     """Context manager for changing the current working directory"""

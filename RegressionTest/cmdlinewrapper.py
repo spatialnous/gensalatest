@@ -14,7 +14,7 @@ class DepthmapCmd():
         self.outfile = None
         self.simpleMode = False
         self.mode = None
-        self.extraArgs = {}
+        self.extraArgs = {"base": [], "test": []}
         self.timingFile = None
 
 

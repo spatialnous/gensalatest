@@ -13,9 +13,9 @@ class ConfigError(Exception):
     def __init__(self, message):
         self.message = message
 
-def buildCmd(testcaseSet):
+def buildCmd(testcaseSteps):
     cmds = [];
-    for testcase in testcaseSet:
+    for testcase in testcaseSteps:
         cmd = cmdlinewrapper.DepthmapCmd()
         cmd.infile = testcase["infile"]
         cmd.outfile = testcase["outfile"]
@@ -34,9 +34,13 @@ class RegressionConfig():
         self.rundir = config["rundir"]
         self.basebinlocation = config["basebinlocation"]
         self.testbinlocation = config["testbinlocation"]
+        self.allowSkipCases = config["allowskip"]
         self.performanceRegression = PerformanceRegressionConfig(config.get("performance", None))
         self.testcases = {}
         for (name, tc) in config["testcases"].items():
-            self.testcases[name] = buildCmd(tc)
+            self.testcases[name] = {
+                "steps": buildCmd(tc['steps']),
+                "minVersion": tc['minVersion']
+            }
 
 
