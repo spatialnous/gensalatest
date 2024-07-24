@@ -1,7 +1,7 @@
 {
     "rundir": "rundir",
-    "basebinlocation": "../../BaselineBinaries",
-    "testbinlocation": "../../../build-RegressionTest",
+    "basebinlocation": "BaselineBinaries",
+    "testbinlocation": "../build-RegressionTest",
     "allowskip": true,
     "testcases": {
         "agents_defaults": {
