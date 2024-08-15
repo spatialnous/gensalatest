@@ -578,5 +578,5 @@ TEST_CASE("Pointmap copy()", "") {
     QtRegion region(p, p);
     auto selSet = newPnt.getPointsInRegion(region);
 
-    auto analysisResult = VGAMetricDepth(selSet).run(nullptr, newPnt, false);
+    auto analysisResult = VGAMetricDepth(newPnt, selSet).run(nullptr);
 }
