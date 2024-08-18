@@ -97,7 +97,7 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
         auto sourceAttrColIdx = sourceMap.addAttribute(attributeName);
 
         for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
-            REQUIRE(vgaRowIter->getRow().getValue(vgaAttrColIdx) == -1);
+            REQUIRE(vgaRowIter->getRow().getValue(vgaAttrColIdx) == -1.0f);
         }
 
         SECTION("Single polygon input") {
@@ -549,7 +549,7 @@ TEST_CASE("Push values from shapemaps to VGA", "") {
         sourceMap.initialiseAttributesAxial();
 
         for (auto vgaRowIter = vgaTable.begin(); vgaRowIter != vgaTable.end(); vgaRowIter++) {
-            REQUIRE(vgaRowIter->getRow().getValue(vgaAttrColIdx) == -1);
+            REQUIRE(vgaRowIter->getRow().getValue(vgaAttrColIdx) == -1.0f);
         }
 
         // vertical line

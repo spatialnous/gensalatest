@@ -46,12 +46,12 @@ void ImportParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrite
         throw depthmapX::RuntimeException(message.str().c_str());
     }
 
-    MetaGraphDX mGraph("Test mgraph");
-    DO_TIMED("Load graph file", mGraph.readFromFile(clp.getFileName());)
+    MetaGraphDX metaGraph("Test mgraph");
+    DO_TIMED("Load graph file", metaGraph.readFromFile(clp.getFileName());)
 
     std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
-    if (mGraph.getReadStatus() == MetaGraphReadWrite::ReadStatus::NOT_A_GRAPH) {
+    if (metaGraph.getReadStatus() == MetaGraphReadWrite::ReadStatus::NOT_A_GRAPH) {
         // not a graph, try to import the file
         std::string ext = clp.getFileName().substr(clp.getFileName().length() - 4,
                                                    clp.getFileName().length() - 1);
@@ -66,11 +66,11 @@ void ImportParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrite
             asDrawingLines = true;
         }
         if (asDrawingLines) {
-            auto newDrawingFile = mGraph.loadLineData(dm_runmethods::getCommunicator(clp).get(),
-                                                      clp.getFileName(), importFileType, false);
+            auto newDrawingFile = metaGraph.loadLineData(dm_runmethods::getCommunicator(clp).get(),
+                                                         clp.getFileName(), importFileType, false);
             if (mimicVersion.has_value() && *mimicVersion == "depthmapX 0.8.0") {
                 // this version does not actually set the map type of the space pixels
-                for (auto &map : mGraph.getDrawingFiles()[newDrawingFile].maps) {
+                for (auto &map : metaGraph.getDrawingFiles()[newDrawingFile].maps) {
                     map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
                 }
             }
@@ -80,28 +80,30 @@ void ImportParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrite
                                       clp.getFileName(), getImportMapType(), importFileType);
             if (getImportMapType() == depthmapX::ImportType::DATAMAP) {
                 for (auto &&map : newMaps) {
-                    mGraph.getDataMaps().emplace_back(std::make_unique<ShapeMap>(std::move(map)));
+                    metaGraph.getDataMaps().emplace_back(
+                        std::make_unique<ShapeMap>(std::move(map)));
                 }
-                if (!mGraph.getDataMaps().empty()) {
-                    mGraph.setDisplayedDataMapRef(mGraph.getDataMaps().size() - 1);
-                    mGraph.setState(mGraph.getState() | MetaGraphDX::DATAMAPS);
-                    mGraph.setViewClass(MetaGraphDX::SHOWHIDESHAPE);
+                if (!metaGraph.getDataMaps().empty()) {
+                    metaGraph.setDisplayedDataMapRef(metaGraph.getDataMaps().size() - 1);
+                    metaGraph.setState(metaGraph.getState() | MetaGraphDX::DATAMAPS);
+                    metaGraph.setViewClass(MetaGraphDX::SHOWHIDESHAPE);
                 }
             } else {
-                auto newDrawingFile = mGraph.addDrawingFile(clp.getFileName(), std::move(newMaps));
-                mGraph.setState(mGraph.getState() | MetaGraphDX::LINEDATA);
+                auto newDrawingFile =
+                    metaGraph.addDrawingFile(clp.getFileName(), std::move(newMaps));
+                metaGraph.setState(metaGraph.getState() | MetaGraphDX::LINEDATA);
                 if (mimicVersion.has_value() && *mimicVersion == "depthmapX 0.8.0") {
                     // this version does not actually set the map type of the space pixels
-                    for (auto &map : mGraph.getDrawingFiles()[newDrawingFile].maps) {
+                    for (auto &map : metaGraph.getDrawingFiles()[newDrawingFile].maps) {
                         map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
                     }
                 }
             }
         }
-    } else if (mGraph.getReadStatus() == MetaGraphReadWrite::ReadStatus::OK) {
+    } else if (metaGraph.getReadStatus() == MetaGraphReadWrite::ReadStatus::OK) {
         if (toImportAsAttrbiutes()) {
 
-            if (mGraph.getDisplayedMapType() == ShapeMap::EMPTYMAP) {
+            if (metaGraph.getDisplayedMapType() == ShapeMap::EMPTYMAP) {
                 throw depthmapX::RuntimeException("No map displayed to attach attributes to");
             }
 
@@ -115,11 +117,11 @@ void ImportParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrite
                 }
 
                 DO_TIMED("Importing attributes",
-                         depthmapX::importAttributes(mGraph.getDisplayedMapAttributes(), file,
+                         depthmapX::importAttributes(metaGraph.getDisplayedMapAttributes(), file,
                                                      delimiter);)
             }
         }
     }
     DO_TIMED("Writing graph",
-             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+             dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
 }

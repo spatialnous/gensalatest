@@ -96,8 +96,8 @@ TEST_CASE("Testing deleting shapes from axial maps") {
             axialConnections[axialMap->getShapeRefFromIndex(i)->first];
         REQUIRE(connector.count(Connector::CONN_ALL) == expectedConnections.size());
         for (int otherShapeRef : expectedConnections) {
-            REQUIRE(std::find(connector.m_connections.begin(), connector.m_connections.end(),
-                              otherShapeRef) != connector.m_connections.end());
+            REQUIRE(std::find(connector.connections.begin(), connector.connections.end(),
+                              otherShapeRef) != connector.connections.end());
         }
     }
 
@@ -294,19 +294,18 @@ TEST_CASE("Testing deleting shapes from segment maps") {
 
         for (int otherShapeRef : expectedForConnections) {
             bool inForConnections =
-                std::find_if(connector.m_forward_segconns.begin(),
-                             connector.m_forward_segconns.end(),
+                std::find_if(connector.forwardSegconns.begin(), connector.forwardSegconns.end(),
                              [&otherShapeRef](const std::pair<SegmentRef, int> &segmentRef) {
                                  return segmentRef.first.ref == otherShapeRef;
-                             }) != connector.m_forward_segconns.end();
+                             }) != connector.forwardSegconns.end();
             REQUIRE(inForConnections);
         }
         for (int otherShapeRef : expectedBackConnections) {
             bool inBackConnections =
-                std::find_if(connector.m_back_segconns.begin(), connector.m_back_segconns.end(),
+                std::find_if(connector.backSegconns.begin(), connector.backSegconns.end(),
                              [&otherShapeRef](const std::pair<SegmentRef, int> &segmentRef) {
                                  return segmentRef.first.ref == otherShapeRef;
-                             }) != connector.m_back_segconns.end();
+                             }) != connector.backSegconns.end();
             REQUIRE(inBackConnections);
         }
     }

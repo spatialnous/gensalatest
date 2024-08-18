@@ -9,10 +9,10 @@
 class PrintCommunicator : public ICommunicator {
   public:
     PrintCommunicator() {
-        num_steps = 0;
-        step = 0;
-        num_records = 0;
-        record = 0;
+        m_numSteps = 0;
+        m_step = 0;
+        m_numRecords = 0;
+        m_record = 0;
     }
     virtual ~PrintCommunicator() {}
     virtual void CommPostMessage(size_t m, size_t x) const;

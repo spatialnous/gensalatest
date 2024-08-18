@@ -83,17 +83,17 @@ void StepDepthParser::parse(size_t argc, char **argv) {
 }
 
 void StepDepthParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto metaGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::cout << "ok\nSelecting cells... " << std::flush;
 
     for (auto &point : m_stepDepthPoints) {
-        auto graphRegion = mGraph.getRegion();
+        auto graphRegion = metaGraph.getRegion();
         if (!graphRegion.contains(point)) {
             throw depthmapX::RuntimeException("Point outside of target region");
         }
         QtRegion r(point, point);
-        mGraph.setCurSel(r, true);
+        metaGraph.setCurSel(r, true);
     }
 
     std::cout << "ok\nCalculating step-depth... " << std::flush;
@@ -117,14 +117,14 @@ void StepDepthParser::run(const CommandLineParser &clp, IPerformanceSink &perfWr
     }
 
     DO_TIMED("Calculating step-depth",
-             mGraph.analyseGraph(dm_runmethods::getCommunicator(clp).get(), options, false);)
+             metaGraph.analyseGraph(dm_runmethods::getCommunicator(clp).get(), options, false);)
 
     std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
     if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
         /* legacy mode where the columns are sorted before stored */
 
-        auto &map = mGraph.getDisplayedPointMap();
+        auto &map = metaGraph.getDisplayedPointMap();
         auto displayedAttribute = map.getDisplayedAttribute();
 
         auto sortedDisplayedAttribute = static_cast<int>(
@@ -143,6 +143,6 @@ void StepDepthParser::run(const CommandLineParser &clp, IPerformanceSink &perfWr
 
     std::cout << " ok\nWriting out result..." << std::flush;
     DO_TIMED("Writing graph",
-             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+             dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

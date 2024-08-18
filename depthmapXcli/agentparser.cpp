@@ -263,11 +263,11 @@ void AgentParser::parse(size_t argc, char *argv[]) {
 
 void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
 
-    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto metaGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
-    auto &currentMap = mGraph.getDisplayedPointMap();
+    auto &currentMap = metaGraph.getDisplayedPointMap();
 
     int agentViewAlgorithm = AgentProgram::SEL_STANDARD;
 
@@ -314,7 +314,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
                   recordTrailsForAgents() == 0
                       ? std::nullopt
                       : std::make_optional(static_cast<size_t>(recordTrailsForAgents())),
-                  std::ref(mGraph.getDataMaps()
+                  std::ref(metaGraph.getDataMaps()
                                .emplace_back("Agent Trails", ShapeMap::DATAMAP)
                                .getInternalMap())})
             : std::nullopt;
@@ -342,7 +342,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
 
     std::cout << "ok\nRunning agent analysis... " << std::flush;
     DO_TIMED("Running agent analysis",
-             mGraph.runAgentEngine(dm_runmethods::getCommunicator(clp).get(), analysis);)
+             metaGraph.runAgentEngine(dm_runmethods::getCommunicator(clp).get(), analysis);)
 
     std::cout << " ok\nWriting out result..." << std::flush;
     std::vector<AgentParser::OutputType> resultTypes = outputTypes();
@@ -352,7 +352,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
 
         if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
-            auto &map = mGraph.getDisplayedPointMap();
+            auto &map = metaGraph.getDisplayedPointMap();
             auto displayedAttribute = map.getDisplayedAttribute();
 
             auto sortedDisplayedAttribute =
@@ -362,7 +362,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
         }
 
         DO_TIMED("Writing graph",
-                 dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+                 dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
     } else if (resultTypes.size() == 1) {
         // if only one type of output is given, assume that the user has
         // correctly entered a name with the correct extension and export
@@ -373,7 +373,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
 
             if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
                 /* legacy mode where the columns are sorted before stored */
-                auto &map = mGraph.getDisplayedPointMap();
+                auto &map = metaGraph.getDisplayedPointMap();
                 auto displayedAttribute = map.getDisplayedAttribute();
 
                 auto sortedDisplayedAttribute =
@@ -383,7 +383,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
             }
 
             DO_TIMED("Writing graph",
-                     dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+                     dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
             break;
         }
         case AgentParser::OutputType::GATECOUNTS: {
@@ -412,7 +412,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
 
             if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
                 /* legacy mode where the columns are sorted before stored */
-                for (auto &map : mGraph.getShapeGraphs()) {
+                for (auto &map : metaGraph.getShapeGraphs()) {
                     auto displayedAttribute = map.getDisplayedAttribute();
 
                     auto sortedDisplayedAttribute =
@@ -420,7 +420,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
                             static_cast<size_t>(displayedAttribute)));
                     map.setDisplayedAttribute(sortedDisplayedAttribute);
                 }
-                auto &map = mGraph.getDisplayedPointMap();
+                auto &map = metaGraph.getDisplayedPointMap();
                 auto displayedAttribute = map.getDisplayedAttribute();
 
                 auto sortedDisplayedAttribute =
@@ -431,7 +431,7 @@ void AgentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
 
             std::string outFile = clp.getOuputFile() + ".graph";
             DO_TIMED("Writing graph",
-                     dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+                     dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
         }
         if (std::find(resultTypes.begin(), resultTypes.end(),
                       AgentParser::OutputType::GATECOUNTS) != resultTypes.end()) {

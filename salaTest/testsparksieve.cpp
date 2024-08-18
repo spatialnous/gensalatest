@@ -17,9 +17,9 @@ TEST_CASE("One block garbage") {
     lines.push_back(Line(Point2f(0.5, 0.2), Point2f(0.5, 0.7)));
     sieve.block(lines, 4);
     sieve.collectgarbage();
-    REQUIRE(sieve.m_gaps.size() == 1);
-    REQUIRE(sieve.m_gaps.begin()->start == 0);
-    REQUIRE(sieve.m_gaps.begin()->end == Catch::Approx(0.625));
+    REQUIRE(sieve.gaps.size() == 1);
+    REQUIRE(sieve.gaps.begin()->start == 0);
+    REQUIRE(sieve.gaps.begin()->end == Catch::Approx(0.625));
 }
 
 TEST_CASE("Shift start and end") {
@@ -32,9 +32,9 @@ TEST_CASE("Shift start and end") {
     lines.push_back(Line(Point2f(0.5, 0.1), Point2f(1.1, 0.9)));
     sieve.block(lines, 4);
     sieve.collectgarbage();
-    REQUIRE(sieve.m_gaps.size() == 1);
-    REQUIRE(sieve.m_gaps.begin()->start == Catch::Approx(0.55555555555));
-    REQUIRE(sieve.m_gaps.begin()->end == Catch::Approx(0.625));
+    REQUIRE(sieve.gaps.size() == 1);
+    REQUIRE(sieve.gaps.begin()->start == Catch::Approx(0.55555555555));
+    REQUIRE(sieve.gaps.begin()->end == Catch::Approx(0.625));
 }
 
 TEST_CASE("delete gap") {
@@ -45,7 +45,7 @@ TEST_CASE("delete gap") {
     lines.push_back(Line(Point2f(1.1, 0.2), Point2f(0.5, 0.7)));
     sieve.block(lines, 4);
     sieve.collectgarbage();
-    REQUIRE(sieve.m_gaps.empty());
+    REQUIRE(sieve.gaps.empty());
 }
 
 TEST_CASE("add gap") {
@@ -58,8 +58,8 @@ TEST_CASE("add gap") {
     lines.push_back(Line(Point2f(0.5, 0.3), Point2f(0.5, 0.7)));
     sieve.block(lines, 4);
     sieve.collectgarbage();
-    REQUIRE(sieve.m_gaps.size() == 2);
-    auto iter = sieve.m_gaps.begin();
+    REQUIRE(sieve.gaps.size() == 2);
+    auto iter = sieve.gaps.begin();
     REQUIRE(iter->start == 0);
     REQUIRE(iter->end == Catch::Approx(0.55555555555));
     iter++;

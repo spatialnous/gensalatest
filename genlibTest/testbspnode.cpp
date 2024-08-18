@@ -148,23 +148,23 @@ TEST_CASE("BSPTree::make (all horizontal lines)", "all-left tree") {
 
     compareLines(node->getLine(), lines[1], EPSILON);
 
-    REQUIRE(node->m_left != nullptr);
-    REQUIRE(node->m_right == nullptr);
+    REQUIRE(node->left != nullptr);
+    REQUIRE(node->right == nullptr);
 
-    compareLines(node->m_left->getLine(), lines[0], EPSILON);
+    compareLines(node->left->getLine(), lines[0], EPSILON);
 
-    REQUIRE(node->m_left->m_left != nullptr);
-    REQUIRE(node->m_left->m_right == nullptr);
+    REQUIRE(node->left->left != nullptr);
+    REQUIRE(node->left->right == nullptr);
 
-    compareLines(node->m_left->m_left->getLine(), lines[2], EPSILON);
+    compareLines(node->left->left->getLine(), lines[2], EPSILON);
 
-    REQUIRE(node->m_left->m_left->m_left != nullptr);
-    REQUIRE(node->m_left->m_left->m_right == nullptr);
+    REQUIRE(node->left->left->left != nullptr);
+    REQUIRE(node->left->left->right == nullptr);
 
-    compareLines(node->m_left->m_left->m_left->getLine(), lines[3], EPSILON);
+    compareLines(node->left->left->left->getLine(), lines[3], EPSILON);
 
-    REQUIRE(node->m_left->m_left->m_left->m_left == nullptr);
-    REQUIRE(node->m_left->m_left->m_left->m_right == nullptr);
+    REQUIRE(node->left->left->left->left == nullptr);
+    REQUIRE(node->left->left->left->right == nullptr);
 }
 
 TEST_CASE("BSPTree::make (all vertical lines)", "split tree") {
@@ -182,20 +182,20 @@ TEST_CASE("BSPTree::make (all vertical lines)", "split tree") {
 
     compareLines(node->getLine(), lines[1], EPSILON);
 
-    REQUIRE(node->m_left != nullptr);
-    REQUIRE(node->m_right != nullptr);
+    REQUIRE(node->left != nullptr);
+    REQUIRE(node->right != nullptr);
 
-    compareLines(node->m_left->getLine(), lines[0], EPSILON);
-    compareLines(node->m_right->getLine(), lines[2], EPSILON);
+    compareLines(node->left->getLine(), lines[0], EPSILON);
+    compareLines(node->right->getLine(), lines[2], EPSILON);
 
-    REQUIRE(node->m_left->m_left == nullptr);
-    REQUIRE(node->m_left->m_right == nullptr);
+    REQUIRE(node->left->left == nullptr);
+    REQUIRE(node->left->right == nullptr);
 
-    REQUIRE(node->m_right->m_left == nullptr);
-    REQUIRE(node->m_right->m_right != nullptr);
+    REQUIRE(node->right->left == nullptr);
+    REQUIRE(node->right->right != nullptr);
 
-    compareLines(node->m_right->m_right->getLine(), lines[3], EPSILON);
+    compareLines(node->right->right->getLine(), lines[3], EPSILON);
 
-    REQUIRE(node->m_right->m_right->m_left == nullptr);
-    REQUIRE(node->m_right->m_right->m_right == nullptr);
+    REQUIRE(node->right->right->left == nullptr);
+    REQUIRE(node->right->right->right == nullptr);
 }

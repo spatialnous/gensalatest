@@ -9,20 +9,20 @@
 void PrintCommunicator::CommPostMessage(size_t m, size_t x) const {
     switch (m) {
     case Communicator::NUM_STEPS:
-        num_steps = x;
+        m_numSteps = x;
         break;
     case Communicator::CURRENT_STEP:
-        step = x;
+        m_step = x;
         break;
     case Communicator::NUM_RECORDS:
-        num_records = x;
+        m_numRecords = x;
         break;
     case Communicator::CURRENT_RECORD:
-        record = x;
-        if (record > num_records)
-            record = num_records;
-        std::cout << "step: " << step << "/" << num_steps << " "
-                  << "record: " << record << "/" << num_records << std::endl;
+        m_record = x;
+        if (m_record > m_numRecords)
+            m_record = m_numRecords;
+        std::cout << "step: " << m_step << "/" << m_numSteps << " "
+                  << "record: " << m_record << "/" << m_numRecords << std::endl;
         break;
     default:
         break;

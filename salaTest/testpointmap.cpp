@@ -13,7 +13,7 @@ TEST_CASE("Test MetaGraph construction", "") {
     Point2f offset(0, 0); // seems that this is always set to 0,0
 
     // create a new MetaGraph
-    // The PointMap needs the m_region variable from this
+    // The PointMap needs the region variable from this
     // object as a definition of the area the grid needs to cover
     MetaGraph metaGraph("Test MetaGraph");
 
@@ -21,14 +21,14 @@ TEST_CASE("Test MetaGraph construction", "") {
         Point2f bottomLeft(0, 0);
         Point2f topRight(2, 4);
 
-        // set m_region to the bounds
+        // set region to the bounds
         metaGraph.region = QtRegion(bottomLeft, topRight);
 
         // check if the bounds are set correctly
-        REQUIRE(metaGraph.region.bottom_left.x == Catch::Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.bottom_left.y == Catch::Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.x == Catch::Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.y == Catch::Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottomLeft.x == Catch::Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottomLeft.y == Catch::Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.topRight.x == Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.topRight.y == Catch::Approx(topRight.y).epsilon(EPSILON));
     }
 
     SECTION("Construct a MetaGraph using underlying geometry") {
@@ -55,12 +55,12 @@ TEST_CASE("Test MetaGraph construction", "") {
         newShapeMap.makeLineShape(Line(lineStart, lineEnd));
 
         // check if the ShapeMap bounds are set correctly
-        REQUIRE(newShapeMap.getRegion().bottom_left.x ==
+        REQUIRE(newShapeMap.getRegion().bottomLeft.x ==
                 Catch::Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(newShapeMap.getRegion().bottom_left.y ==
+        REQUIRE(newShapeMap.getRegion().bottomLeft.y ==
                 Catch::Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(newShapeMap.getRegion().top_right.x == Catch::Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(newShapeMap.getRegion().top_right.y == Catch::Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().topRight.x == Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(newShapeMap.getRegion().topRight.y == Catch::Approx(topRight.y).epsilon(EPSILON));
 
         // MetaGraph and SpacePixelFile do not automatically grow
         // their region when new shapemaps/files are added to them
@@ -68,23 +68,21 @@ TEST_CASE("Test MetaGraph construction", "") {
         spacePixelFileData.region = newShapeMap.getRegion();
 
         // check if the SpacePixelFile bounds are set correctly
-        REQUIRE(spacePixelFileData.region.bottom_left.x ==
+        REQUIRE(spacePixelFileData.region.bottomLeft.x ==
                 Catch::Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(spacePixelFileData.region.bottom_left.y ==
+        REQUIRE(spacePixelFileData.region.bottomLeft.y ==
                 Catch::Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(spacePixelFileData.region.top_right.x ==
-                Catch::Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(spacePixelFileData.region.top_right.y ==
-                Catch::Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.topRight.x == Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(spacePixelFileData.region.topRight.y == Catch::Approx(topRight.y).epsilon(EPSILON));
 
         metaGraph.region =
-            QtRegion(spacePixelFileData.region.bottom_left, spacePixelFileData.region.top_right);
+            QtRegion(spacePixelFileData.region.bottomLeft, spacePixelFileData.region.topRight);
 
         // check if the MetaGraph bounds are set correctly
-        REQUIRE(metaGraph.region.bottom_left.x == Catch::Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.bottom_left.y == Catch::Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.x == Catch::Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.y == Catch::Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottomLeft.x == Catch::Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottomLeft.y == Catch::Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.topRight.x == Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.topRight.y == Catch::Approx(topRight.y).epsilon(EPSILON));
     }
 
     // construct a sample pointMap
@@ -97,7 +95,7 @@ TEST_CASE("Test grid filling", "") {
     Point2f offset(0, 0); // seems that this is always set to 0,0
 
     // create a new MetaGraph
-    // The PointMap needs the m_region variable from this
+    // The PointMap needs the region variable from this
     // object as a definition of the area the grid needs to cover
     MetaGraph metaGraph("Test MetaGraph");
 
@@ -106,14 +104,14 @@ TEST_CASE("Test grid filling", "") {
         Point2f bottomLeft(0, 0);
         Point2f topRight(2, 4);
 
-        // set m_region to the bounds
+        // set region to the bounds
         metaGraph.region = QtRegion(bottomLeft, topRight);
 
         // check if the bounds are set correctly
-        REQUIRE(metaGraph.region.bottom_left.x == Catch::Approx(bottomLeft.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.bottom_left.y == Catch::Approx(bottomLeft.y).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.x == Catch::Approx(topRight.x).epsilon(EPSILON));
-        REQUIRE(metaGraph.region.top_right.y == Catch::Approx(topRight.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottomLeft.x == Catch::Approx(bottomLeft.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.bottomLeft.y == Catch::Approx(bottomLeft.y).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.topRight.x == Catch::Approx(topRight.x).epsilon(EPSILON));
+        REQUIRE(metaGraph.region.topRight.y == Catch::Approx(topRight.y).epsilon(EPSILON));
     }
 
     // construct a sample pointMap
@@ -137,7 +135,7 @@ TEST_CASE("Test grid filling", "") {
     // TODO Disentangle GUI enum from pointMap.makePoints
     int fill_type = 0; // = QDepthmapView::FULLFILL
 
-    Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
+    Point2f gridBottomLeft = pointMap.getRegion().bottomLeft;
 
     SECTION("Check if the points are made when fill selection in a cell") {
         // Check if the points are made (grid filled) when
@@ -291,8 +289,8 @@ TEST_CASE("Quirks in grid creation - Origin always at 0", "") {
                            bottomLeftPixelIndexY * spacing - 0.5 * spacing);
 
     // check if the bottom-left corner of the bottom-left pixel is as expected
-    REQUIRE(pointMap.getRegion().bottom_left.x == Catch::Approx(gridBottomLeft.x).epsilon(EPSILON));
-    REQUIRE(pointMap.getRegion().bottom_left.y == Catch::Approx(gridBottomLeft.y).epsilon(EPSILON));
+    REQUIRE(pointMap.getRegion().bottomLeft.x == Catch::Approx(gridBottomLeft.x).epsilon(EPSILON));
+    REQUIRE(pointMap.getRegion().bottomLeft.y == Catch::Approx(gridBottomLeft.y).epsilon(EPSILON));
 
     Point2f midPoint(gridBottomLeft.x + spacing * (floor(numCellsX * 0.5) + 0.5),
                      gridBottomLeft.y + spacing * (floor(numCellsY * 0.5) + 0.5));
@@ -336,10 +334,10 @@ TEST_CASE("Test PointMap connections output", "") {
     spacePixels.back().makeLineShape(Line(line3Start, line3End));
     spacePixelFileData.region = spacePixels.back().getRegion();
     metaGraph.region =
-        QtRegion(spacePixelFileData.region.bottom_left, spacePixelFileData.region.top_right);
+        QtRegion(spacePixelFileData.region.bottomLeft, spacePixelFileData.region.topRight);
     PointMap pointMap(metaGraph.region, "Test PointMap");
 
-    Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
+    Point2f gridBottomLeft = pointMap.getRegion().bottomLeft;
 
     Point2f midPoint(
         gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5) + 0.5),
@@ -462,7 +460,7 @@ TEST_CASE("Direct pointmap linking - fully filled grid (no geometry)", "") {
     metaGraph.region = QtRegion(bottomLeft, topRight);
     PointMap pointMap(metaGraph.region, "Test PointMap");
     pointMap.setGrid(spacing, offset);
-    Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
+    Point2f gridBottomLeft = pointMap.getRegion().bottomLeft;
     Point2f midPoint(
         gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5) + 0.5),
         gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));

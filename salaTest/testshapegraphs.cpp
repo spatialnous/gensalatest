@@ -39,9 +39,9 @@ TEST_CASE("Testing ShapeGraph::writeAxialConnections") {
     auto shapegraph = MapConverter::convertDrawingToAxial(0, "Test axial", drawingMapRefs);
 
     REQUIRE(shapegraph->getConnections().size() == 3);
-    REQUIRE(shapegraph->getConnections()[0].m_connections.size() == 2);
-    REQUIRE(shapegraph->getConnections()[1].m_connections.size() == 1);
-    REQUIRE(shapegraph->getConnections()[2].m_connections.size() == 1);
+    REQUIRE(shapegraph->getConnections()[0].connections.size() == 2);
+    REQUIRE(shapegraph->getConnections()[1].connections.size() == 1);
+    REQUIRE(shapegraph->getConnections()[2].connections.size() == 1);
 
     SECTION("writeAxialConnectionsAsDotGraph") {
         std::stringstream stream;

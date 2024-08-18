@@ -119,7 +119,7 @@ void SegmentParser::parse(size_t argc, char **argv) {
 }
 
 void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto metaGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
@@ -132,7 +132,7 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
     options.weighted_measure_col = -1;
 
     if (!getAttribute().empty()) {
-        const auto &map = mGraph.getDisplayedShapeGraph();
+        const auto &map = metaGraph.getDisplayedShapeGraph();
         const AttributeTable &table = map.getAttributeTable();
         for (size_t i = 0; i < table.getNumColumns(); i++) {
             if (getAttribute() == table.getColumnName(i).c_str()) {
@@ -164,25 +164,26 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
     switch (getAnalysisType()) {
     case InAnalysisType::ANGULAR_TULIP: {
         DO_TIMED("Segment tulip analysis",
-                 mGraph.analyseSegmentsTulip(
+                 metaGraph.analyseSegmentsTulip(
                      dm_runmethods::getCommunicator(clp).get(), options,
                      (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0")))
         break;
     }
     case InAnalysisType::ANGULAR_FULL: {
-        DO_TIMED("Segment angular analysis",
-                 mGraph.analyseSegmentsAngular(dm_runmethods::getCommunicator(clp).get(), options))
+        DO_TIMED(
+            "Segment angular analysis",
+            metaGraph.analyseSegmentsAngular(dm_runmethods::getCommunicator(clp).get(), options))
         break;
     }
     case InAnalysisType::TOPOLOGICAL: {
         options.output_type = AnalysisType::ISOVIST;
-        DO_TIMED("Segment topological", mGraph.analyseTopoMetMultipleRadii(
+        DO_TIMED("Segment topological", metaGraph.analyseTopoMetMultipleRadii(
                                             dm_runmethods::getCommunicator(clp).get(), options))
         break;
     }
     case InAnalysisType::METRIC: {
         options.output_type = AnalysisType::VISUAL;
-        DO_TIMED("Segment metric", mGraph.analyseTopoMetMultipleRadii(
+        DO_TIMED("Segment metric", metaGraph.analyseTopoMetMultipleRadii(
                                        dm_runmethods::getCommunicator(clp).get(), options))
         break;
     }
@@ -193,7 +194,7 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
 
     if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
         /* legacy mode where the columns are sorted before stored */
-        auto &map = mGraph.getDisplayedShapeGraph();
+        auto &map = metaGraph.getDisplayedShapeGraph();
         auto displayedAttribute = map.getDisplayedAttribute();
 
         auto sortedDisplayedAttribute = static_cast<int>(
@@ -203,6 +204,6 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
 
     std::cout << "Writing out result..." << std::flush;
     DO_TIMED("Writing graph",
-             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+             dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

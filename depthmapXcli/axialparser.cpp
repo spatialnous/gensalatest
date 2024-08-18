@@ -71,11 +71,11 @@ void AxialParser::parse(size_t argc, char **argv) {
 }
 
 void AxialParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto metaGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
-    auto state = mGraph.getState();
+    auto state = metaGraph.getState();
     if (runAllLines()) {
         if (~state & MetaGraphDX::LINEDATA) {
             throw depthmapX::RuntimeException(
@@ -84,9 +84,9 @@ void AxialParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
         std::cout << "Making all line map... " << std::flush;
         DO_TIMED("Making all axes map",
                  for_each(getAllAxesRoots().begin(), getAllAxesRoots().end(),
-                          [&mGraph, &clp](const Point2f &point) -> void {
-                              mGraph.makeAllLineMap(dm_runmethods::getCommunicator(clp).get(),
-                                                    point);
+                          [&metaGraph, &clp](const Point2f &point) -> void {
+                              metaGraph.makeAllLineMap(dm_runmethods::getCommunicator(clp).get(),
+                                                       point);
                           }))
         std::cout << "ok" << std::endl;
     }
@@ -96,13 +96,13 @@ void AxialParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
             throw depthmapX::RuntimeException(
                 "Line drawing must be loaded before fewest line map can be constructed");
         }
-        if (!mGraph.hasAllLineMap()) {
+        if (!metaGraph.hasAllLineMap()) {
             throw depthmapX::RuntimeException("All line map must be constructed before fewest "
                                               "lines can be constructed. Use -aa to do this");
         }
         std::cout << "Constructing fewest line map... " << std::flush;
         DO_TIMED("Fewest line map",
-                 mGraph.makeFewestLineMap(dm_runmethods::getCommunicator(clp).get(), 1))
+                 metaGraph.makeFewestLineMap(dm_runmethods::getCommunicator(clp).get(), 1))
         std::cout << "ok" << std::endl;
     }
 
@@ -117,7 +117,7 @@ void AxialParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
         options.weighted_measure_col = -1;
 
         if (!getAttribute().empty()) {
-            const auto &map = mGraph.getDisplayedShapeGraph();
+            const auto &map = metaGraph.getDisplayedShapeGraph();
             const auto &table = map.getAttributeTable();
             for (size_t i = 0; i < table.getNumColumns(); i++) {
                 if (getAttribute() == table.getColumnName(i).c_str()) {
@@ -132,14 +132,14 @@ void AxialParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
 
         DO_TIMED(
             "Axial analysis",
-            mGraph.analyseAxial(dm_runmethods::getCommunicator(clp).get(), options,
-                                (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0")))
+            metaGraph.analyseAxial(dm_runmethods::getCommunicator(clp).get(), options,
+                                   (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0")))
         std::cout << "ok\n" << std::flush;
     }
 
     if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
         /* legacy mode where the columns are sorted before stored */
-        auto &map = mGraph.getDisplayedShapeGraph();
+        auto &map = metaGraph.getDisplayedShapeGraph();
         auto displayedAttribute = map.getDisplayedAttribute();
 
         auto sortedDisplayedAttribute = static_cast<int>(
@@ -149,6 +149,6 @@ void AxialParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
 
     std::cout << "Writing out result..." << std::flush;
     DO_TIMED("Writing graph",
-             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+             dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

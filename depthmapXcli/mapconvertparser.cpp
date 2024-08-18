@@ -66,14 +66,14 @@ void MapConvertParser::parse(size_t argc, char **argv) {
 }
 
 void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto metaGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
-    int currentMapType = mGraph.getDisplayedMapType();
+    int currentMapType = metaGraph.getDisplayedMapType();
 
     if (currentMapType == ShapeMap::EMPTYMAP) {
-        if (mGraph.hasVisibleDrawingLayers()) {
+        if (metaGraph.hasVisibleDrawingLayers()) {
             currentMapType = ShapeMap::DRAWINGMAP;
         } else {
             throw depthmapX::RuntimeException("No currently available map to convert from");
@@ -110,12 +110,12 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
     switch (outputMapType()) {
     case ShapeMap::DRAWINGMAP: {
         DO_TIMED("Converting to drawing",
-                 mGraph.convertToDrawing(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
-                                         currentMapType == ShapeMap::DATAMAP));
+                 metaGraph.convertToDrawing(dm_runmethods::getCommunicator(clp).get(),
+                                            outputMapName(), currentMapType == ShapeMap::DATAMAP));
 
         if (mimicVersion.has_value() && *mimicVersion == "depthmapX 0.8.0") {
             // this version does not actually set the map type of the space pixels
-            for (auto &map : mGraph.getDrawingFiles().back().maps) {
+            for (auto &map : metaGraph.getDrawingFiles().back().maps) {
                 map.getInternalMap().setMapType(ShapeMap::EMPTYMAP);
             }
         }
@@ -125,15 +125,15 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
         switch (currentMapType) {
         case ShapeMap::DRAWINGMAP: {
             DO_TIMED("Converting from drawing to axial",
-                     mGraph.convertDrawingToAxial(dm_runmethods::getCommunicator(clp).get(),
-                                                  outputMapName()));
+                     metaGraph.convertDrawingToAxial(dm_runmethods::getCommunicator(clp).get(),
+                                                     outputMapName()));
             break;
         }
         case ShapeMap::DATAMAP: {
             DO_TIMED("Converting from data to axial",
-                     mGraph.convertDataToAxial(dm_runmethods::getCommunicator(clp).get(),
-                                               outputMapName(), !removeInputMap(),
-                                               copyAttributes()));
+                     metaGraph.convertDataToAxial(dm_runmethods::getCommunicator(clp).get(),
+                                                  outputMapName(), !removeInputMap(),
+                                                  copyAttributes()));
             break;
         }
         default: {
@@ -142,7 +142,7 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
         }
         if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
-            auto &map = mGraph.getShapeGraphs().back();
+            auto &map = metaGraph.getShapeGraphs().back();
             auto displayedAttribute = map.getDisplayedAttribute();
 
             auto sortedDisplayedAttribute =
@@ -156,22 +156,22 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
         switch (currentMapType) {
         case ShapeMap::DRAWINGMAP: {
             DO_TIMED("Converting from drawing to segment",
-                     mGraph.convertDrawingToSegment(dm_runmethods::getCommunicator(clp).get(),
-                                                    outputMapName()));
+                     metaGraph.convertDrawingToSegment(dm_runmethods::getCommunicator(clp).get(),
+                                                       outputMapName()));
             break;
         }
         case ShapeMap::AXIALMAP: {
             DO_TIMED("Converting from axial to segment",
-                     mGraph.convertAxialToSegment(dm_runmethods::getCommunicator(clp).get(),
-                                                  outputMapName(), !removeInputMap(),
-                                                  copyAttributes(), removeStubLength() / 100.0));
+                     metaGraph.convertAxialToSegment(dm_runmethods::getCommunicator(clp).get(),
+                                                     outputMapName(), !removeInputMap(),
+                                                     copyAttributes(), removeStubLength() / 100.0));
             break;
         }
         case ShapeMap::DATAMAP: {
             DO_TIMED("Converting from data to segment",
-                     mGraph.convertDataToSegment(dm_runmethods::getCommunicator(clp).get(),
-                                                 outputMapName(), !removeInputMap(),
-                                                 copyAttributes()));
+                     metaGraph.convertDataToSegment(dm_runmethods::getCommunicator(clp).get(),
+                                                    outputMapName(), !removeInputMap(),
+                                                    copyAttributes()));
             break;
         }
         default: {
@@ -180,7 +180,7 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
         }
         if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
-            auto &map = mGraph.getShapeGraphs().back();
+            auto &map = metaGraph.getShapeGraphs().back();
             auto displayedAttribute = map.getDisplayedAttribute();
 
             auto sortedDisplayedAttribute =
@@ -192,11 +192,11 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
     }
     case ShapeMap::DATAMAP: {
         DO_TIMED("Converting to data",
-                 mGraph.convertToData(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
-                                      !removeInputMap(), currentMapType, copyAttributes()));
+                 metaGraph.convertToData(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
+                                         !removeInputMap(), currentMapType, copyAttributes()));
         if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
-            auto &map = mGraph.getDataMaps().back();
+            auto &map = metaGraph.getDataMaps().back();
             auto displayedAttribute = map.getDisplayedAttribute();
 
             auto sortedDisplayedAttribute =
@@ -208,11 +208,12 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
     }
     case ShapeMap::CONVEXMAP: {
         DO_TIMED("Converting to convex",
-                 mGraph.convertToConvex(dm_runmethods::getCommunicator(clp).get(), outputMapName(),
-                                        !removeInputMap(), currentMapType, copyAttributes()));
+                 metaGraph.convertToConvex(dm_runmethods::getCommunicator(clp).get(),
+                                           outputMapName(), !removeInputMap(), currentMapType,
+                                           copyAttributes()));
         if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
             /* legacy mode where the columns are sorted before stored */
-            auto &map = mGraph.getShapeGraphs().back();
+            auto &map = metaGraph.getShapeGraphs().back();
             auto displayedAttribute = map.getDisplayedAttribute();
 
             auto sortedDisplayedAttribute =
@@ -229,6 +230,6 @@ void MapConvertParser::run(const CommandLineParser &clp, IPerformanceSink &perfW
 
     std::cout << " ok\nWriting out result..." << std::flush;
     DO_TIMED("Writing graph",
-             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+             dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

@@ -85,8 +85,8 @@ TEST_CASE("Test ShapeMap::copy()") {
 
     REQUIRE(newShapeGraph->getConnections().size() == shapeGraph->getConnections().size());
     for (size_t i = 0; i < shapeGraph->getConnections().size(); i++) {
-        REQUIRE(newShapeGraph->getConnections()[i].m_connections ==
-                shapeGraph->getConnections()[i].m_connections);
+        REQUIRE(newShapeGraph->getConnections()[i].connections ==
+                shapeGraph->getConnections()[i].connections);
     }
 
     Point2f p1(0982.8, -1620.3);

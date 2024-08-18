@@ -30,36 +30,36 @@ TEST_CASE("test attribute column") {
     REQUIRE(col.isHidden());
     REQUIRE(col.isLocked());
 
-    REQUIRE(col.m_stats.max == -1.0);
-    REQUIRE(col.m_stats.min == -1.0);
-    REQUIRE(col.m_stats.total == -1.0);
-    REQUIRE(col.m_stats.visibleMax == -1.0);
-    REQUIRE(col.m_stats.visibleMin == -1.0);
-    REQUIRE(col.m_stats.visibleTotal == -1.0);
+    REQUIRE(col.stats.max == -1.0);
+    REQUIRE(col.stats.min == -1.0);
+    REQUIRE(col.stats.total == -1.0);
+    REQUIRE(col.stats.visibleMax == -1.0);
+    REQUIRE(col.stats.visibleMin == -1.0);
+    REQUIRE(col.stats.visibleTotal == -1.0);
 
     col.updateStats(1.2f);
-    REQUIRE(col.m_stats.max == Catch::Approx(1.2));
-    REQUIRE(col.m_stats.min == Catch::Approx(1.2));
-    REQUIRE(col.m_stats.total == Catch::Approx(1.2));
-    REQUIRE(col.m_stats.visibleMax == -1.0);
-    REQUIRE(col.m_stats.visibleMin == -1.0);
-    REQUIRE(col.m_stats.visibleTotal == -1.0);
+    REQUIRE(col.stats.max == Catch::Approx(1.2));
+    REQUIRE(col.stats.min == Catch::Approx(1.2));
+    REQUIRE(col.stats.total == Catch::Approx(1.2));
+    REQUIRE(col.stats.visibleMax == -1.0);
+    REQUIRE(col.stats.visibleMin == -1.0);
+    REQUIRE(col.stats.visibleTotal == -1.0);
 
     col.updateStats(2.0f);
-    REQUIRE(col.m_stats.max == Catch::Approx(2.0));
-    REQUIRE(col.m_stats.min == Catch::Approx(1.2));
-    REQUIRE(col.m_stats.total == Catch::Approx(3.2));
-    REQUIRE(col.m_stats.visibleMax == -1.0);
-    REQUIRE(col.m_stats.visibleMin == -1.0);
-    REQUIRE(col.m_stats.visibleTotal == -1.0);
+    REQUIRE(col.stats.max == Catch::Approx(2.0));
+    REQUIRE(col.stats.min == Catch::Approx(1.2));
+    REQUIRE(col.stats.total == Catch::Approx(3.2));
+    REQUIRE(col.stats.visibleMax == -1.0);
+    REQUIRE(col.stats.visibleMin == -1.0);
+    REQUIRE(col.stats.visibleTotal == -1.0);
 
     col.updateStats(3.0f, 1.2f);
-    REQUIRE(col.m_stats.max == Catch::Approx(3.0));
-    REQUIRE(col.m_stats.min == Catch::Approx(1.2));
-    REQUIRE(col.m_stats.total == Catch::Approx(5));
-    REQUIRE(col.m_stats.visibleMax == -1.0);
-    REQUIRE(col.m_stats.visibleMin == -1.0);
-    REQUIRE(col.m_stats.visibleTotal == -1.0);
+    REQUIRE(col.stats.max == Catch::Approx(3.0));
+    REQUIRE(col.stats.min == Catch::Approx(1.2));
+    REQUIRE(col.stats.total == Catch::Approx(5));
+    REQUIRE(col.stats.visibleMax == -1.0);
+    REQUIRE(col.stats.visibleMin == -1.0);
+    REQUIRE(col.stats.visibleTotal == -1.0);
 
     // test read/write
     SelfCleaningFile scf("column.bin");
@@ -76,12 +76,12 @@ TEST_CASE("test attribute column") {
     REQUIRE(copy.getFormula() == "");
     REQUIRE(copy.isHidden());
     REQUIRE(copy.isLocked());
-    REQUIRE(copy.m_stats.max == Catch::Approx(3.0));
-    REQUIRE(copy.m_stats.min == Catch::Approx(1.2));
-    REQUIRE(copy.m_stats.total == Catch::Approx(5));
-    REQUIRE(copy.m_stats.visibleMax == -1.0);
-    REQUIRE(copy.m_stats.visibleMin == -1.0);
-    REQUIRE(copy.m_stats.visibleTotal == -1.0);
+    REQUIRE(copy.stats.max == Catch::Approx(3.0));
+    REQUIRE(copy.stats.min == Catch::Approx(1.2));
+    REQUIRE(copy.stats.total == Catch::Approx(5));
+    REQUIRE(copy.stats.visibleMax == -1.0);
+    REQUIRE(copy.stats.visibleMin == -1.0);
+    REQUIRE(copy.stats.visibleTotal == -1.0);
 }
 
 TEST_CASE("test attribute row") {
@@ -177,12 +177,12 @@ TEST_CASE("test attribute table") {
     REQUIRE(table.getColumn(3).isLocked());
 
     table.addRow(AttributeKey(0));
-    REQUIRE(table.getRow(AttributeKey(0)).getValue("col1") == -1);
+    REQUIRE(table.getRow(AttributeKey(0)).getValue("col1") == -1.0f);
     table.getRow(AttributeKey(0)).setValue("col1", 1.2f);
     REQUIRE(table.getRow(AttributeKey(0)).getValue("col1") == Catch::Approx(1.2f));
     REQUIRE(table.getRow(AttributeKey(0)).getValue(0) == Catch::Approx(1.2f));
 
-    REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == -1);
+    REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == -1.0f);
     table.getRow(AttributeKey(0)).setValue(3, 1.4f);
     REQUIRE(table.getRow(AttributeKey(0)).getValue("lcol2") == Catch::Approx(1.4f));
     REQUIRE(table.getRow(AttributeKey(0)).getValue(3) == Catch::Approx(1.4f));

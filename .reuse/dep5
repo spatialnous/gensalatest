@@ -3,7 +3,7 @@ Upstream-Name: gensalatest
 Upstream-Contact: Petros Koutsolampros <commits@pklampros.io>
 Source: https://github.com/spatialnous/gensalatest
 
-Files: .gitignore README.md .clang-format .gitmodules .mailmap
+Files: .gitignore README.md .clang-format .clang-tidy .gitmodules .mailmap
 Copyright: Petros Koutsolampros <commits@pklampros.io>
 License: GPL-3.0-or-later
 

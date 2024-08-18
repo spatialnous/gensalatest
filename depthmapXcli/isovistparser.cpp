@@ -69,15 +69,15 @@ void IsovistParser::parse(size_t argc, char **argv) {
 }
 
 void IsovistParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto metaGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::cout << "Making " << m_isovists.size() << " isovists... " << std::flush;
     DO_TIMED("Make isovists",
              std::for_each(m_isovists.begin(), m_isovists.end(),
-                           [&mGraph, &clp](const IsovistDefinition &isovist) -> void {
-                               mGraph.makeIsovist(dm_runmethods::getCommunicator(clp).get(),
-                                                  isovist.getLocation(), isovist.getLeftAngle(),
-                                                  isovist.getRightAngle(), clp.simpleMode());
+                           [&metaGraph, &clp](const IsovistDefinition &isovist) -> void {
+                               metaGraph.makeIsovist(dm_runmethods::getCommunicator(clp).get(),
+                                                     isovist.getLocation(), isovist.getLeftAngle(),
+                                                     isovist.getRightAngle(), clp.simpleMode());
                            }))
     std::cout << " ok\nWriting out result..." << std::flush;
 
@@ -86,7 +86,7 @@ void IsovistParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
     if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
         /* legacy mode where the columns are sorted before stored */
 
-        auto &map = mGraph.getDataMaps().back();
+        auto &map = metaGraph.getDataMaps().back();
         auto displayedAttribute = map.getDisplayedAttribute();
 
         auto sortedDisplayedAttribute = static_cast<int>(
@@ -95,6 +95,6 @@ void IsovistParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
     }
 
     DO_TIMED("Writing graph",
-             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+             dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

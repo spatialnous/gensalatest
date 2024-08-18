@@ -45,8 +45,8 @@ TEST_CASE("Shortest paths working examples", "") {
 
     auto shapesInRegion = segmentMap->getShapesInRegion(selRegion);
 
-    selRegion.bottom_left = lines[9].midpoint();
-    selRegion.top_right = lines[9].midpoint();
+    selRegion.bottomLeft = lines[9].midpoint();
+    selRegion.topRight = lines[9].midpoint();
     auto newShapesInRegion = segmentMap->getShapesInRegion(selRegion);
 
     shapesInRegion.insert(newShapesInRegion.begin(), newShapesInRegion.end());

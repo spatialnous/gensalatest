@@ -82,13 +82,13 @@ void SegmentShortestPathParser::parse(size_t argc, char **argv) {
 
 void SegmentShortestPathParser::run(const CommandLineParser &clp,
                                     IPerformanceSink &perfWriter) const {
-    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto metaGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
     std::cout << "ok\nSelecting cells... " << std::flush;
 
-    auto graphRegion = mGraph.getRegion();
+    auto graphRegion = metaGraph.getRegion();
 
     if (!graphRegion.contains(m_originPoint)) {
         throw depthmapX::RuntimeException("Origin point outside of target region");
@@ -97,20 +97,20 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
         throw depthmapX::RuntimeException("Destination point outside of target region");
     }
     QtRegion r(m_originPoint, m_originPoint);
-    mGraph.setCurSel(r, false);
+    metaGraph.setCurSel(r, false);
 
     r = QtRegion(m_destinationPoint, m_destinationPoint);
-    mGraph.setCurSel(r, true);
+    metaGraph.setCurSel(r, true);
 
     std::cout << "ok\nCalculating shortest path... " << std::flush;
 
     std::unique_ptr<Communicator> comm(new ICommunicator());
-    int refFrom = *mGraph.getSelSet().begin();
-    int refTo = *mGraph.getSelSet().rbegin();
+    int refFrom = *metaGraph.getSelSet().begin();
+    int refTo = *metaGraph.getSelSet().rbegin();
 
     switch (m_stepType) {
     case SegmentShortestPathParser::StepType::TULIP: {
-        auto &map = mGraph.getDisplayedShapeGraph();
+        auto &map = metaGraph.getDisplayedShapeGraph();
         DO_TIMED(
             "Calculating tulip shortest path",
             SegmentTulipShortestPath(map.getInternalMap(), 1024, refFrom, refTo).run(comm.get()))
@@ -119,7 +119,7 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
         break;
     }
     case SegmentShortestPathParser::StepType::METRIC: {
-        auto &map = mGraph.getDisplayedShapeGraph();
+        auto &map = metaGraph.getDisplayedShapeGraph();
         DO_TIMED("Calculating metric shortest path",
                  SegmentMetricShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
         map.overrideDisplayedAttribute(-2);
@@ -133,7 +133,7 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
         break;
     }
     case SegmentShortestPathParser::StepType::TOPOLOGICAL: {
-        auto &map = mGraph.getDisplayedShapeGraph();
+        auto &map = metaGraph.getDisplayedShapeGraph();
         DO_TIMED(
             "Calculating topological shortest path",
             SegmentTopologicalShortestPath(map.getInternalMap(), refFrom, refTo).run(comm.get()))
@@ -149,7 +149,7 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
 
     if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
         /* legacy mode where the columns are sorted before stored */
-        auto &map = mGraph.getDisplayedShapeGraph();
+        auto &map = metaGraph.getDisplayedShapeGraph();
         auto displayedAttribute = map.getDisplayedAttribute();
 
         auto sortedDisplayedAttribute = static_cast<int>(
@@ -159,6 +159,6 @@ void SegmentShortestPathParser::run(const CommandLineParser &clp,
 
     std::cout << " ok\nWriting out result..." << std::flush;
     DO_TIMED("Writing graph",
-             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+             dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }

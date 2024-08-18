@@ -56,7 +56,7 @@ TEST_CASE("Test attribute table handle") {
     REQUIRE(handle.getTableIndex().front().key.value == 7);
     REQUIRE(handle.getConstTableIndex().front().key.value == 7);
 
-    handle.getTableIndex().front().mutable_row->setValue(0, 0.8f);
+    handle.getTableIndex().front().mutableRow->setValue(0, 0.8f);
 
     REQUIRE(table.getRow(AttributeKey(7)).getValue(0) == Catch::Approx(0.8));
 

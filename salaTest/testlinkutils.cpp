@@ -16,7 +16,7 @@ TEST_CASE("Test linking - fully filled grid (no geometry)", "") {
 
     PointMap pointMap(QtRegion(bottomLeft, topRight), "Test PointMap");
     pointMap.setGrid(spacing, offset);
-    Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
+    Point2f gridBottomLeft = pointMap.getRegion().bottomLeft;
     Point2f midPoint(
         gridBottomLeft.x + spacing * (floor(static_cast<double>(pointMap.getCols()) * 0.5) + 0.5),
         gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));
@@ -197,8 +197,8 @@ TEST_CASE("Test linking - half filled grid", "") {
     PointMap pointMap(QtRegion(bottomLeft, topRight), "Test PointMap");
     pointMap.setGrid(spacing, offset);
 
-    Point2f gridBottomLeft = pointMap.getRegion().bottom_left;
-    Point2f gridTopRight = pointMap.getRegion().top_right;
+    Point2f gridBottomLeft = pointMap.getRegion().bottomLeft;
+    Point2f gridTopRight = pointMap.getRegion().topRight;
     Point2f topLeftFillPoint(gridBottomLeft.x + spacing, gridTopRight.y - spacing);
     std::vector<Line> lines = spacePixels.back().getAllShapesAsLines();
     pointMap.blockLines(lines);

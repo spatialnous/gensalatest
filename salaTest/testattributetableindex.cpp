@@ -29,6 +29,6 @@ TEST_CASE("Check index creation") {
     REQUIRE(index[2].key.value == 0);
     REQUIRE(index[3].key.value == 2);
 
-    index[3].mutable_row->setValue(1, 1.5);
+    index[3].mutableRow->setValue(1, 1.5);
     REQUIRE(table.getRow(AttributeKey(2)).getValue(1) == Catch::Approx(1.5));
 }

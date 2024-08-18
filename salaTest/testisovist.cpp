@@ -61,29 +61,29 @@ TEST_CASE("Simple Isovist") {
     // needs 5 points so it might make sense to run some sort of optimisation right
     // after generating the isovists
 
-    REQUIRE(isovist.m_points.size() == 8);
+    REQUIRE(isovist.points.size() == 8);
 
-    REQUIRE(isovist.m_points[0].x == Catch::Approx(3.0).epsilon(EPSILON));
-    REQUIRE(isovist.m_points[0].y == Catch::Approx(3.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[0].x == Catch::Approx(3.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[0].y == Catch::Approx(3.0).epsilon(EPSILON));
 
-    REQUIRE(isovist.m_points[1].x == Catch::Approx(2.0).epsilon(EPSILON));
-    REQUIRE(isovist.m_points[1].y == Catch::Approx(3.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[1].x == Catch::Approx(2.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[1].y == Catch::Approx(3.0).epsilon(EPSILON));
 
-    REQUIRE(isovist.m_points[2].x == Catch::Approx(1.0).epsilon(EPSILON));
-    REQUIRE(isovist.m_points[2].y == Catch::Approx(3.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[2].x == Catch::Approx(1.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[2].y == Catch::Approx(3.0).epsilon(EPSILON));
 
-    REQUIRE(isovist.m_points[3].x == Catch::Approx(1.0).epsilon(EPSILON));
-    REQUIRE(isovist.m_points[3].y == Catch::Approx(1.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[3].x == Catch::Approx(1.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[3].y == Catch::Approx(1.0).epsilon(EPSILON));
 
-    REQUIRE(isovist.m_points[4].x == Catch::Approx(2.0).epsilon(EPSILON));
-    REQUIRE(isovist.m_points[4].y == Catch::Approx(2.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[4].x == Catch::Approx(2.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[4].y == Catch::Approx(2.0).epsilon(EPSILON));
 
-    REQUIRE(isovist.m_points[5].x == Catch::Approx(2.0).epsilon(EPSILON));
-    REQUIRE(isovist.m_points[5].y == Catch::Approx(2.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[5].x == Catch::Approx(2.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[5].y == Catch::Approx(2.0).epsilon(EPSILON));
 
-    REQUIRE(isovist.m_points[6].x == Catch::Approx(3.0).epsilon(EPSILON));
-    REQUIRE(isovist.m_points[6].y == Catch::Approx(2.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[6].x == Catch::Approx(3.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[6].y == Catch::Approx(2.0).epsilon(EPSILON));
 
-    REQUIRE(isovist.m_points[7].x == Catch::Approx(3.0).epsilon(EPSILON));
-    REQUIRE(isovist.m_points[7].y == Catch::Approx(2.5).epsilon(EPSILON));
+    REQUIRE(isovist.points[7].x == Catch::Approx(3.0).epsilon(EPSILON));
+    REQUIRE(isovist.points[7].y == Catch::Approx(2.5).epsilon(EPSILON));
 }

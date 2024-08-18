@@ -143,18 +143,18 @@ void VisPrepParser::parse(size_t argc, char **argv) {
 }
 
 void VisPrepParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const {
-    auto mGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
+    auto metaGraph = dm_runmethods::loadGraph(clp.getFileName().c_str(), perfWriter);
 
     std::optional<std::string> mimicVersion = clp.getMimickVersion();
 
     std::cout << "Initial checks... " << std::flush;
-    auto state = mGraph.getState();
+    auto state = metaGraph.getState();
     if (~state & MetaGraphDX::LINEDATA) {
         throw depthmapX::RuntimeException("Graph must have line data before preparing VGA");
     }
     if (m_grid > 0) {
         // Create a new pointmap and set tha grid
-        QtRegion r = mGraph.getRegion();
+        QtRegion r = metaGraph.getRegion();
 
         GridProperties gp(__max(r.width(), r.height()));
         if (m_grid > gp.getMax() || m_grid < gp.getMin()) {
@@ -166,9 +166,9 @@ void VisPrepParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
         }
 
         std::cout << "ok\nSetting up grid... " << std::flush;
-        mGraph.addNewPointMap();
-        DO_TIMED("Setting grid", mGraph.setGrid(m_grid, Point2f(0.0, 0.0)))
-    } else if (mGraph.getPointMaps().empty()) {
+        metaGraph.addNewPointMap();
+        DO_TIMED("Setting grid", metaGraph.setGrid(m_grid, Point2f(0.0, 0.0)))
+    } else if (metaGraph.getPointMaps().empty()) {
         std::stringstream message;
         message << "No map exists to use. Please create a new one by providing a grid size"
                 << std::flush;
@@ -176,29 +176,29 @@ void VisPrepParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
     }
 
     if (m_unmakeGraph) {
-        if (!mGraph.getDisplayedPointMap().getInternalMap().isProcessed()) {
+        if (!metaGraph.getDisplayedPointMap().getInternalMap().isProcessed()) {
             std::stringstream message;
             message << "Current map has not had its graph made so there's nothing to unmake"
                     << std::flush;
             throw depthmapX::RuntimeException(message.str());
         }
-        DO_TIMED("Unmaking graph", mGraph.unmakeGraph(m_removeLinksWhenUnmaking))
+        DO_TIMED("Unmaking graph", metaGraph.unmakeGraph(m_removeLinksWhenUnmaking))
     } else {
         if (m_fillPoints.size() > 0) {
             std::cout << "ok\nFilling grid... " << std::flush;
             DO_TIMED("Filling grid", for_each(m_fillPoints.begin(), m_fillPoints.end(),
-                                              [&mGraph](const Point2f &point) -> void {
-                                                  fillGraph(mGraph, point);
+                                              [&metaGraph](const Point2f &point) -> void {
+                                                  fillGraph(metaGraph, point);
                                               }))
         }
         if (m_makeGraph) {
             std::cout << "ok\nMaking graph... " << std::flush;
-            DO_TIMED("Making graph", mGraph.makeGraph(dm_runmethods::getCommunicator(clp).get(),
-                                                      m_boundaryGraph ? 1 : 0, m_maxVisibility))
+            DO_TIMED("Making graph", metaGraph.makeGraph(dm_runmethods::getCommunicator(clp).get(),
+                                                         m_boundaryGraph ? 1 : 0, m_maxVisibility))
 
             if (mimicVersion.has_value() && mimicVersion == "depthmapX 0.8.0") {
                 /* legacy mode where the columns are sorted before stored */
-                auto &map = mGraph.getDisplayedPointMap();
+                auto &map = metaGraph.getDisplayedPointMap();
                 auto displayedAttribute = map.getDisplayedAttribute();
 
                 auto sortedDisplayedAttribute =
@@ -211,6 +211,6 @@ void VisPrepParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
 
     std::cout << " ok\nWriting out result..." << std::flush;
     DO_TIMED("Writing graph",
-             dm_runmethods::writeGraph(clp, mGraph, clp.getOuputFile().c_str(), false))
+             dm_runmethods::writeGraph(clp, metaGraph, clp.getOuputFile().c_str(), false))
     std::cout << " ok" << std::endl;
 }
