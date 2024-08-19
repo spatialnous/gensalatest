@@ -13,7 +13,7 @@ class ModeParserRegistry : public IModeParserFactory {
   public:
     ModeParserRegistry() { populateParsers(); }
 
-    const ModeParserVec &getModeParsers() const { return m_availableParsers; }
+    const ModeParserVec &getModeParsers() const override { return m_availableParsers; }
 
   private:
     void populateParsers();

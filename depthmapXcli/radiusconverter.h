@@ -15,6 +15,6 @@ class IRadiusConverter {
 
 class RadiusConverter : public IRadiusConverter {
   public:
-    virtual double ConvertForVisibility(const std::string &radius) const;
-    virtual double ConvertForMetric(const std::string &radius) const;
+    double ConvertForVisibility(const std::string &radius) const override;
+    double ConvertForMetric(const std::string &radius) const override;
 };

@@ -16,9 +16,9 @@ class MapConvertParser : public IModeParser {
 
     // IModeParser interface
   public:
-    std::string getModeName() const { return "MAPCONVERT"; }
+    std::string getModeName() const override { return "MAPCONVERT"; }
 
-    std::string getHelp() const {
+    std::string getHelp() const override {
         return "Mode options for Map Conversion:\n"
                "  -co Output map type (to convert to)\n"
                "      Possible input/output map types:\n"
@@ -33,8 +33,8 @@ class MapConvertParser : public IModeParser {
                "  -crsl <%> Percent of line length of axial stubs to remove (Only for AXIAL -> "
                "SEGMENT)\n\n";
     }
-    void parse(size_t argc, char **argv);
-    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    void parse(size_t argc, char **argv) override;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     int outputMapType() const { return m_outMapType; }
     std::string outputMapName() const { return m_outMapName; }

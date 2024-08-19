@@ -11,9 +11,9 @@
 
 class VgaParser : public IModeParser {
   public:
-    virtual std::string getModeName() const { return "VGA"; }
+    std::string getModeName() const override { return "VGA"; }
 
-    virtual std::string getHelp() const {
+    std::string getHelp() const override {
         return "Mode options for VGA:\n"
                "-vm <vga mode> one of isovist, visiblity, metric, angular, thruvision\n"
                "-vg turn on global measures for visibility, requires radius between 1 and 99 or n\n"
@@ -23,8 +23,8 @@ class VgaParser : public IModeParser {
 
   public:
     VgaParser();
-    virtual void parse(size_t argc, char *argv[]);
-    virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    void parse(size_t argc, char *argv[]) override;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     enum VgaMode { NONE, ISOVIST, VISBILITY, METRIC, ANGULAR, THRU_VISION };
 

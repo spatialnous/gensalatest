@@ -18,9 +18,9 @@ class LinkParser : public IModeParser {
 
     LinkParser() : m_mapTypeGroup(POINTMAPS), m_linkMode(LINK), m_linkType(COORDS) {}
 
-    virtual std::string getModeName() const { return "LINK"; }
+    std::string getModeName() const override { return "LINK"; }
 
-    virtual std::string getHelp() const {
+    std::string getHelp() const override {
         return "Mode options for LINK:\n"
                "  -lmt <type> Map type group to select displayed map from. One of:\n"
                "       pointmaps (default, vga: link)\n"
@@ -40,8 +40,8 @@ class LinkParser : public IModeParser {
     }
 
   public:
-    virtual void parse(size_t argc, char *argv[]);
-    virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    void parse(size_t argc, char *argv[]) override;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     // link options
     const std::string &getLinksFile() const { return m_linksFile; }

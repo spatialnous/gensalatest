@@ -16,6 +16,6 @@ class PerformanceWriter : public IPerformanceSink {
 
   public:
     PerformanceWriter(const std::string &filename);
-    void addData(const std::string &message, double timeInSeconds);
+    void addData(const std::string &message, double timeInSeconds) override;
     void write() const;
 };

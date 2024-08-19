@@ -11,9 +11,9 @@
 
 class ExportParser : public IModeParser {
   public:
-    virtual std::string getModeName() const { return "EXPORT"; }
+    std::string getModeName() const override { return "EXPORT"; }
 
-    virtual std::string getHelp() const {
+    std::string getHelp() const override {
         return "Mode options for EXPORT:\n"
                "-em <export mode> one of:\n"
                "    pointmap-data-csv\n"
@@ -27,8 +27,8 @@ class ExportParser : public IModeParser {
 
   public:
     ExportParser();
-    virtual void parse(size_t argc, char *argv[]);
-    virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    void parse(size_t argc, char *argv[]) override;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     enum ExportMode {
         NONE,

@@ -14,9 +14,9 @@ class StepDepthParser : public IModeParser {
   public:
     StepDepthParser() : m_stepType(StepType::NONE) {}
 
-    virtual std::string getModeName() const { return "STEPDEPTH"; }
+    std::string getModeName() const override { return "STEPDEPTH"; }
 
-    virtual std::string getHelp() const {
+    std::string getHelp() const override {
         return "Mode options for pointmap STEPDEPTH are:\n"
                "  -sdp <step depth point> point where to calculate step depth from. Can be "
                "repeated\n"
@@ -27,9 +27,9 @@ class StepDepthParser : public IModeParser {
 
     enum class StepType { NONE, ANGULAR, METRIC, VISUAL };
 
-    virtual void parse(size_t argc, char **argv);
+    void parse(size_t argc, char **argv) override;
 
-    virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     std::vector<Point2f> getStepDepthPoints() const { return m_stepDepthPoints; }
 

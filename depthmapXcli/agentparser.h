@@ -13,9 +13,9 @@
 
 class AgentParser : public IModeParser {
   public:
-    virtual std::string getModeName() const { return "AGENTS"; }
+    std::string getModeName() const override { return "AGENTS"; }
 
-    virtual std::string getHelp() const {
+    std::string getHelp() const override {
         return "Mode options for AGENTS:\n"
                "-am <agent mode> one of:\n"
                "    standard\n"
@@ -50,8 +50,8 @@ class AgentParser : public IModeParser {
 
   public:
     AgentParser();
-    virtual void parse(size_t argc, char *argv[]);
-    virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    void parse(size_t argc, char *argv[]) override;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     enum AgentMode {
         NONE,

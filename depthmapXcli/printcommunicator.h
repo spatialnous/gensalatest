@@ -14,6 +14,6 @@ class PrintCommunicator : public ICommunicator {
         m_numRecords = 0;
         m_record = 0;
     }
-    virtual ~PrintCommunicator() {}
-    virtual void CommPostMessage(size_t m, size_t x) const;
+    ~PrintCommunicator() override {}
+    void CommPostMessage(size_t m, size_t x) const override;
 };

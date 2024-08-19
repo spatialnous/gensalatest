@@ -14,9 +14,9 @@ class SegmentShortestPathParser : public IModeParser {
   public:
     SegmentShortestPathParser() : m_stepType(StepType::NONE) {}
 
-    virtual std::string getModeName() const { return "SEGMENTSHORTESTPATH"; }
+    std::string getModeName() const override { return "SEGMENTSHORTESTPATH"; }
 
-    virtual std::string getHelp() const {
+    std::string getHelp() const override {
         return "Mode options for pointmap SEGMENTSHORTESTPATH are:\n"
                "  -sspo <shortest path origin point> point where to calculate shortest path "
                "between.\n"
@@ -27,9 +27,9 @@ class SegmentShortestPathParser : public IModeParser {
 
     enum class StepType { NONE, TULIP, METRIC, TOPOLOGICAL };
 
-    virtual void parse(size_t argc, char **argv);
+    void parse(size_t argc, char **argv) override;
 
-    virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     Point2f getShortestPathOrigin() const { return m_originPoint; }
     Point2f getShortestPathDestination() const { return m_destinationPoint; }

@@ -14,9 +14,9 @@
 
 class ImportParser : public IModeParser {
   public:
-    virtual std::string getModeName() const { return "IMPORT"; }
+    std::string getModeName() const override { return "IMPORT"; }
 
-    virtual std::string getHelp() const {
+    std::string getHelp() const override {
         return "Mode options for IMPORT:\n"
                "   The file provided by -f here will be used as the base. If that file"
                "is not a graph, a new graph will be created and the file will be imported\n"
@@ -30,8 +30,8 @@ class ImportParser : public IModeParser {
     }
 
   public:
-    virtual void parse(size_t argc, char *argv[]);
-    virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    void parse(size_t argc, char *argv[]) override;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     const std::vector<std::string> &getFilesToImport() const { return m_filesToImport; }
     bool toImportAsAttrbiutes() const { return m_importAsAttributes; }

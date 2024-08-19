@@ -16,9 +16,9 @@ class VisPrepParser : public IModeParser {
         : m_grid(-1.0), m_maxVisibility(-1.0), m_boundaryGraph(false), m_makeGraph(false),
           m_unmakeGraph(false), m_removeLinksWhenUnmaking(false) {}
 
-    virtual std::string getModeName() const { return "VISPREP"; }
+    std::string getModeName() const override { return "VISPREP"; }
 
-    virtual std::string getHelp() const {
+    std::string getHelp() const override {
         return "Mode options for VISPREP (visual analysis preparation) are:\n"
                "  -pg <gridsize> floating point number defining the grid spacing. If this\n"
                "      is provided it will create a new map\n"
@@ -31,9 +31,9 @@ class VisPrepParser : public IModeParser {
                "  -pl Remove links when unmaking\n";
     }
 
-    virtual void parse(size_t argc, char **argv);
+    void parse(size_t argc, char **argv) override;
 
-    virtual void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     double getGrid() const { return m_grid; }
     std::vector<Point2f> getFillPoints() const { return m_fillPoints; }

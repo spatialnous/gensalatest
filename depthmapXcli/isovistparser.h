@@ -16,10 +16,10 @@ class IsovistParser : public IModeParser {
 
     // IModeParser interface
   public:
-    std::string getModeName() const;
-    std::string getHelp() const;
-    void parse(size_t argc, char **argv);
-    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const;
+    std::string getModeName() const override;
+    std::string getHelp() const override;
+    void parse(size_t argc, char **argv) override;
+    void run(const CommandLineParser &clp, IPerformanceSink &perfWriter) const override;
 
     const std::vector<IsovistDefinition> &getIsovists() const { return m_isovists; }
 

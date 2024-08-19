@@ -22,13 +22,15 @@ class TestParser : public IModeParser {
     TestParser(const std::string &modeName)
         : m_parseCalled(false), m_runCalled(false), m_modeName(modeName) {}
 
-    virtual std::string getModeName() const { return m_modeName; }
+    std::string getModeName() const override { return m_modeName; }
 
-    virtual std::string getHelp() const { return formatTestHelpString(m_runCalled, m_parseCalled); }
+    std::string getHelp() const override {
+        return formatTestHelpString(m_runCalled, m_parseCalled);
+    }
 
-    virtual void parse(size_t, char **) { m_parseCalled = true; }
+    void parse(size_t, char **) override { m_parseCalled = true; }
 
-    virtual void run(const CommandLineParser &, IPerformanceSink &) const { m_runCalled = true; }
+    void run(const CommandLineParser &, IPerformanceSink &) const override { m_runCalled = true; }
 
     static std::string formatTestHelpString(bool runCalled, bool parseCalled) {
         std::stringstream buf;
