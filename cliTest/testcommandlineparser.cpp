@@ -55,7 +55,7 @@ TEST_CASE("Invalid Parser", "Constructor") {
 
     {
         CommandLineParser cmdP(factoryMock.get());
-        REQUIRE_THROWS_WITH(cmdP.parse(0, 0),
+        REQUIRE_THROWS_WITH(cmdP.parse(0, nullptr),
                             Catch::Matchers::ContainsSubstring(
                                 "No commandline parameters provided - don't know what to do"));
     }

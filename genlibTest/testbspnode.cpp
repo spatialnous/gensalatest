@@ -16,18 +16,18 @@ TEST_CASE("BSPTree::pickMidpointLine") {
 
     BSPNode node;
 
-    REQUIRE(BSPTree::pickMidpointLine(lines, 0) == 1);
+    REQUIRE(BSPTree::pickMidpointLine(lines, nullptr) == 1);
 
     SECTION("Additional lines") {
         lines.push_back(Line(Point2f(4, 2), Point2f(5, 2)));
-        REQUIRE(BSPTree::pickMidpointLine(lines, 0) == 1);
+        REQUIRE(BSPTree::pickMidpointLine(lines, nullptr) == 1);
 
         lines.push_back(Line(Point2f(5, 1), Point2f(6, 1)));
-        REQUIRE(BSPTree::pickMidpointLine(lines, 0) == 2);
+        REQUIRE(BSPTree::pickMidpointLine(lines, nullptr) == 2);
 
         // the only line with height > width becomes chosen
         lines.push_back(Line(Point2f(15, 4), Point2f(15, 0)));
-        REQUIRE(BSPTree::pickMidpointLine(lines, 0) == 5);
+        REQUIRE(BSPTree::pickMidpointLine(lines, nullptr) == 5);
     }
     SECTION("rotated middle") {
 
@@ -40,15 +40,15 @@ TEST_CASE("BSPTree::pickMidpointLine") {
         // height > width, rotated, not close to midpoint
         lines.push_back(Line(Point2f(6.5, 1), Point2f(6.5, 3)));
 
-        REQUIRE(BSPTree::pickMidpointLine(lines, 0) == 3);
+        REQUIRE(BSPTree::pickMidpointLine(lines, nullptr) == 3);
     }
 }
 
-void compareLines(const Line &l1, const Line &l2, float EPSILON) {
-    REQUIRE(l1.start().x == Catch::Approx(l2.start().x).epsilon(EPSILON));
-    REQUIRE(l1.start().y == Catch::Approx(l2.start().y).epsilon(EPSILON));
-    REQUIRE(l1.end().x == Catch::Approx(l2.end().x).epsilon(EPSILON));
-    REQUIRE(l1.end().y == Catch::Approx(l2.end().y).epsilon(EPSILON));
+void compareLines(const Line &l1, const Line &l2, float epsilon) {
+    REQUIRE(l1.start().x == Catch::Approx(l2.start().x).epsilon(epsilon));
+    REQUIRE(l1.start().y == Catch::Approx(l2.start().y).epsilon(epsilon));
+    REQUIRE(l1.end().x == Catch::Approx(l2.end().x).epsilon(epsilon));
+    REQUIRE(l1.end().y == Catch::Approx(l2.end().y).epsilon(epsilon));
 }
 
 TEST_CASE("BSPTree::makeLines") {
@@ -63,7 +63,7 @@ TEST_CASE("BSPTree::makeLines") {
 
     std::unique_ptr<BSPNode> node(new BSPNode());
 
-    LineVecPair result = BSPTree::makeLines(0, 0, lines, node.get());
+    LineVecPair result = BSPTree::makeLines(nullptr, 0, lines, node.get());
 
     REQUIRE(result.first.size() == 3);
     REQUIRE(result.second.size() == 0);
@@ -75,7 +75,7 @@ TEST_CASE("BSPTree::makeLines") {
     SECTION("One on the right") {
         lines.push_back(Line(Point2f(5, 1), Point2f(6, 1)));
 
-        result = BSPTree::makeLines(0, 0, lines, node.get());
+        result = BSPTree::makeLines(nullptr, 0, lines, node.get());
 
         REQUIRE(result.first.size() == 3);
         REQUIRE(result.second.size() == 1);
@@ -88,7 +88,7 @@ TEST_CASE("BSPTree::makeLines") {
 
         lines.push_back(Line(Point2f(6, 2), Point2f(7, 2)));
 
-        result = BSPTree::makeLines(0, 0, lines, node.get());
+        result = BSPTree::makeLines(nullptr, 0, lines, node.get());
 
         REQUIRE(result.first.size() == 4);
         REQUIRE(result.second.size() == 1);
@@ -112,7 +112,7 @@ TEST_CASE("BSPTree::makeLines") {
         // line with two points at different sides of chosen
         lines.push_back(Line(Point2f(3, -2), Point2f(6, -2)));
 
-        result = BSPTree::makeLines(0, 0, lines, node.get());
+        result = BSPTree::makeLines(nullptr, 0, lines, node.get());
 
         // adds one on each side
         REQUIRE(result.first.size() == 5);
@@ -144,7 +144,7 @@ TEST_CASE("BSPTree::make (all horizontal lines)", "all-left tree") {
 
     std::unique_ptr<BSPNode> node(new BSPNode());
 
-    BSPTree::make(0, 0, lines, node.get());
+    BSPTree::make(nullptr, 0, lines, node.get());
 
     compareLines(node->getLine(), lines[1], epsilon);
 
@@ -178,7 +178,7 @@ TEST_CASE("BSPTree::make (all vertical lines)", "split tree") {
 
     std::unique_ptr<BSPNode> node(new BSPNode());
 
-    BSPTree::make(0, 0, lines, node.get());
+    BSPTree::make(nullptr, 0, lines, node.get());
 
     compareLines(node->getLine(), lines[1], epsilon);
 

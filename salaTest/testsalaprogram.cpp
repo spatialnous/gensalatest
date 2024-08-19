@@ -154,7 +154,7 @@ TEST_CASE("Shapemap scripts") {
     spacePixels.back().makeLineShape(Line(line5Start, line5End));
 
     auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
-    auto shapeGraph = MapConverter::convertDrawingToAxial(0, "Test axial", drawingMapRefs);
+    auto shapeGraph = MapConverter::convertDrawingToAxial(nullptr, "Test axial", drawingMapRefs);
 
     std::stringstream script;
     std::vector<double> expectedColVals;
@@ -257,7 +257,7 @@ TEST_CASE("Shapemap scripts with unexpected results") {
     spacePixels.back().makeLineShape(Line(line5Start, line5End));
 
     auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
-    auto shapeGraph = MapConverter::convertDrawingToAxial(0, "Test axial", drawingMapRefs);
+    auto shapeGraph = MapConverter::convertDrawingToAxial(nullptr, "Test axial", drawingMapRefs);
 
     std::stringstream script;
     std::vector<double> expectedColVals;

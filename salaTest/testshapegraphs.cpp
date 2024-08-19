@@ -36,7 +36,7 @@ TEST_CASE("Testing ShapeGraph::writeAxialConnections") {
 
     auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
 
-    auto shapegraph = MapConverter::convertDrawingToAxial(0, "Test axial", drawingMapRefs);
+    auto shapegraph = MapConverter::convertDrawingToAxial(nullptr, "Test axial", drawingMapRefs);
 
     REQUIRE(shapegraph->getConnections().size() == 3);
     REQUIRE(shapegraph->getConnections()[0].connections.size() == 2);
@@ -95,7 +95,8 @@ TEST_CASE("Testing ShapeGraph::writeSegmentConnections") {
     spacePixels.back().makeLineShape(Line(line3Start, line3End));
 
     auto drawingMapRefs = ShapeMapGroupData::getAsRefMaps(drawingFiles);
-    auto shapegraph = MapConverter::convertDrawingToSegment(0, "Test segment", drawingMapRefs);
+    auto shapegraph =
+        MapConverter::convertDrawingToSegment(nullptr, "Test segment", drawingMapRefs);
 
     SECTION("writeSegmentConnectionsAsPairsCSV") {
         std::stringstream stream;
