@@ -10,7 +10,7 @@
 #include "catch_amalgamated.hpp"
 
 TEST_CASE("DXF Parsing (lines)") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     Point2f lineStart(-1, -2);
     Point2f lineEnd(3, 4);
     std::string layer("0");
@@ -40,17 +40,17 @@ TEST_CASE("DXF Parsing (lines)") {
     REQUIRE(dxfParser.numLayers() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->numLines() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getStart().x ==
-            Catch::Approx(lineStart.x).epsilon(EPSILON));
+            Catch::Approx(lineStart.x).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getStart().y ==
-            Catch::Approx(lineStart.y).epsilon(EPSILON));
+            Catch::Approx(lineStart.y).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getEnd().x ==
-            Catch::Approx(lineEnd.x).epsilon(EPSILON));
+            Catch::Approx(lineEnd.x).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getEnd().y ==
-            Catch::Approx(lineEnd.y).epsilon(EPSILON));
+            Catch::Approx(lineEnd.y).epsilon(epsilon));
 }
 
 TEST_CASE("DXF Parsing (arcs)") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     Point2f centre(1, -2);
     float radius = 3;
     float startAngle = 45;
@@ -83,17 +83,17 @@ TEST_CASE("DXF Parsing (arcs)") {
     REQUIRE(dxfParser.numLayers() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->numArcs() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->getArc(0).getCentre().x ==
-            Catch::Approx(centre.x).epsilon(EPSILON));
+            Catch::Approx(centre.x).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getArc(0).getCentre().y ==
-            Catch::Approx(centre.y).epsilon(EPSILON));
+            Catch::Approx(centre.y).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getArc(0).getRadius() ==
-            Catch::Approx(radius).epsilon(EPSILON));
+            Catch::Approx(radius).epsilon(epsilon));
     // arc start angle not publicly accessible
     // arc end angle not publicly accessible
 }
 
 TEST_CASE("DXF Parsing (circles)") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     Point2f centre(1, -2);
     float radius = 3;
     std::string layer("0");
@@ -120,15 +120,15 @@ TEST_CASE("DXF Parsing (circles)") {
     REQUIRE(dxfParser.numLayers() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->numCircles() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->getCircle(0).getCentre().x ==
-            Catch::Approx(centre.x).epsilon(EPSILON));
+            Catch::Approx(centre.x).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getCircle(0).getCentre().y ==
-            Catch::Approx(centre.y).epsilon(EPSILON));
+            Catch::Approx(centre.y).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getCircle(0).getRadius() ==
-            Catch::Approx(radius).epsilon(EPSILON));
+            Catch::Approx(radius).epsilon(epsilon));
 }
 
 TEST_CASE("DXF Parsing (points)") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     Point2f point(1, -2);
     std::string layer("0");
 
@@ -152,13 +152,13 @@ TEST_CASE("DXF Parsing (points)") {
     REQUIRE(dxfParser.numLayers() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->numPoints() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->getPoint(0).x ==
-            Catch::Approx(point.x).epsilon(EPSILON));
+            Catch::Approx(point.x).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getPoint(0).y ==
-            Catch::Approx(point.y).epsilon(EPSILON));
+            Catch::Approx(point.y).epsilon(epsilon));
 }
 
 TEST_CASE("DXF Parsing (lwpolyline)") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     Point2f point1(-1, -2);
     Point2f point2(3, 4);
     Point2f point3(-5, 6);
@@ -208,19 +208,19 @@ TEST_CASE("DXF Parsing (lwpolyline)") {
     REQUIRE(dxfParser.getLayer(layer.c_str())->numPolyLines() == 1);
     DxfPolyLine polyline = dxfParser.getLayer(layer.c_str())->getPolyLine(0);
     REQUIRE(polyline.numVertices() == 4);
-    REQUIRE(polyline.getVertex(0).x == Catch::Approx(point1.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(0).y == Catch::Approx(point1.y).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(1).x == Catch::Approx(point2.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(1).y == Catch::Approx(point2.y).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(2).x == Catch::Approx(point3.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(2).y == Catch::Approx(point3.y).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(3).x == Catch::Approx(point4.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(3).y == Catch::Approx(point4.y).epsilon(EPSILON));
+    REQUIRE(polyline.getVertex(0).x == Catch::Approx(point1.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(0).y == Catch::Approx(point1.y).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(1).x == Catch::Approx(point2.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(1).y == Catch::Approx(point2.y).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(2).x == Catch::Approx(point3.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(2).y == Catch::Approx(point3.y).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(3).x == Catch::Approx(point4.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(3).y == Catch::Approx(point4.y).epsilon(epsilon));
     REQUIRE((polyline.getAttributes() & polyline.CLOSED) == closed);
 }
 
 TEST_CASE("DXF Parsing (polyline)") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     Point2f point1(-1, -2);
     Point2f point2(3, 4);
     Point2f point3(-5, 6);
@@ -275,19 +275,19 @@ TEST_CASE("DXF Parsing (polyline)") {
     REQUIRE(dxfParser.getLayer(layer.c_str())->numPolyLines() == 1);
     DxfPolyLine polyline = dxfParser.getLayer(layer.c_str())->getPolyLine(0);
     REQUIRE(polyline.numVertices() == 4);
-    REQUIRE(polyline.getVertex(0).x == Catch::Approx(point1.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(0).y == Catch::Approx(point1.y).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(1).x == Catch::Approx(point2.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(1).y == Catch::Approx(point2.y).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(2).x == Catch::Approx(point3.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(2).y == Catch::Approx(point3.y).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(3).x == Catch::Approx(point4.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(3).y == Catch::Approx(point4.y).epsilon(EPSILON));
+    REQUIRE(polyline.getVertex(0).x == Catch::Approx(point1.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(0).y == Catch::Approx(point1.y).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(1).x == Catch::Approx(point2.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(1).y == Catch::Approx(point2.y).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(2).x == Catch::Approx(point3.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(2).y == Catch::Approx(point3.y).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(3).x == Catch::Approx(point4.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(3).y == Catch::Approx(point4.y).epsilon(epsilon));
     REQUIRE((polyline.getAttributes() & polyline.CLOSED) == closed);
 }
 
 TEST_CASE("DXF Parsing (spline)") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
 
     std::vector<double> weights = {0.0, 0.0, 0.0, 0.0, 2.72, 5.15, 6.93, 6.93, 6.93, 6.93};
 
@@ -358,8 +358,8 @@ TEST_CASE("DXF Parsing (spline)") {
     DxfSpline spline = dxfParser.getLayer(layer.c_str())->getSpline(0);
     REQUIRE(spline.numVertices() == controlPoints.size());
     for (size_t i = 0; i < controlPoints.size(); i++) {
-        REQUIRE(spline.getVertex(i).x == Catch::Approx(controlPoints[i].x).epsilon(EPSILON));
-        REQUIRE(spline.getVertex(i).y == Catch::Approx(controlPoints[i].y).epsilon(EPSILON));
+        REQUIRE(spline.getVertex(i).x == Catch::Approx(controlPoints[i].x).epsilon(epsilon));
+        REQUIRE(spline.getVertex(i).y == Catch::Approx(controlPoints[i].y).epsilon(epsilon));
     }
     REQUIRE((spline.getAttributes() & spline.CLOSED) == closed);
 }
@@ -399,7 +399,7 @@ TEST_CASE("DXF Parsing (zero-length line)") {
 TEST_CASE("DXF Parsing (zero-length lwpolyline)") {
     // parser does not skip zero-length polylines
 
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     Point2f point1(1, 2);
     Point2f point2(1, 2);
     std::string layer("0");
@@ -434,15 +434,15 @@ TEST_CASE("DXF Parsing (zero-length lwpolyline)") {
     REQUIRE(dxfParser.getLayer(layer.c_str())->numPolyLines() == 1);
     DxfPolyLine polyline = dxfParser.getLayer(layer.c_str())->getPolyLine(0);
     REQUIRE(polyline.numVertices() == 2);
-    REQUIRE(polyline.getVertex(0).x == Catch::Approx(point1.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(0).y == Catch::Approx(point1.y).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(1).x == Catch::Approx(point2.x).epsilon(EPSILON));
-    REQUIRE(polyline.getVertex(1).y == Catch::Approx(point2.y).epsilon(EPSILON));
+    REQUIRE(polyline.getVertex(0).x == Catch::Approx(point1.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(0).y == Catch::Approx(point1.y).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(1).x == Catch::Approx(point2.x).epsilon(epsilon));
+    REQUIRE(polyline.getVertex(1).y == Catch::Approx(point2.y).epsilon(epsilon));
     REQUIRE((polyline.getAttributes() & polyline.CLOSED) == closed);
 }
 
 TEST_CASE("DXF Parsing (block)") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     Point2f lineStart(-1, -2);
     Point2f lineEnd(3, 4);
     std::string block("bl");
@@ -504,17 +504,17 @@ TEST_CASE("DXF Parsing (block)") {
     REQUIRE(dxfParser.numLayers() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->numLines() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getStart().x ==
-            Catch::Approx(lineStart.x + blockTranslation.x).epsilon(EPSILON));
+            Catch::Approx(lineStart.x + blockTranslation.x).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getStart().y ==
-            Catch::Approx(lineStart.y + blockTranslation.y).epsilon(EPSILON));
+            Catch::Approx(lineStart.y + blockTranslation.y).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getEnd().x ==
-            Catch::Approx(lineEnd.x + blockTranslation.x).epsilon(EPSILON));
+            Catch::Approx(lineEnd.x + blockTranslation.x).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getEnd().y ==
-            Catch::Approx(lineEnd.y + blockTranslation.y).epsilon(EPSILON));
+            Catch::Approx(lineEnd.y + blockTranslation.y).epsilon(epsilon));
 }
 
 TEST_CASE("DXF Parsing (deeper blocks)") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     Point2f lineStart(-1, -2);
     Point2f lineEnd(3, 4);
     std::string block("bl");
@@ -604,11 +604,11 @@ TEST_CASE("DXF Parsing (deeper blocks)") {
     REQUIRE(dxfParser.numLayers() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->numLines() == 1);
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getStart().x ==
-            Catch::Approx(lineStart.x + 2 * blockTranslation.x).epsilon(EPSILON));
+            Catch::Approx(lineStart.x + 2 * blockTranslation.x).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getStart().y ==
-            Catch::Approx(lineStart.y + 2 * blockTranslation.y).epsilon(EPSILON));
+            Catch::Approx(lineStart.y + 2 * blockTranslation.y).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getEnd().x ==
-            Catch::Approx(lineEnd.x + 2 * blockTranslation.x).epsilon(EPSILON));
+            Catch::Approx(lineEnd.x + 2 * blockTranslation.x).epsilon(epsilon));
     REQUIRE(dxfParser.getLayer(layer.c_str())->getLine(0).getEnd().y ==
-            Catch::Approx(lineEnd.y + 2 * blockTranslation.y).epsilon(EPSILON));
+            Catch::Approx(lineEnd.y + 2 * blockTranslation.y).epsilon(epsilon));
 }

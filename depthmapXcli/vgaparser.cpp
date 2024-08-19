@@ -79,7 +79,7 @@ void VgaParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) 
     std::cout << "Getting options..." << std::flush;
     switch (getVgaMode()) {
     case VgaParser::VgaMode::VISBILITY:
-        options->output_type = AnalysisType::VISUAL;
+        options->outputType = AnalysisType::VISUAL;
         options->local = localMeasures();
         options->global = globalMeasures();
         if (options->global) {
@@ -87,17 +87,17 @@ void VgaParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter) 
         }
         break;
     case VgaParser::VgaMode::METRIC:
-        options->output_type = AnalysisType::METRIC;
+        options->outputType = AnalysisType::METRIC;
         options->radius = converter.ConvertForMetric(getRadius());
         break;
     case VgaParser::VgaMode::ANGULAR:
-        options->output_type = AnalysisType::ANGULAR;
+        options->outputType = AnalysisType::ANGULAR;
         break;
     case VgaParser::VgaMode::ISOVIST:
-        options->output_type = AnalysisType::ISOVIST;
+        options->outputType = AnalysisType::ISOVIST;
         break;
     case VgaParser::VgaMode::THRU_VISION:
-        options->output_type = AnalysisType::THRU_VISION;
+        options->outputType = AnalysisType::THRU_VISION;
         break;
     default:
         throw depthmapX::SetupCheckException("Unsupported VGA mode");

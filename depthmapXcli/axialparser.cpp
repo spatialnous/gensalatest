@@ -110,21 +110,21 @@ void AxialParser::run(const CommandLineParser &clp, IPerformanceSink &perfWriter
         std::cout << "Running axial analysis... " << std::flush;
         Options options;
         const std::vector<double> &radii = getRadii();
-        options.radius_set.insert(radii.begin(), radii.end());
+        options.radiusSet.insert(radii.begin(), radii.end());
         options.choice = useChoice();
         options.local = useLocal();
         options.fulloutput = calculateRRA();
-        options.weighted_measure_col = -1;
+        options.weightedMeasureCol = -1;
 
         if (!getAttribute().empty()) {
             const auto &map = metaGraph.getDisplayedShapeGraph();
             const auto &table = map.getAttributeTable();
             for (size_t i = 0; i < table.getNumColumns(); i++) {
                 if (getAttribute() == table.getColumnName(i).c_str()) {
-                    options.weighted_measure_col = static_cast<int>(i);
+                    options.weightedMeasureCol = static_cast<int>(i);
                 }
             }
-            if (options.weighted_measure_col == -1) {
+            if (options.weightedMeasureCol == -1) {
                 throw depthmapX::RuntimeException("Given attribute (" + getAttribute() +
                                                   ") does not exist in currently selected map");
             }

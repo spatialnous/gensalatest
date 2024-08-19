@@ -52,7 +52,7 @@ void compareLines(const Line &l1, const Line &l2, float EPSILON) {
 }
 
 TEST_CASE("BSPTree::makeLines") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     typedef std::pair<std::vector<Line>, std::vector<Line>> LineVecPair;
 
     std::vector<Line> lines;
@@ -68,9 +68,9 @@ TEST_CASE("BSPTree::makeLines") {
     REQUIRE(result.first.size() == 3);
     REQUIRE(result.second.size() == 0);
 
-    compareLines(result.first[0], lines[0], EPSILON);
-    compareLines(result.first[1], lines[2], EPSILON);
-    compareLines(result.first[2], lines[3], EPSILON);
+    compareLines(result.first[0], lines[0], epsilon);
+    compareLines(result.first[1], lines[2], epsilon);
+    compareLines(result.first[2], lines[3], epsilon);
 
     SECTION("One on the right") {
         lines.push_back(Line(Point2f(5, 1), Point2f(6, 1)));
@@ -80,7 +80,7 @@ TEST_CASE("BSPTree::makeLines") {
         REQUIRE(result.first.size() == 3);
         REQUIRE(result.second.size() == 1);
 
-        compareLines(result.second[0], lines[4], EPSILON);
+        compareLines(result.second[0], lines[4], epsilon);
     }
     SECTION("One line with height > width becomes chosen") {
         // height > width, rotated, not close to midpoint
@@ -93,11 +93,11 @@ TEST_CASE("BSPTree::makeLines") {
         REQUIRE(result.first.size() == 4);
         REQUIRE(result.second.size() == 1);
 
-        compareLines(result.first[0], lines[0], EPSILON);
-        compareLines(result.first[1], lines[1], EPSILON);
-        compareLines(result.first[2], lines[2], EPSILON);
-        compareLines(result.first[3], lines[3], EPSILON);
-        compareLines(result.second[0], lines[5], EPSILON);
+        compareLines(result.first[0], lines[0], epsilon);
+        compareLines(result.first[1], lines[1], epsilon);
+        compareLines(result.first[2], lines[2], epsilon);
+        compareLines(result.first[3], lines[3], epsilon);
+        compareLines(result.second[0], lines[5], epsilon);
     }
 
     SECTION("One broken between") {
@@ -118,23 +118,23 @@ TEST_CASE("BSPTree::makeLines") {
         REQUIRE(result.first.size() == 5);
         REQUIRE(result.second.size() == 5);
 
-        compareLines(result.first[0], lines[0], EPSILON);
-        compareLines(result.first[1], lines[1], EPSILON);
-        compareLines(result.first[2], lines[2], EPSILON);
-        compareLines(result.first[3], lines[3], EPSILON);
+        compareLines(result.first[0], lines[0], epsilon);
+        compareLines(result.first[1], lines[1], epsilon);
+        compareLines(result.first[2], lines[2], epsilon);
+        compareLines(result.first[3], lines[3], epsilon);
 
-        compareLines(result.second[0], lines[5], EPSILON);
-        compareLines(result.second[1], lines[6], EPSILON);
-        compareLines(result.second[2], lines[7], EPSILON);
-        compareLines(result.second[3], lines[8], EPSILON);
+        compareLines(result.second[0], lines[5], epsilon);
+        compareLines(result.second[1], lines[6], epsilon);
+        compareLines(result.second[2], lines[7], epsilon);
+        compareLines(result.second[3], lines[8], epsilon);
 
-        compareLines(result.first[4], Line(Point2f(3, -2), Point2f(5.5, -2)), EPSILON);
-        compareLines(result.second[4], Line(Point2f(5.5, -2), Point2f(6, -2)), EPSILON);
+        compareLines(result.first[4], Line(Point2f(3, -2), Point2f(5.5, -2)), epsilon);
+        compareLines(result.second[4], Line(Point2f(5.5, -2), Point2f(6, -2)), epsilon);
     }
 }
 
 TEST_CASE("BSPTree::make (all horizontal lines)", "all-left tree") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
 
     std::vector<Line> lines;
     lines.push_back(Line(Point2f(1, 2), Point2f(2, 2)));
@@ -146,29 +146,29 @@ TEST_CASE("BSPTree::make (all horizontal lines)", "all-left tree") {
 
     BSPTree::make(0, 0, lines, node.get());
 
-    compareLines(node->getLine(), lines[1], EPSILON);
+    compareLines(node->getLine(), lines[1], epsilon);
 
     REQUIRE(node->left != nullptr);
     REQUIRE(node->right == nullptr);
 
-    compareLines(node->left->getLine(), lines[0], EPSILON);
+    compareLines(node->left->getLine(), lines[0], epsilon);
 
     REQUIRE(node->left->left != nullptr);
     REQUIRE(node->left->right == nullptr);
 
-    compareLines(node->left->left->getLine(), lines[2], EPSILON);
+    compareLines(node->left->left->getLine(), lines[2], epsilon);
 
     REQUIRE(node->left->left->left != nullptr);
     REQUIRE(node->left->left->right == nullptr);
 
-    compareLines(node->left->left->left->getLine(), lines[3], EPSILON);
+    compareLines(node->left->left->left->getLine(), lines[3], epsilon);
 
     REQUIRE(node->left->left->left->left == nullptr);
     REQUIRE(node->left->left->left->right == nullptr);
 }
 
 TEST_CASE("BSPTree::make (all vertical lines)", "split tree") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
 
     std::vector<Line> lines;
     lines.push_back(Line(Point2f(1.5, 1), Point2f(1.5, 3)));
@@ -180,13 +180,13 @@ TEST_CASE("BSPTree::make (all vertical lines)", "split tree") {
 
     BSPTree::make(0, 0, lines, node.get());
 
-    compareLines(node->getLine(), lines[1], EPSILON);
+    compareLines(node->getLine(), lines[1], epsilon);
 
     REQUIRE(node->left != nullptr);
     REQUIRE(node->right != nullptr);
 
-    compareLines(node->left->getLine(), lines[0], EPSILON);
-    compareLines(node->right->getLine(), lines[2], EPSILON);
+    compareLines(node->left->getLine(), lines[0], epsilon);
+    compareLines(node->right->getLine(), lines[2], epsilon);
 
     REQUIRE(node->left->left == nullptr);
     REQUIRE(node->left->right == nullptr);
@@ -194,7 +194,7 @@ TEST_CASE("BSPTree::make (all vertical lines)", "split tree") {
     REQUIRE(node->right->left == nullptr);
     REQUIRE(node->right->right != nullptr);
 
-    compareLines(node->right->right->getLine(), lines[3], EPSILON);
+    compareLines(node->right->right->getLine(), lines[3], epsilon);
 
     REQUIRE(node->right->right->left == nullptr);
     REQUIRE(node->right->right->right == nullptr);

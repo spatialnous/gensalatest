@@ -126,20 +126,20 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
     std::cout << "Running segment analysis... " << std::flush;
     Options options;
     const std::vector<double> &radii = getRadii();
-    options.radius_set.insert(radii.begin(), radii.end());
+    options.radiusSet.insert(radii.begin(), radii.end());
     options.choice = includeChoice();
-    options.tulip_bins = getTulipBins();
-    options.weighted_measure_col = -1;
+    options.tulipBins = getTulipBins();
+    options.weightedMeasureCol = -1;
 
     if (!getAttribute().empty()) {
         const auto &map = metaGraph.getDisplayedShapeGraph();
         const AttributeTable &table = map.getAttributeTable();
         for (size_t i = 0; i < table.getNumColumns(); i++) {
             if (getAttribute() == table.getColumnName(i).c_str()) {
-                options.weighted_measure_col = static_cast<int>(i);
+                options.weightedMeasureCol = static_cast<int>(i);
             }
         }
-        if (options.weighted_measure_col == -1) {
+        if (options.weightedMeasureCol == -1) {
             throw depthmapX::RuntimeException("Given attribute (" + getAttribute() +
                                               ") does not exist in currently selected map");
         }
@@ -147,15 +147,15 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
 
     switch (getRadiusType()) {
     case InRadiusType::SEGMENT_STEPS: {
-        options.radius_type = RadiusType::TOPOLOGICAL;
+        options.radiusType = RadiusType::TOPOLOGICAL;
         break;
     }
     case InRadiusType::METRIC: {
-        options.radius_type = RadiusType::METRIC;
+        options.radiusType = RadiusType::METRIC;
         break;
     }
     case InRadiusType::ANGULAR: {
-        options.radius_type = RadiusType::ANGULAR;
+        options.radiusType = RadiusType::ANGULAR;
         break;
     }
     case InRadiusType::NONE:
@@ -176,13 +176,13 @@ void SegmentParser::run(const CommandLineParser &clp, IPerformanceSink &perfWrit
         break;
     }
     case InAnalysisType::TOPOLOGICAL: {
-        options.output_type = AnalysisType::ISOVIST;
+        options.outputType = AnalysisType::ISOVIST;
         DO_TIMED("Segment topological", metaGraph.analyseTopoMetMultipleRadii(
                                             dm_runmethods::getCommunicator(clp).get(), options))
         break;
     }
     case InAnalysisType::METRIC: {
-        options.output_type = AnalysisType::VISUAL;
+        options.outputType = AnalysisType::VISUAL;
         DO_TIMED("Segment metric", metaGraph.analyseTopoMetMultipleRadii(
                                        dm_runmethods::getCommunicator(clp).get(), options))
         break;

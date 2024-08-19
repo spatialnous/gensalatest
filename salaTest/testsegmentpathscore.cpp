@@ -11,7 +11,7 @@
 #include "catch_amalgamated.hpp"
 
 TEST_CASE("Shortest paths working examples", "") {
-    const double EPSILON = 0.001;
+    const double epsilon = 0.001;
 
     // construct an axial map which will result in three different paths for the three types
     ShapeGraph axialMap("Dummy drawing map", ShapeMap::AXIALMAP);
@@ -73,7 +73,7 @@ TEST_CASE("Shortest paths working examples", "") {
                 static_cast<size_t>(segmentMap->getShapesInRegion(selRegion).begin()->first));
 
             REQUIRE(shapeRow.getValue(angleColIdx) ==
-                    Catch::Approx(expectedAngles[i]).epsilon(EPSILON));
+                    Catch::Approx(expectedAngles[i]).epsilon(epsilon));
             REQUIRE(shapeRow.getValue(orderColIdx) == static_cast<double>(expectedOrder[i]));
         }
     }
@@ -98,7 +98,7 @@ TEST_CASE("Shortest paths working examples", "") {
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
                 static_cast<size_t>(segmentMap->getShapesInRegion(selRegion).begin()->first));
             REQUIRE(shapeRow.getValue(distanceColIdx) ==
-                    Catch::Approx(expectedDistances[i]).epsilon(EPSILON));
+                    Catch::Approx(expectedDistances[i]).epsilon(epsilon));
             REQUIRE(shapeRow.getValue(orderColIdx) == static_cast<double>(expectedOrder[i]));
         }
     }
@@ -122,7 +122,7 @@ TEST_CASE("Shortest paths working examples", "") {
             AttributeRow &shapeRow = segmentMap->getAttributeRowFromShapeIndex(
                 static_cast<size_t>(segmentMap->getShapesInRegion(selRegion).begin()->first));
             REQUIRE(shapeRow.getValue(depthColIdx) ==
-                    Catch::Approx(expectedDepths[i]).epsilon(EPSILON));
+                    Catch::Approx(expectedDepths[i]).epsilon(epsilon));
             REQUIRE(shapeRow.getValue(orderColIdx) == static_cast<double>(expectedOrder[i]));
         }
     }

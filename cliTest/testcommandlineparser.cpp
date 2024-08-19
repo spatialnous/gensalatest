@@ -20,15 +20,15 @@ using namespace fakeit;
 class TestParser : public IModeParser {
   public:
     TestParser(const std::string &modeName)
-        : _parseCalled(false), _runCalled(false), _modeName(modeName) {}
+        : m_parseCalled(false), m_runCalled(false), m_modeName(modeName) {}
 
-    virtual std::string getModeName() const { return _modeName; }
+    virtual std::string getModeName() const { return m_modeName; }
 
-    virtual std::string getHelp() const { return formatTestHelpString(_runCalled, _parseCalled); }
+    virtual std::string getHelp() const { return formatTestHelpString(m_runCalled, m_parseCalled); }
 
-    virtual void parse(size_t, char **) { _parseCalled = true; }
+    virtual void parse(size_t, char **) { m_parseCalled = true; }
 
-    virtual void run(const CommandLineParser &, IPerformanceSink &) const { _runCalled = true; }
+    virtual void run(const CommandLineParser &, IPerformanceSink &) const { m_runCalled = true; }
 
     static std::string formatTestHelpString(bool runCalled, bool parseCalled) {
         std::stringstream buf;
@@ -38,9 +38,9 @@ class TestParser : public IModeParser {
     }
 
   private:
-    bool _parseCalled;
-    mutable bool _runCalled;
-    std::string _modeName;
+    bool m_parseCalled;
+    mutable bool m_runCalled;
+    std::string m_modeName;
 };
 
 TEST_CASE("Invalid Parser", "Constructor") {

@@ -41,17 +41,17 @@ TEST_CASE("Failing line parser", "") {
     }
 }
 TEST_CASE("Successful line parser", "") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     {
         std::stringstream stream;
         stream << "x1,y1,x2,y2" << std::endl;
         stream << "1.2,3.4,5.6,7.8" << std::endl;
         std::vector<Line> lines = EntityParsing::parseLines(stream, ',');
         REQUIRE(lines.size() == 1);
-        REQUIRE(lines[0].start().x == Catch::Approx(1.2).epsilon(EPSILON));
-        REQUIRE(lines[0].start().y == Catch::Approx(3.4).epsilon(EPSILON));
-        REQUIRE(lines[0].end().x == Catch::Approx(5.6).epsilon(EPSILON));
-        REQUIRE(lines[0].end().y == Catch::Approx(7.8).epsilon(EPSILON));
+        REQUIRE(lines[0].start().x == Catch::Approx(1.2).epsilon(epsilon));
+        REQUIRE(lines[0].start().y == Catch::Approx(3.4).epsilon(epsilon));
+        REQUIRE(lines[0].end().x == Catch::Approx(5.6).epsilon(epsilon));
+        REQUIRE(lines[0].end().y == Catch::Approx(7.8).epsilon(epsilon));
     }
 
     {
@@ -60,10 +60,10 @@ TEST_CASE("Successful line parser", "") {
         stream << "1.2\t3.4\t5.6\t7.8" << std::endl;
         std::vector<Line> lines = EntityParsing::parseLines(stream, '\t');
         REQUIRE(lines.size() == 1);
-        REQUIRE(lines[0].start().x == Catch::Approx(1.2).epsilon(EPSILON));
-        REQUIRE(lines[0].start().y == Catch::Approx(3.4).epsilon(EPSILON));
-        REQUIRE(lines[0].end().x == Catch::Approx(5.6).epsilon(EPSILON));
-        REQUIRE(lines[0].end().y == Catch::Approx(7.8).epsilon(EPSILON));
+        REQUIRE(lines[0].start().x == Catch::Approx(1.2).epsilon(epsilon));
+        REQUIRE(lines[0].start().y == Catch::Approx(3.4).epsilon(epsilon));
+        REQUIRE(lines[0].end().x == Catch::Approx(5.6).epsilon(epsilon));
+        REQUIRE(lines[0].end().y == Catch::Approx(7.8).epsilon(epsilon));
     }
 
     {
@@ -73,14 +73,14 @@ TEST_CASE("Successful line parser", "") {
         stream << "0.1\t0.2\t0.3\t0.4" << std::endl;
         std::vector<Line> lines = EntityParsing::parseLines(stream, '\t');
         REQUIRE(lines.size() == 2);
-        REQUIRE(lines[0].start().x == Catch::Approx(1.2).epsilon(EPSILON));
-        REQUIRE(lines[0].start().y == Catch::Approx(3.4).epsilon(EPSILON));
-        REQUIRE(lines[0].end().x == Catch::Approx(5.6).epsilon(EPSILON));
-        REQUIRE(lines[0].end().y == Catch::Approx(7.8).epsilon(EPSILON));
-        REQUIRE(lines[1].start().x == Catch::Approx(0.1).epsilon(EPSILON));
-        REQUIRE(lines[1].start().y == Catch::Approx(0.2).epsilon(EPSILON));
-        REQUIRE(lines[1].end().x == Catch::Approx(0.3).epsilon(EPSILON));
-        REQUIRE(lines[1].end().y == Catch::Approx(0.4).epsilon(EPSILON));
+        REQUIRE(lines[0].start().x == Catch::Approx(1.2).epsilon(epsilon));
+        REQUIRE(lines[0].start().y == Catch::Approx(3.4).epsilon(epsilon));
+        REQUIRE(lines[0].end().x == Catch::Approx(5.6).epsilon(epsilon));
+        REQUIRE(lines[0].end().y == Catch::Approx(7.8).epsilon(epsilon));
+        REQUIRE(lines[1].start().x == Catch::Approx(0.1).epsilon(epsilon));
+        REQUIRE(lines[1].start().y == Catch::Approx(0.2).epsilon(epsilon));
+        REQUIRE(lines[1].end().x == Catch::Approx(0.3).epsilon(epsilon));
+        REQUIRE(lines[1].end().y == Catch::Approx(0.4).epsilon(epsilon));
     }
 }
 
@@ -113,15 +113,15 @@ TEST_CASE("Failing point parser", "") {
     }
 }
 TEST_CASE("Successful point parser", "") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     {
         std::stringstream stream;
         stream << "x,y" << std::endl;
         stream << "1.2,3.4" << std::endl;
         std::vector<Point2f> points = EntityParsing::parsePoints(stream, ',');
         REQUIRE(points.size() == 1);
-        REQUIRE(points[0].x == Catch::Approx(1.2).epsilon(EPSILON));
-        REQUIRE(points[0].y == Catch::Approx(3.4).epsilon(EPSILON));
+        REQUIRE(points[0].x == Catch::Approx(1.2).epsilon(epsilon));
+        REQUIRE(points[0].y == Catch::Approx(3.4).epsilon(epsilon));
     }
 
     {
@@ -130,8 +130,8 @@ TEST_CASE("Successful point parser", "") {
         stream << "1.2\t3.4" << std::endl;
         std::vector<Point2f> points = EntityParsing::parsePoints(stream, '\t');
         REQUIRE(points.size() == 1);
-        REQUIRE(points[0].x == Catch::Approx(1.2).epsilon(EPSILON));
-        REQUIRE(points[0].y == Catch::Approx(3.4).epsilon(EPSILON));
+        REQUIRE(points[0].x == Catch::Approx(1.2).epsilon(epsilon));
+        REQUIRE(points[0].y == Catch::Approx(3.4).epsilon(epsilon));
     }
 
     {
@@ -141,10 +141,10 @@ TEST_CASE("Successful point parser", "") {
         stream << "0.1\t0.2" << std::endl;
         std::vector<Point2f> points = EntityParsing::parsePoints(stream, '\t');
         REQUIRE(points.size() == 2);
-        REQUIRE(points[0].x == Catch::Approx(1.2).epsilon(EPSILON));
-        REQUIRE(points[0].y == Catch::Approx(3.4).epsilon(EPSILON));
-        REQUIRE(points[1].x == Catch::Approx(0.1).epsilon(EPSILON));
-        REQUIRE(points[1].y == Catch::Approx(0.2).epsilon(EPSILON));
+        REQUIRE(points[0].x == Catch::Approx(1.2).epsilon(epsilon));
+        REQUIRE(points[0].y == Catch::Approx(3.4).epsilon(epsilon));
+        REQUIRE(points[1].x == Catch::Approx(0.1).epsilon(epsilon));
+        REQUIRE(points[1].y == Catch::Approx(0.2).epsilon(epsilon));
     }
 }
 
@@ -162,19 +162,19 @@ TEST_CASE("Test point parsing") {
 }
 
 TEST_CASE("Successful Isovist parser") {
-    const float EPSILON = 0.0001f;
+    const float epsilon = 0.0001f;
     {
         std::stringstream stream;
         stream << "x,y\n1.0,2.34\n0.5,9.2\n" << std::flush;
         auto result = EntityParsing::parseIsovists(stream, ',');
         REQUIRE(result.size() == 2);
-        REQUIRE(result[0].getLocation().x == Catch::Approx(1.0).epsilon(EPSILON));
-        REQUIRE(result[0].getLocation().y == Catch::Approx(2.34).epsilon(EPSILON));
-        REQUIRE(result[0].getAngle() == Catch::Approx(0.0).epsilon(EPSILON));
+        REQUIRE(result[0].getLocation().x == Catch::Approx(1.0).epsilon(epsilon));
+        REQUIRE(result[0].getLocation().y == Catch::Approx(2.34).epsilon(epsilon));
+        REQUIRE(result[0].getAngle() == Catch::Approx(0.0).epsilon(epsilon));
         REQUIRE(result[0].getViewAngle() == 0.0);
-        REQUIRE(result[1].getLocation().x == Catch::Approx(0.5).epsilon(EPSILON));
-        REQUIRE(result[1].getLocation().y == Catch::Approx(9.2).epsilon(EPSILON));
-        REQUIRE(result[1].getAngle() == Catch::Approx(0.0).epsilon(EPSILON));
+        REQUIRE(result[1].getLocation().x == Catch::Approx(0.5).epsilon(epsilon));
+        REQUIRE(result[1].getLocation().y == Catch::Approx(9.2).epsilon(epsilon));
+        REQUIRE(result[1].getAngle() == Catch::Approx(0.0).epsilon(epsilon));
         REQUIRE(result[1].getViewAngle() == 0.0);
     }
     {
@@ -182,14 +182,14 @@ TEST_CASE("Successful Isovist parser") {
         stream << "x,y,angle,viewAngle\n1.0,2.34,90,90\n0.5,9.2,180,270\n" << std::flush;
         auto result = EntityParsing::parseIsovists(stream, ',');
         REQUIRE(result.size() == 2);
-        REQUIRE(result[0].getLocation().x == Catch::Approx(1.0).epsilon(EPSILON));
-        REQUIRE(result[0].getLocation().y == Catch::Approx(2.34).epsilon(EPSILON));
-        REQUIRE(result[0].getAngle() == Catch::Approx(M_PI / 2.0).epsilon(EPSILON));
-        REQUIRE(result[0].getViewAngle() == Catch::Approx(M_PI / 2.0).epsilon(EPSILON));
-        REQUIRE(result[1].getLocation().x == Catch::Approx(0.5).epsilon(EPSILON));
-        REQUIRE(result[1].getLocation().y == Catch::Approx(9.2).epsilon(EPSILON));
-        REQUIRE(result[1].getAngle() == Catch::Approx(M_PI).epsilon(EPSILON));
-        REQUIRE(result[1].getViewAngle() == Catch::Approx(M_PI * 1.5).epsilon(EPSILON));
+        REQUIRE(result[0].getLocation().x == Catch::Approx(1.0).epsilon(epsilon));
+        REQUIRE(result[0].getLocation().y == Catch::Approx(2.34).epsilon(epsilon));
+        REQUIRE(result[0].getAngle() == Catch::Approx(M_PI / 2.0).epsilon(epsilon));
+        REQUIRE(result[0].getViewAngle() == Catch::Approx(M_PI / 2.0).epsilon(epsilon));
+        REQUIRE(result[1].getLocation().x == Catch::Approx(0.5).epsilon(epsilon));
+        REQUIRE(result[1].getLocation().y == Catch::Approx(9.2).epsilon(epsilon));
+        REQUIRE(result[1].getAngle() == Catch::Approx(M_PI).epsilon(epsilon));
+        REQUIRE(result[1].getViewAngle() == Catch::Approx(M_PI * 1.5).epsilon(epsilon));
     }
 }
 

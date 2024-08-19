@@ -27,13 +27,13 @@ void CommandLineParser::printHelp() {
               << "-mmv mimic a previous version's quirks\n"
 
               << "Possible modes are:\n";
-    std::for_each(_parserFactory.getModeParsers().begin(), _parserFactory.getModeParsers().end(),
+    std::for_each(m_parserFactory.getModeParsers().begin(), m_parserFactory.getModeParsers().end(),
                   [](const ModeParserVec::value_type &p) -> void {
                       std::cout << "  " << p->getModeName() << "\n";
                   });
     std::cout << "\n";
     std::for_each(
-        _parserFactory.getModeParsers().begin(), _parserFactory.getModeParsers().end(),
+        m_parserFactory.getModeParsers().begin(), m_parserFactory.getModeParsers().end(),
         [](const ModeParserVec::value_type &p) -> void { std::cout << p->getHelp() << "\n"; });
     std::cout << std::flush;
 }
@@ -41,7 +41,7 @@ void CommandLineParser::printHelp() {
 void CommandLineParser::printVersion() { std::cout << TITLE_BASE << "\n" << std::flush; }
 
 CommandLineParser::CommandLineParser(const IModeParserFactory &parserFactory)
-    : m_simpleMode(false), _parserFactory(parserFactory), _modeParser(0) {}
+    : m_simpleMode(false), m_parserFactory(parserFactory), m_modeParser(0) {}
 
 void CommandLineParser::parse(size_t argc, char *argv[]) {
     m_valid = false;
@@ -56,21 +56,21 @@ void CommandLineParser::parse(size_t argc, char *argv[]) {
             m_printVersionMode = true;
             return;
         } else if (std::strcmp("-m", argv[i]) == 0) {
-            if (_modeParser) {
+            if (m_modeParser) {
                 throw CommandLineException("-m can only be used once");
             }
             ENFORCE_ARGUMENT("-m", i)
 
-            for (auto iter = _parserFactory.getModeParsers().begin(),
-                      end = _parserFactory.getModeParsers().end();
+            for (auto iter = m_parserFactory.getModeParsers().begin(),
+                      end = m_parserFactory.getModeParsers().end();
                  iter != end; ++iter) {
                 if ((*iter)->getModeName() == argv[i]) {
-                    _modeParser = iter->get();
+                    m_modeParser = iter->get();
                     break;
                 }
             }
 
-            if (!_modeParser) {
+            if (!m_modeParser) {
                 throw CommandLineException(std::string("Invalid mode: ") + argv[i]);
             }
         } else if (std::strcmp("-f", argv[i]) == 0) {
@@ -95,7 +95,7 @@ void CommandLineParser::parse(size_t argc, char *argv[]) {
         ++i;
     }
 
-    if (!_modeParser) {
+    if (!m_modeParser) {
         throw CommandLineException("-m for mode is required");
     }
     if (m_fileName.empty()) {
@@ -104,13 +104,13 @@ void CommandLineParser::parse(size_t argc, char *argv[]) {
     if (m_outputFile.empty()) {
         throw CommandLineException("-o for output file is required");
     }
-    _modeParser->parse(argc, argv);
+    m_modeParser->parse(argc, argv);
     m_valid = true;
 }
 
 void CommandLineParser::run(IPerformanceSink &perfWriter) const {
-    if (!m_valid || !_modeParser) {
+    if (!m_valid || !m_modeParser) {
         throw CommandLineException("Trying to run with invalid command line parameters");
     }
-    _modeParser->run(*this, perfWriter);
+    m_modeParser->run(*this, perfWriter);
 }

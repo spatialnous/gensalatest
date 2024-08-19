@@ -8,7 +8,7 @@
 #include "catch_amalgamated.hpp"
 
 TEST_CASE("Test getVisibleLines", "") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
 
     // create a new MetaGraph
     std::unique_ptr<MetaGraph> mgraph(new MetaGraph());
@@ -43,13 +43,13 @@ TEST_CASE("Test getVisibleLines", "") {
 
         REQUIRE(visibleLines0.size() == 1);
         REQUIRE(visibleLines1.size() == 1);
-        REQUIRE(visibleLines0[0].start().x == Catch::Approx(visibleLineStart.x).epsilon(EPSILON));
-        REQUIRE(visibleLines0[0].start().y == Catch::Approx(visibleLineStart.y).epsilon(EPSILON));
-        REQUIRE(visibleLines0[0].end().x == Catch::Approx(visibleLineEnd.x).epsilon(EPSILON));
-        REQUIRE(visibleLines0[0].end().y == Catch::Approx(visibleLineEnd.y).epsilon(EPSILON));
-        REQUIRE(visibleLines1[0].start().x == Catch::Approx(hiddenLineStart.x).epsilon(EPSILON));
-        REQUIRE(visibleLines1[0].start().y == Catch::Approx(hiddenLineStart.y).epsilon(EPSILON));
-        REQUIRE(visibleLines1[0].end().x == Catch::Approx(hiddenLineEnd.x).epsilon(EPSILON));
-        REQUIRE(visibleLines1[0].end().y == Catch::Approx(hiddenLineEnd.y).epsilon(EPSILON));
+        REQUIRE(visibleLines0[0].start().x == Catch::Approx(visibleLineStart.x).epsilon(epsilon));
+        REQUIRE(visibleLines0[0].start().y == Catch::Approx(visibleLineStart.y).epsilon(epsilon));
+        REQUIRE(visibleLines0[0].end().x == Catch::Approx(visibleLineEnd.x).epsilon(epsilon));
+        REQUIRE(visibleLines0[0].end().y == Catch::Approx(visibleLineEnd.y).epsilon(epsilon));
+        REQUIRE(visibleLines1[0].start().x == Catch::Approx(hiddenLineStart.x).epsilon(epsilon));
+        REQUIRE(visibleLines1[0].start().y == Catch::Approx(hiddenLineStart.y).epsilon(epsilon));
+        REQUIRE(visibleLines1[0].end().x == Catch::Approx(hiddenLineEnd.x).epsilon(epsilon));
+        REQUIRE(visibleLines1[0].end().y == Catch::Approx(hiddenLineEnd.y).epsilon(epsilon));
     }
 }

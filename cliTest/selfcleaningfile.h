@@ -9,11 +9,11 @@
 
 class SelfCleaningFile {
   public:
-    SelfCleaningFile(const std::string &filename) : _filename(filename) {}
-    ~SelfCleaningFile() { std::remove(_filename.c_str()); }
+    SelfCleaningFile(const std::string &filename) : m_filename(filename) {}
+    ~SelfCleaningFile() { std::remove(m_filename.c_str()); }
 
-    const std::string &Filename() { return _filename; }
+    const std::string &Filename() { return m_filename; }
 
   private:
-    const std::string _filename;
+    const std::string m_filename;
 };

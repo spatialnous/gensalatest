@@ -127,7 +127,7 @@ TEST_CASE("Variables from outer scope are accessible in inner scope") {
 
 TEST_CASE("Shapemap scripts") {
 
-    const double EPSILON = 0.001;
+    const double epsilon = 0.001;
 
     Point2f line1Start(0, 0);
     Point2f line1End(3, 0);
@@ -223,14 +223,14 @@ TEST_CASE("Shapemap scripts") {
     auto iter = expectedColVals.begin();
     auto &attributes = shapeGraph->getAttributeTable();
     for (auto rowIter = attributes.begin(); rowIter != attributes.end(); rowIter++) {
-        REQUIRE(rowIter->getRow().getValue(newCol) == Catch::Approx(*iter).epsilon(EPSILON));
+        REQUIRE(rowIter->getRow().getValue(newCol) == Catch::Approx(*iter).epsilon(epsilon));
         iter++;
     }
 }
 
 TEST_CASE("Shapemap scripts with unexpected results") {
 
-    const double EPSILON = 0.001;
+    const double epsilon = 0.001;
 
     Point2f line1Start(0, 0);
     Point2f line1End(3, 0);
@@ -356,7 +356,7 @@ TEST_CASE("Shapemap scripts with unexpected results") {
     auto iter = expectedColVals.begin();
     auto &attributes = shapeGraph->getAttributeTable();
     for (auto rowIter = attributes.begin(); rowIter != attributes.end(); rowIter++) {
-        REQUIRE(rowIter->getRow().getValue(newCol) == Catch::Approx(*iter).epsilon(EPSILON));
+        REQUIRE(rowIter->getRow().getValue(newCol) == Catch::Approx(*iter).epsilon(epsilon));
         iter++;
     }
 }

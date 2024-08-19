@@ -121,8 +121,8 @@ TEST_CASE("Testing ShapeGraph::writeSegmentConnections") {
 // move to the ShapeGraph
 
 TEST_CASE("Testing ShapeMap::getAllLinkLines and ShapeMap::getAllUnlinkPoints()") {
-    const float EPSILON = 0.001f;
-    const double TOLERANCE_A = 1e-9;
+    const float epsilon = 0.001f;
+    const double toleranceA = 1e-9;
     Point2f line0Start(0.522, 0.424);
     Point2f line0End(0.709, 1.098);
     Point2f line1Start(0.897, 1.123);
@@ -146,21 +146,21 @@ TEST_CASE("Testing ShapeMap::getAllLinkLines and ShapeMap::getAllUnlinkPoints()"
     REQUIRE(linkLines.size() == 1);
 
     REQUIRE(linkLines[0].start().x ==
-            Catch::Approx((line0Start.x + line0End.x) * 0.5).epsilon(EPSILON));
+            Catch::Approx((line0Start.x + line0End.x) * 0.5).epsilon(epsilon));
     REQUIRE(linkLines[0].start().y ==
-            Catch::Approx((line0Start.y + line0End.y) * 0.5).epsilon(EPSILON));
+            Catch::Approx((line0Start.y + line0End.y) * 0.5).epsilon(epsilon));
     REQUIRE(linkLines[0].end().x ==
-            Catch::Approx((line1Start.x + line1End.x) * 0.5).epsilon(EPSILON));
+            Catch::Approx((line1Start.x + line1End.x) * 0.5).epsilon(epsilon));
     REQUIRE(linkLines[0].end().y ==
-            Catch::Approx((line1Start.y + line1End.y) * 0.5).epsilon(EPSILON));
+            Catch::Approx((line1Start.y + line1End.y) * 0.5).epsilon(epsilon));
 
     std::vector<Point2f> unlinkPoints = shapeGraph->getAllUnlinkPoints();
 
     REQUIRE(unlinkPoints.size() == 1);
 
     Point2f intersection =
-        intersection_point(Line(line1Start, line1End), Line(line2Start, line2End), TOLERANCE_A);
+        intersection_point(Line(line1Start, line1End), Line(line2Start, line2End), toleranceA);
 
-    REQUIRE(unlinkPoints[0].x == Catch::Approx(intersection.x).epsilon(EPSILON));
-    REQUIRE(unlinkPoints[0].y == Catch::Approx(intersection.y).epsilon(EPSILON));
+    REQUIRE(unlinkPoints[0].x == Catch::Approx(intersection.x).epsilon(epsilon));
+    REQUIRE(unlinkPoints[0].y == Catch::Approx(intersection.y).epsilon(epsilon));
 }

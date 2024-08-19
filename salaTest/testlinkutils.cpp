@@ -12,7 +12,7 @@ TEST_CASE("Test linking - fully filled grid (no geometry)", "") {
     Point2f offset(0, 0); // seems that this is always set to 0,0
     Point2f bottomLeft(0, 0);
     Point2f topRight(2, 4);
-    int fill_type = 0; // = QDepthmapView::FULLFILL
+    int fillType = 0; // = QDepthmapView::FULLFILL
 
     PointMap pointMap(QtRegion(bottomLeft, topRight), "Test PointMap");
     pointMap.setGrid(spacing, offset);
@@ -22,7 +22,7 @@ TEST_CASE("Test linking - fully filled grid (no geometry)", "") {
         gridBottomLeft.y + spacing * (floor(static_cast<double>(pointMap.getRows()) * 0.5) + 0.5));
     std::vector<Line> lines;
     pointMap.blockLines(lines);
-    pointMap.makePoints(midPoint, fill_type);
+    pointMap.makePoints(midPoint, fillType);
 
     std::vector<Line> mergeLines;
 
@@ -176,7 +176,7 @@ TEST_CASE("Test linking - half filled grid", "") {
 
     double spacing = 0.5;
     Point2f offset(0, 0); // seems that this is always set to 0,0
-    int fill_type = 0;    // = QDepthmapView::FULLFILL
+    int fillType = 0;     // = QDepthmapView::FULLFILL
 
     Point2f lineStart(0, 0);
     Point2f lineEnd(2, 4);
@@ -202,7 +202,7 @@ TEST_CASE("Test linking - half filled grid", "") {
     Point2f topLeftFillPoint(gridBottomLeft.x + spacing, gridTopRight.y - spacing);
     std::vector<Line> lines = spacePixels.back().getAllShapesAsLines();
     pointMap.blockLines(lines);
-    pointMap.makePoints(topLeftFillPoint, fill_type);
+    pointMap.makePoints(topLeftFillPoint, fillType);
 
     std::vector<Line> mergeLines;
 

@@ -323,9 +323,9 @@ TEST_CASE("attibute table iterations") {
     REQUIRE(table.getRow(AttributeKey(0)).getValue(1) == Catch::Approx(2.0));
     REQUIRE(table.getRow(AttributeKey(1)).getValue(1) == Catch::Approx(2.0));
 
-    const AttributeTable &const_table = table;
+    const AttributeTable &constTable = table;
 
-    auto citer = const_table.begin();
+    auto citer = constTable.begin();
     REQUIRE((*citer).getKey().value == 0);
     REQUIRE(citer->getRow().getValue(0) == Catch::Approx(0.5));
     citer++;
@@ -333,7 +333,7 @@ TEST_CASE("attibute table iterations") {
     REQUIRE(citer->getRow().getValue(0) == Catch::Approx(1.0));
     citer++;
 
-    auto cend = const_table.end();
+    auto cend = constTable.end();
     REQUIRE(citer == cend);
     REQUIRE(citer == table.end());
 

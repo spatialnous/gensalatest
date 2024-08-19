@@ -10,7 +10,7 @@
 #include "catch_amalgamated.hpp"
 
 TEST_CASE("Test disk triangles generation", "") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     size_t sides = 8;
     float radius = 2;
 
@@ -32,9 +32,9 @@ TEST_CASE("Test disk triangles generation", "") {
     REQUIRE(diskTriangles.size() == expected.size());
     for (size_t i = 0; i < diskTriangles.size(); i++) {
         REQUIRE_THAT(diskTriangles[i].x,
-                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].x), EPSILON));
+                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].x), epsilon));
         REQUIRE_THAT(diskTriangles[i].y,
-                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].y), EPSILON));
+                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].y), epsilon));
     }
 
     std::vector<Point2f> offsets{Point2f(1, 2), Point2f(3, -4), Point2f(-5, -6), Point2f(-7, 8)};
@@ -47,15 +47,15 @@ TEST_CASE("Test disk triangles generation", "") {
     for (size_t i = 0; i < multiDiskTriangles.size(); i++) {
         REQUIRE(multiDiskTriangles[i].x ==
                 Catch::Approx(expected[i % (sides * 3)].x + offsets[i / (sides * 3)].x)
-                    .epsilon(EPSILON));
+                    .epsilon(epsilon));
         REQUIRE(multiDiskTriangles[i].y ==
                 Catch::Approx(expected[i % (sides * 3)].y + offsets[i / (sides * 3)].y)
-                    .epsilon(EPSILON));
+                    .epsilon(epsilon));
     }
 }
 
 TEST_CASE("Test circle perimeter line generation", "") {
-    const float EPSILON = 0.001f;
+    const float epsilon = 0.001f;
     size_t sides = 8;
     float radius = 2;
 
@@ -74,14 +74,14 @@ TEST_CASE("Test circle perimeter line generation", "") {
     for (size_t i = 0; i < circleLines.size(); i++) {
         REQUIRE_THAT(
             circleLines[i].start().x,
-            Catch::Matchers::WithinAbs(static_cast<float>(expected[i].start().x), EPSILON));
+            Catch::Matchers::WithinAbs(static_cast<float>(expected[i].start().x), epsilon));
         REQUIRE_THAT(
             circleLines[i].start().y,
-            Catch::Matchers::WithinAbs(static_cast<float>(expected[i].start().y), EPSILON));
+            Catch::Matchers::WithinAbs(static_cast<float>(expected[i].start().y), epsilon));
         REQUIRE_THAT(circleLines[i].end().x,
-                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].end().x), EPSILON));
+                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].end().x), epsilon));
         REQUIRE_THAT(circleLines[i].end().y,
-                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].end().y), EPSILON));
+                     Catch::Matchers::WithinAbs(static_cast<float>(expected[i].end().y), epsilon));
     }
 
     std::vector<Point2f> offsets{Point2f(1, 2), Point2f(3, -4), Point2f(-5, -6), Point2f(-7, 8)};
@@ -94,13 +94,13 @@ TEST_CASE("Test circle perimeter line generation", "") {
     for (size_t i = 0; i < multiCircleLines.size(); i++) {
         REQUIRE(
             multiCircleLines[i].start().x ==
-            Catch::Approx(expected[i % sides].start().x + offsets[i / sides].x).epsilon(EPSILON));
+            Catch::Approx(expected[i % sides].start().x + offsets[i / sides].x).epsilon(epsilon));
         REQUIRE(
             multiCircleLines[i].start().y ==
-            Catch::Approx(expected[i % sides].start().y + offsets[i / sides].y).epsilon(EPSILON));
+            Catch::Approx(expected[i % sides].start().y + offsets[i / sides].y).epsilon(epsilon));
         REQUIRE(multiCircleLines[i].end().x ==
-                Catch::Approx(expected[i % sides].end().x + offsets[i / sides].x).epsilon(EPSILON));
+                Catch::Approx(expected[i % sides].end().x + offsets[i / sides].x).epsilon(epsilon));
         REQUIRE(multiCircleLines[i].end().y ==
-                Catch::Approx(expected[i % sides].end().y + offsets[i / sides].y).epsilon(EPSILON));
+                Catch::Approx(expected[i % sides].end().y + offsets[i / sides].y).epsilon(epsilon));
     }
 }

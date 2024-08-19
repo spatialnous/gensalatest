@@ -103,13 +103,13 @@ void StepDepthParser::run(const CommandLineParser &clp, IPerformanceSink &perfWr
 
     switch (m_stepType) {
     case StepDepthParser::StepType::ANGULAR:
-        options.point_depth_selection = 3;
+        options.pointDepthSelection = 3;
         break;
     case StepDepthParser::StepType::METRIC:
-        options.point_depth_selection = 2;
+        options.pointDepthSelection = 2;
         break;
     case StepDepthParser::StepType::VISUAL:
-        options.point_depth_selection = 1;
+        options.pointDepthSelection = 1;
         break;
     default: {
         throw depthmapX::SetupCheckException("Error, unsupported step type");
