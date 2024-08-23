@@ -1,9 +1,9 @@
 [submodule "salalib"]
 	path = salalib
-	url = ../salalib
+	url = ../../spatialnous/salalib
 [submodule "genlib"]
 	path = genlib
-	url = ../genlib
+	url = ../../spatialnous/genlib
 [submodule "depthmapXcli/dxinterface"]
 	path = depthmapXcli/dxinterface
-	url = git@github.com:spatialnous/dxinterface.git
+	url = ../../spatialnous/dxinterface.git
