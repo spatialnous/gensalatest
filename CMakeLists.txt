@@ -63,7 +63,6 @@ set(MODULES_CLI_TEST FALSE)
 set(MODULES_CORE TRUE)
 set(MODULES_CORE_TEST FALSE)
 
-add_subdirectory(genlib)
 add_subdirectory(genlibTest)
 add_subdirectory(salalib)
 add_subdirectory(modules) # only the core modules are loaded here

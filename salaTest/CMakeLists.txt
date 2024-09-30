@@ -40,7 +40,7 @@ set(external_SRCS
 
 include_directories(SYSTEM "../ThirdParty/Catch" "../ThirdParty/FakeIt")
 
-set(LINK_LIBS salalib genlib)
+set(LINK_LIBS salalib)
 
 add_executable(${salaTest} ${salaTest_SRCS})
 

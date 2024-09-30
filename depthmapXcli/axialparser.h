@@ -6,7 +6,7 @@
 
 #include "imodeparser.h"
 
-#include "genlib/p2dpoly.h"
+#include "salalib/genlib/p2dpoly.h"
 
 class AxialParser : public IModeParser {
   public:

@@ -61,7 +61,7 @@ set(external_SRCS
 
 include_directories(SYSTEM "../ThirdParty/Catch" "../ThirdParty/FakeIt")
 
-set(LINK_LIBS salalib genlib)
+set(LINK_LIBS salalib)
 
 set(modules_cliTest "" CACHE INTERNAL "modules_cliTest" FORCE)
 set(MODULES_GUI FALSE)

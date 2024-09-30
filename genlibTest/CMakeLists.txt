@@ -19,7 +19,7 @@ set(external_SRCS
 ) # external_SRCS
 
 set(LINK_LIBS
-    genlib)
+    salalib)
 
 include_directories(SYSTEM "../ThirdParty/Catch")
 

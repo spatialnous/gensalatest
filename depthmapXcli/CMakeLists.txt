@@ -55,7 +55,7 @@ set(depthmapXcli_SRCS
     mapconvertparser.cpp
     segmentshortestpathparser.cpp)
 
-set(LINK_LIBS salalib genlib)
+set(LINK_LIBS salalib)
 
 set(modules_cli "" CACHE INTERNAL "modules_cli" FORCE)
 set(MODULES_GUI FALSE)

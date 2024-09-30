@@ -33,4 +33,4 @@ set_source_files_properties(
 )
 target_compile_options(${moduleTest} PRIVATE ${COMPILE_WARNINGS})
 
-target_link_libraries(${moduleTest} salalib genlib ${modules_coreTest} ${modules_core})
+target_link_libraries(${moduleTest} salalib ${modules_coreTest} ${modules_core})

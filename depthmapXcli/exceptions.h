@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "genlib/exceptions.h"
+#include "salalib/genlib/exceptions.h"
 
 #include <string>
 

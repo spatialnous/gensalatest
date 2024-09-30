@@ -2,9 +2,9 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "genlib/bsptree.h"
-#include "genlib/comm.h"
-#include "genlib/p2dpoly.h"
+#include "salalib/genlib/bsptree.h"
+#include "salalib/genlib/comm.h"
+#include "salalib/genlib/p2dpoly.h"
 
 #include "catch_amalgamated.hpp"
 

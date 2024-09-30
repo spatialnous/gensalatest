@@ -4,8 +4,8 @@
 
 #include "salalib/parsers/dxfp.h"
 
-#include "genlib/comm.h"
-#include "genlib/p2dpoly.h"
+#include "salalib/genlib/comm.h"
+#include "salalib/genlib/p2dpoly.h"
 
 #include "catch_amalgamated.hpp"
 

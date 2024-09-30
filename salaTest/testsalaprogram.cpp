@@ -4,7 +4,7 @@
 
 #include "../salalib/mapconverter.h"
 #include "catch_amalgamated.hpp"
-#include "genlib/p2dpoly.h"
+#include "salalib/genlib/p2dpoly.h"
 #include "salalib/salaprogram.h"
 #include "salalib/shapegraph.h"
 #include "salalib/shapemapgroupdata.h"

@@ -5,7 +5,7 @@
 
 #include "cliTest/selfcleaningfile.h"
 
-#include "genlib/readwritehelpers.h"
+#include "salalib/genlib/readwritehelpers.h"
 
 #include "catch_amalgamated.hpp"
 

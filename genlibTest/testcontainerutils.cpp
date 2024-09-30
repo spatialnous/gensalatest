@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-#include "genlib/containerutils.h"
+#include "salalib/genlib/containerutils.h"
 
 #include "catch_amalgamated.hpp"
 

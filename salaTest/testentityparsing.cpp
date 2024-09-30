@@ -5,7 +5,7 @@
 
 #include "salalib/entityparsing.h"
 
-#include "genlib/p2dpoly.h"
+#include "salalib/genlib/p2dpoly.h"
 
 #include "catch_amalgamated.hpp"
 
