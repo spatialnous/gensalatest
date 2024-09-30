@@ -1,4 +1,4 @@
-## gensalatest - tests for the spatial analysis library [salalib](https://github.com/spatialnous/salalib)
+## salatest - tests for the spatial analysis library [salalib](https://github.com/spatialnous/salalib)
 
 This repository does not provide a Graphical User Interface, but it does include the Command Line Interface depthmapXcli, also used for Regression testing.
 For the GUI, see [depthmapX](https://github.com/spatialnous/depthmapX)
